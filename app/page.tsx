@@ -1,7 +1,14 @@
-import { memo } from "react";
+'use client';
+
+import dynamic from "next/dynamic";
+const ImageEditor = dynamic(() => import("@/components/ImageEditor"), { ssr: false })
+
 
 const page = () => {
-  return <div>page</div>;
+  return (
+    <div>
+      <ImageEditor />
+    </div>
+  );
 };
-
-export default memo(page);
+export default page;
