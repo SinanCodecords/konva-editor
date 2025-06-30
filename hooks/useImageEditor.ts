@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useRef, useEffect } from "react";
 import type Konva from "konva";
 
@@ -188,6 +186,10 @@ export const useImageEditor = () => {
         setTextElement((prev) => prev ? { ...prev, isSelected: false } : prev);
     };
 
+    const makeCaps = () => {
+        setTextElement((prev) => prev ? { ...prev, text: prev?.text.toUpperCase() } : prev);
+    }
+
     return {
         textElement,
         setTextContent,
@@ -210,5 +212,6 @@ export const useImageEditor = () => {
         handleStickerTransform,
         handleStickerSelect,
         handleStyleChange,
+        makeCaps
     };
 };

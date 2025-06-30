@@ -1,6 +1,5 @@
 "use client";
 
-import type React from "react";
 import { useEffect, useRef } from "react";
 import { Text, Transformer } from "react-konva";
 import type Konva from "konva";
@@ -31,6 +30,7 @@ const EditableText = ({ textElement, onDragEnd, onTransform, onSelect, transform
         }
     };
 
+
     return (
         <>
             <Text
@@ -47,22 +47,28 @@ const EditableText = ({ textElement, onDragEnd, onTransform, onSelect, transform
                 onTransformEnd={handleTransformEnd}
                 onClick={onSelect}
                 onTap={onSelect}
-                shadowColor={textElement.isSelected ? "blue" : "transparent"}
+                shadowColor={textElement.isSelected ? "#4A90E2" : "transparent"}
                 shadowBlur={textElement.isSelected ? 5 : 0}
                 shadowOpacity={textElement.isSelected ? 0.3 : 0}
             />
-
             {textElement.isSelected && transformerRef && (
                 <Transformer
                     ref={transformerRef}
                     boundBoxFunc={(oldBox, newBox) => {
+                        // Prevent text from becoming too small
                         if (newBox.width < 20 || newBox.height < 20) {
                             return oldBox;
                         }
                         return newBox;
                     }}
-                    enabledAnchors={["top-left", "top-right", "bottom-left", "bottom-right", "middle-left", "middle-right"]}
                     rotateEnabled={true}
+                    borderStroke="#4A90E2"
+                    borderStrokeWidth={2}
+                    anchorFill="#4A90E2"
+                    anchorStroke="#4A90E2"
+                    anchorSize={8}
+                    keepRatio={false}
+                    centeredScaling={false}
                 />
             )}
         </>

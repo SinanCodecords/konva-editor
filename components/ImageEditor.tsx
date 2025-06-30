@@ -28,7 +28,7 @@ const ImageEditor = () => {
         handleStickerSelect,
         handleStyleChange,
         isTextSelected,
-        selectedStickerId,
+        makeCaps
     } = useImageEditor();
 
     return (
@@ -43,6 +43,7 @@ const ImageEditor = () => {
                         handleStyleChange={handleStyleChange}
                         isTextSelected={isTextSelected}
                         onRemoveText={removeText}
+                        makeCaps={makeCaps}
                     />
                 </div>
 
@@ -57,7 +58,7 @@ const ImageEditor = () => {
                                 )}
 
 
-                                {stickerObj &&
+                                {stickerObj && (
                                     stickers.map((sticker) => (
                                         <EditableSticker
                                             key={sticker.id}
@@ -68,7 +69,8 @@ const ImageEditor = () => {
                                             onSelect={() => handleStickerSelect(sticker.id)}
                                             transformerRef={sticker.isSelected ? transformerRef : null}
                                         />
-                                    ))}
+                                    ))
+                                )}
 
 
                                 {textElement && (

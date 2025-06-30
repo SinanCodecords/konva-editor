@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -18,6 +16,7 @@ interface TextControlsProps {
     isTextSelected: boolean;
     onRemoveText: () => void;
     handleStyleChange: (key: string, value: any) => void;
+    makeCaps: () => void;
 }
 
 const TextControls = ({
@@ -26,6 +25,7 @@ const TextControls = ({
     textStyle,
     onRemoveText,
     handleStyleChange,
+    makeCaps
 }: TextControlsProps) => {
     const FONT_FAMILIES = [
         "Arial",
@@ -109,6 +109,11 @@ const TextControls = ({
                             />
                         </div>
                     </div>
+                </div>
+                <div>
+                    <Button onClick={makeCaps} variant={'outline'}>
+                        B
+                    </Button>
                 </div>
             </div>
         </div>

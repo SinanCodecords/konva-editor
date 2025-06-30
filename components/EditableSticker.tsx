@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { useEffect, useRef } from "react";
 import { Image as KonvaImage, Transformer } from "react-konva";
@@ -63,7 +61,6 @@ const EditableSticker = ({
                 onTransformEnd={handleTransformEnd}
                 onClick={onSelect}
                 onTap={onSelect}
-                // Add visual feedback for selection
                 shadowColor={stickerElement.isSelected ? "blue" : "transparent"}
                 shadowBlur={stickerElement.isSelected ? 10 : 0}
                 shadowOpacity={stickerElement.isSelected ? 0.5 : 0}
@@ -79,7 +76,16 @@ const EditableSticker = ({
                         }
                         return newBox;
                     }}
-                    enabledAnchors={["top-left", "top-right", "bottom-left", "bottom-right"]}
+                    enabledAnchors={[
+                        "top-left",
+                        "top-center",
+                        "top-right",
+                        "middle-left",
+                        "middle-right",
+                        "bottom-left",
+                        "bottom-center",
+                        "bottom-right",
+                    ]}
                     rotateEnabled={true}
                     borderStroke="#4A90E2"
                     borderStrokeWidth={2}
