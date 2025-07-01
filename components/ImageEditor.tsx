@@ -50,11 +50,18 @@ const ImageEditor = () => {
                 <div className="lg:col-span-3">
 
                     <div className="border rounded-lg overflow-hidden mb-4">
-                        <Stage width={1000} height={600} ref={stageRef} onClick={handleStageClick} onTap={handleStageClick}>
+                        <Stage width={1024} height={700} ref={stageRef} onClick={handleStageClick} onTap={handleStageClick}>
                             <Layer>
 
                                 {bgImageObj && (
-                                    <KonvaImage image={bgImageObj} x={0} y={0} width={1000} height={600} draggable={false} />
+                                    <KonvaImage
+                                        image={bgImageObj}
+                                        x={0}
+                                        y={0}
+                                        width={1024}
+                                        height={700}
+                                        draggable={false}
+                                    />
                                 )}
 
 
