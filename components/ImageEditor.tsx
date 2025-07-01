@@ -58,7 +58,7 @@ const ImageEditor = () => {
                 <div className="lg:col-span-3">
 
                     <div className="border rounded-lg overflow-hidden mb-4">
-                        <Stage width={1024} height={700} ref={stageRef} onClick={handleStageClick} onTap={handleStageClick}>
+                        <Stage width={1024} height={700} ref={stageRef} onClick={handleStageClick} onTap={handleStageClick} id="1">
                             <Layer>
 
                                 {bgImageObj && (

@@ -1,23 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type Konva from "konva";
 
 export const useStickerEditor = () => {
-    const [bgImageObj, setBgImageObj] = useState<HTMLImageElement | null>(null);
     const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
     const [stickers, setStickers] = useState<any[]>([]);
     const [availableStickers, setAvailableStickers] = useState([
         { name: "Sticker 1", src: "/sticker.svg" },
-
     ]);
-
-    useEffect(() => {
-        const bgImg = new window.Image();
-        bgImg.src = "/bg.jpg";
-        bgImg.crossOrigin = "anonymous";
-        bgImg.onload = () => {
-            setBgImageObj(bgImg);
-        };
-    }, []);
 
     const addSticker = (src: string) => {
         setStickers((prev) => [
@@ -76,7 +65,6 @@ export const useStickerEditor = () => {
     };
 
     return {
-        bgImageObj,
         stickers,
         setStickers,
         availableStickers,

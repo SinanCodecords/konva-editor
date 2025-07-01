@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Image as KonvaImage, Transformer } from "react-konva";
 import type Konva from "konva";
 
@@ -30,26 +30,26 @@ const EditableSticker = ({
     onSelect,
     transformerRef,
 }: EditableStickerProps) => {
-    const stickerRef = useRef<Konva.Image>(null);
-
     useEffect(() => {
-        if (transformerRef?.current && stickerRef.current && stickerElement.isSelected) {
-            transformerRef.current.nodes([stickerRef.current]);
-            transformerRef.current.getLayer()?.batchDraw();
+        if (transformerRef?.current && stickerElement.isSelected) {
+            const stage = transformerRef.current.getStage();
+            const node = stage?.findOne(`#${stickerElement.id}`);
+            if (node) {
+                transformerRef.current.nodes([node]);
+                transformerRef.current.getLayer()?.batchDraw();
+            }
         }
-    }, [stickerElement.isSelected, transformerRef]);
+    }, [stickerElement.isSelected, transformerRef, stickerElement.id]);
 
-    const handleTransformEnd = () => {
-        if (stickerRef.current) {
-            const node = stickerRef.current;
-            onTransform(node);
-        }
+    const handleTransformEnd = (e: Konva.KonvaEventObject<Event>) => {
+        const node = e.target as Konva.Image;
+        onTransform(node);
     };
 
     return (
         <>
             <KonvaImage
-                ref={stickerRef}
+                id={stickerElement.id}
                 image={stickerImage}
                 x={stickerElement.x}
                 y={stickerElement.y}
@@ -62,7 +62,6 @@ const EditableSticker = ({
                 onClick={onSelect}
                 onTap={onSelect}
             />
-
             {stickerElement.isSelected && transformerRef && (
                 <Transformer
                     ref={transformerRef}
