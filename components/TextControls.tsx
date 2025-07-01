@@ -3,7 +3,6 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Slider, } from "./ui/slider";
-import { X } from "lucide-react";
 
 interface TextControlsProps {
     textContent: string;
@@ -23,7 +22,6 @@ const TextControls = ({
     textContent,
     setTextContent,
     textStyle,
-    onRemoveText,
     handleStyleChange,
     makeCaps
 }: TextControlsProps) => {
@@ -60,9 +58,6 @@ const TextControls = ({
                             placeholder="Type and press Enter to add..."
                             className="mt-1"
                         />
-                        <Button onClick={onRemoveText} variant={"default"} disabled={!textContent.trim()} className="mt-1 ">
-                            <X />
-                        </Button>
                     </div>
                 </div>
 

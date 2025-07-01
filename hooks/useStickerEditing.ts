@@ -64,6 +64,10 @@ export const useStickerEditor = () => {
         );
     };
 
+    const handleStickerRemove = (id: string) => {
+        setStickers((prev) => prev.filter((sticker) => sticker.id !== id));
+    };
+
     return {
         stickers,
         setStickers,
@@ -75,5 +79,6 @@ export const useStickerEditor = () => {
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
+        handleStickerRemove,
     };
 };

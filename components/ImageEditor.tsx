@@ -10,7 +10,7 @@ import StickerControls from "./StickerControls";
 
 const ImageEditor = () => {
     const {
-        textElement,
+        selectedTextElement,
         setTextContent,
         textStyle,
         stageRef,
@@ -31,6 +31,7 @@ const ImageEditor = () => {
         handleStickerSelect,
         handleStyleChange,
         isTextSelected,
+        handleStickerRemove,
         makeCaps
     } = useImageEditor();
 
@@ -40,7 +41,7 @@ const ImageEditor = () => {
 
                 <div className="lg:col-span-1 space-y-6">
                     <TextControls
-                        textContent={textElement?.text || ""}
+                        textContent={selectedTextElement?.text || ""}
                         setTextContent={setTextContent}
                         textStyle={textStyle}
                         handleStyleChange={handleStyleChange}
@@ -58,7 +59,7 @@ const ImageEditor = () => {
                 <div className="lg:col-span-3">
 
                     <div className="border rounded-lg overflow-hidden mb-4">
-                        <Stage width={1024} height={700} ref={stageRef} onClick={handleStageClick} onTap={handleStageClick} id="1">
+                        <Stage width={1024} height={700} ref={stageRef} onClick={handleStageClick} onTap={handleStageClick}>
                             <Layer>
 
                                 {bgImageObj && (
@@ -82,14 +83,16 @@ const ImageEditor = () => {
                                         onTransform={(node) => handleStickerTransform(sticker.id, node)}
                                         onSelect={() => handleStickerSelect(sticker.id)}
                                         transformerRef={sticker.isSelected ? transformerRef : null}
+                                        onStickerRemove={handleStickerRemove}
                                     />
                                 ))}
 
 
-                                {textElement && (
+                                {selectedTextElement && (
                                     <EditableText
-                                        textElement={textElement}
+                                        textElement={selectedTextElement}
                                         onDragEnd={handleTextDragEnd}
+                                        onClose={removeText}
                                         onTransform={handleTextTransform}
                                         onSelect={handleTextSelect}
                                         transformerRef={isTextSelected ? transformerRef : null}

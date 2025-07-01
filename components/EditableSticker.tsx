@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect } from "react";
-import { Image as KonvaImage, Transformer } from "react-konva";
+import { Image as KonvaImage, Transformer, Group, Rect, Text as KonvaText } from "react-konva";
 import type Konva from "konva";
 
 interface StickerElement {
@@ -20,6 +20,7 @@ interface EditableStickerProps {
     onTransform: (node: Konva.Image) => void;
     onSelect: () => void;
     transformerRef: React.RefObject<Konva.Transformer | null> | null;
+    onStickerRemove: (id: string) => void;
 }
 
 const EditableSticker = ({
@@ -29,6 +30,7 @@ const EditableSticker = ({
     onTransform,
     onSelect,
     transformerRef,
+    onStickerRemove,
 }: EditableStickerProps) => {
     useEffect(() => {
         if (transformerRef?.current && stickerElement.isSelected) {
@@ -46,42 +48,47 @@ const EditableSticker = ({
         onTransform(node);
     };
 
+    // X button size and offset
+    const xSize = 24;
+    const xOffset = 8;
+    const x = stickerElement.x + (stickerImage?.width || 80) * stickerElement.scaleX + xOffset;
+    const y = stickerElement.y - xOffset;
+
     return (
         <>
-            <KonvaImage
-                id={stickerElement.id}
-                image={stickerImage}
-                x={stickerElement.x}
-                y={stickerElement.y}
-                rotation={stickerElement.rotation}
-                scaleX={stickerElement.scaleX}
-                scaleY={stickerElement.scaleY}
-                draggable={true}
-                onDragEnd={onDragEnd}
-                onTransformEnd={handleTransformEnd}
-                onClick={onSelect}
-                onTap={onSelect}
-            />
+            <Group>
+                <KonvaImage
+                    id={stickerElement.id}
+                    image={stickerImage}
+                    x={stickerElement.x}
+                    y={stickerElement.y}
+                    rotation={stickerElement.rotation}
+                    scaleX={stickerElement.scaleX}
+                    scaleY={stickerElement.scaleY}
+                    draggable={true}
+                    onDragEnd={onDragEnd}
+                    onTransformEnd={handleTransformEnd}
+                    onClick={onSelect}
+                    onTap={onSelect}
+                />
+                {stickerElement.isSelected && (
+                    <Group x={x} y={y} onClick={() => onStickerRemove(stickerElement.id)} onTap={() => onStickerRemove(stickerElement.id)}>
+                        <Rect width={xSize} height={xSize} stroke="#f00" strokeWidth={2} cornerRadius={6} shadowBlur={2} fill="#fff" />
+                        <KonvaText
+                            text="×"
+                            fontSize={20}
+                            fill="#f00"
+                            width={xSize}
+                            height={xSize}
+                            align="center"
+                            verticalAlign="middle"
+                        />
+                    </Group>
+                )}
+            </Group>
             {stickerElement.isSelected && transformerRef && (
                 <Transformer
                     ref={transformerRef}
-                    boundBoxFunc={(oldBox, newBox) => {
-                        // Prevent sticker from becoming too small
-                        if (newBox.width < 20 || newBox.height < 20) {
-                            return oldBox;
-                        }
-                        return newBox;
-                    }}
-                    enabledAnchors={[
-                        "top-left",
-                        "top-center",
-                        "top-right",
-                        "middle-left",
-                        "middle-right",
-                        "bottom-left",
-                        "bottom-center",
-                        "bottom-right",
-                    ]}
                     rotateEnabled={true}
                     borderStroke="#4A90E2"
                     borderStrokeWidth={2}

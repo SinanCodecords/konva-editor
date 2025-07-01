@@ -18,7 +18,7 @@ export const useImageEditor = () => {
     }, []);
 
     const {
-        textElement,
+        selectedTextElement,
         setTextContent,
         isTextSelected,
         setIsTextSelected,
@@ -30,7 +30,7 @@ export const useImageEditor = () => {
         removeText,
         handleStyleChange,
         makeCaps,
-        setTextElement
+        setSelectedTextElement
     } = useTextEditor();
 
     const {
@@ -43,19 +43,16 @@ export const useImageEditor = () => {
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
-        setSelectedStickerId
+        setSelectedStickerId,
+        handleStickerRemove
     } = useStickerEditor();
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-        console.log("HERE 🟨");
-        console.log("STAGE", e.target.getStage());
-        console.log("TARGET", e.target);
-
         if ((e.target._id === 3) && (e.target.getStage()?._id === 1)) {
             console.log("🔴");
 
             setIsTextSelected(false);
             setSelectedStickerId(null);
-            setTextElement((prev) => prev ? { ...prev, isSelected: false } : prev);
+            setSelectedTextElement((prev) => prev ? { ...prev, isSelected: false } : prev);
             setStickers((prev) =>
                 prev.map((sticker) => ({
                     ...sticker,
@@ -88,7 +85,7 @@ export const useImageEditor = () => {
     return {
         stageRef,
         transformerRef,
-        textElement,
+        selectedTextElement,
         setTextContent,
         isTextSelected,
         textStyle,
@@ -110,6 +107,7 @@ export const useImageEditor = () => {
         handleStickerTransform,
         handleStickerSelect,
         handleStyleChange,
-        makeCaps
+        makeCaps,
+        handleStickerRemove
     };
 };
