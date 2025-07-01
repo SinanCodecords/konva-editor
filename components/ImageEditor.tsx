@@ -6,6 +6,7 @@ import TextControls from "./TextControls";
 import EditableText from "./EditableText";
 import { useImageEditor } from "../hooks/useImageEditor";
 import EditableSticker from "./EditableSticker";
+import StickerControls from "./StickerControls";
 
 const ImageEditor = () => {
     const {
@@ -21,8 +22,10 @@ const ImageEditor = () => {
         removeText,
         downloadImage,
         bgImageObj,
-        stickerObj,
         stickers,
+        availableStickers,
+        addSticker,
+        addAvailableSticker,
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
@@ -45,6 +48,11 @@ const ImageEditor = () => {
                         onRemoveText={removeText}
                         makeCaps={makeCaps}
                     />
+                    <StickerControls
+                        availableStickers={availableStickers}
+                        addSticker={addSticker}
+                        addAvailableSticker={addAvailableSticker}
+                    />
                 </div>
 
                 <div className="lg:col-span-3">
@@ -65,19 +73,17 @@ const ImageEditor = () => {
                                 )}
 
 
-                                {stickerObj && (
-                                    stickers.map((sticker) => (
-                                        <EditableSticker
-                                            key={sticker.id}
-                                            stickerElement={sticker}
-                                            stickerImage={stickerObj}
-                                            onDragEnd={(e) => handleStickerDragEnd(sticker.id, e)}
-                                            onTransform={(node) => handleStickerTransform(sticker.id, node)}
-                                            onSelect={() => handleStickerSelect(sticker.id)}
-                                            transformerRef={sticker.isSelected ? transformerRef : null}
-                                        />
-                                    ))
-                                )}
+                                {stickers.map((sticker) => (
+                                    <EditableSticker
+                                        key={sticker.id}
+                                        stickerElement={sticker}
+                                        stickerImage={(() => { const img = new window.Image(); img.src = sticker.src; img.crossOrigin = "anonymous"; return img; })()}
+                                        onDragEnd={(e) => handleStickerDragEnd(sticker.id, e)}
+                                        onTransform={(node) => handleStickerTransform(sticker.id, node)}
+                                        onSelect={() => handleStickerSelect(sticker.id)}
+                                        transformerRef={sticker.isSelected ? transformerRef : null}
+                                    />
+                                ))}
 
 
                                 {textElement && (

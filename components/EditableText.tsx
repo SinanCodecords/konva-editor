@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Text, Transformer } from "react-konva";
 import type Konva from "konva";
-import type { TextElement } from "../hooks/useImageEditor";
+import type { TextElement } from "../hooks/useTextEditing";
 
 interface EditableTextProps {
     textElement: TextElement;

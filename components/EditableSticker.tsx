@@ -61,9 +61,6 @@ const EditableSticker = ({
                 onTransformEnd={handleTransformEnd}
                 onClick={onSelect}
                 onTap={onSelect}
-                shadowColor={stickerElement.isSelected ? "blue" : "transparent"}
-                shadowBlur={stickerElement.isSelected ? 10 : 0}
-                shadowOpacity={stickerElement.isSelected ? 0.5 : 0}
             />
 
             {stickerElement.isSelected && transformerRef && (

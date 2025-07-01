@@ -3,19 +3,11 @@ import type Konva from "konva";
 
 export const useStickerEditor = () => {
     const [bgImageObj, setBgImageObj] = useState<HTMLImageElement | null>(null);
-    const [stickerObj, setStickerObj] = useState<HTMLImageElement | null>(null);
     const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
+    const [stickers, setStickers] = useState<any[]>([]);
+    const [availableStickers, setAvailableStickers] = useState([
+        { name: "Sticker 1", src: "/sticker.svg" },
 
-    const [stickers, setStickers] = useState([
-        {
-            id: "main-sticker",
-            x: 100,
-            y: 100,
-            rotation: 0,
-            scaleX: 1,
-            scaleY: 1,
-            isSelected: false,
-        },
     ]);
 
     useEffect(() => {
@@ -25,14 +17,30 @@ export const useStickerEditor = () => {
         bgImg.onload = () => {
             setBgImageObj(bgImg);
         };
-
-        const stkImg = new window.Image();
-        stkImg.src = "/sticker.svg";
-        stkImg.crossOrigin = "anonymous";
-        stkImg.onload = () => {
-            setStickerObj(stkImg);
-        };
     }, []);
+
+    const addSticker = (src: string) => {
+        setStickers((prev) => [
+            ...prev,
+            {
+                id: `sticker-${Date.now()}`,
+                x: 100,
+                y: 100,
+                rotation: 0,
+                scaleX: 1,
+                scaleY: 1,
+                isSelected: false,
+                src,
+            },
+        ]);
+    };
+
+    const addAvailableSticker = (src: string) => {
+        setAvailableStickers((prev) => [
+            ...prev,
+            { name: `Sticker ${prev.length + 1}`, src },
+        ]);
+    };
 
     const handleStickerDragEnd = (id: string, e: Konva.KonvaEventObject<DragEvent>) => {
         setStickers((prev) =>
@@ -69,9 +77,11 @@ export const useStickerEditor = () => {
 
     return {
         bgImageObj,
-        stickerObj,
         stickers,
         setStickers,
+        availableStickers,
+        addSticker,
+        addAvailableSticker,
         selectedStickerId,
         setSelectedStickerId,
         handleStickerDragEnd,

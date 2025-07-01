@@ -62,14 +62,11 @@ export const useTextEditor = () => {
                     x: node.x(),
                     y: node.y(),
                     rotation: node.rotation(),
-                    fontSize: Math.max(10, prev.fontSize * node.scaleX()),
+                    scaleX: node.scaleX(),
+                    scaleY: node.scaleY(),
                 }
                 : prev
         );
-        if (node) {
-            node.scaleX(1);
-            node.scaleY(1);
-        }
     };
 
     const handleTextSelect = () => {

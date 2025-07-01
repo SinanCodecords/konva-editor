@@ -25,14 +25,16 @@ export const useImageEditor = () => {
 
     const {
         bgImageObj,
-        stickerObj,
         stickers,
+        setStickers,
+        availableStickers,
+        addSticker,
+        addAvailableSticker,
         selectedStickerId,
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
-        setSelectedStickerId,
-        setStickers
+        setSelectedStickerId
     } = useStickerEditor();
 
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
@@ -74,8 +76,11 @@ export const useImageEditor = () => {
         removeText,
         downloadImage,
         bgImageObj,
-        stickerObj,
         stickers,
+        setStickers,
+        availableStickers,
+        addSticker,
+        addAvailableSticker,
         selectedStickerId,
         handleStickerDragEnd,
         handleStickerTransform,
