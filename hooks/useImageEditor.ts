@@ -23,14 +23,14 @@ export const useImageEditor = () => {
         isTextSelected,
         setIsTextSelected,
         textStyle,
-        setTextStyle,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
         removeText,
         handleStyleChange,
         makeCaps,
-        setSelectedTextElement
+        setSelectedTextElement,
+        textElements
     } = useTextEditor();
 
     const {
@@ -48,7 +48,6 @@ export const useImageEditor = () => {
     } = useStickerEditor();
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
         if ((e.target._id === 3) && (e.target.getStage()?._id === 1)) {
-            console.log("🔴");
 
             setIsTextSelected(false);
             setSelectedStickerId(null);
@@ -60,7 +59,6 @@ export const useImageEditor = () => {
                 }))
             );
             if (transformerRef.current) {
-                console.log("HERE ❌");
                 transformerRef.current.nodes([]);
                 transformerRef.current.getLayer()?.batchDraw();
             }
@@ -89,7 +87,6 @@ export const useImageEditor = () => {
         setTextContent,
         isTextSelected,
         textStyle,
-        setTextStyle,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
@@ -98,7 +95,6 @@ export const useImageEditor = () => {
         downloadImage,
         bgImageObj,
         stickers,
-        setStickers,
         availableStickers,
         addSticker,
         addAvailableSticker,
@@ -108,6 +104,7 @@ export const useImageEditor = () => {
         handleStickerSelect,
         handleStyleChange,
         makeCaps,
-        handleStickerRemove
+        handleStickerRemove,
+        textElements
     };
 };

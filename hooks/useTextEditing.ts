@@ -25,7 +25,6 @@ const DEFAULT_TEXT = {
 };
 
 export const useTextEditor = () => {
-
     const [selectedTextElement, setSelectedTextElement] = useState<TextElement | null>(null);
     const [isTextSelected, setIsTextSelected] = useState(false);
     const [textElements, setTextElements] = useState([]);
@@ -93,13 +92,13 @@ export const useTextEditor = () => {
         isTextSelected,
         setIsTextSelected,
         textStyle,
-        setTextStyle,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
         removeText,
         handleStyleChange,
         makeCaps,
-        setSelectedTextElement
+        setSelectedTextElement,
+        textElements
     };
 };

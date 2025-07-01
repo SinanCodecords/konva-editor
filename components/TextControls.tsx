@@ -18,6 +18,23 @@ interface TextControlsProps {
     makeCaps: () => void;
 }
 
+const FONT_FAMILIES = [
+    "Arial",
+    "Helvetica",
+    "Times New Roman",
+    "Courier New",
+    "Verdana",
+    "Georgia",
+    "Palatino",
+    "Garamond",
+    "Bookman",
+    "Comic Sans MS",
+    "Trebuchet MS",
+    "Arial Black",
+    "Impact",
+];
+
+
 const TextControls = ({
     textContent,
     setTextContent,
@@ -25,22 +42,6 @@ const TextControls = ({
     handleStyleChange,
     makeCaps
 }: TextControlsProps) => {
-    const FONT_FAMILIES = [
-        "Arial",
-        "Helvetica",
-        "Times New Roman",
-        "Courier New",
-        "Verdana",
-        "Georgia",
-        "Palatino",
-        "Garamond",
-        "Bookman",
-        "Comic Sans MS",
-        "Trebuchet MS",
-        "Arial Black",
-        "Impact",
-    ];
-
     return (
         <div className="p-4 rounded-lg border bg-gray-800">
             <h3 className="text-lg font-semibold mb-4">Text Controls</h3>
