@@ -23,7 +23,7 @@ export type ElementStyles = {
 export interface TextControlsProps {
     textContent: string;
     setTextContent: (text: string) => void;
-    handleControlFocusOut: () => void;
+    handleControlFocusOut: (e: React.FocusEvent<HTMLDivElement>) => void; 
     textStyle: ElementStyles;
     handleStyleChange: (key: string, value: any) => void;
     makeCaps: () => void;

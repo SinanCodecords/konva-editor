@@ -9,6 +9,8 @@ export const useStickerEditor = () => {
         setAvailableStickers,
         selectedStickerId,
         setSelectedStickerId,
+        setTextElements,
+        setSelectedElementId
     } = useEditorStore();
 
     const addSticker = (src: string) => {
@@ -59,12 +61,9 @@ export const useStickerEditor = () => {
 
     const handleStickerSelect = (id: string) => {
         setSelectedStickerId(id);
-        setStickers((prev) =>
-            prev.map((sticker) => ({
-                ...sticker,
-                isSelected: sticker.id === id,
-            }))
-        );
+        setStickers((prev) => prev.map((sticker) => ({ ...sticker, isSelected: sticker.id === id })));
+        setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
+        setSelectedElementId(null);
     };
 
     const handleStickerRemove = (id: string) => {

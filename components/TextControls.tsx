@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { TextControlsProps } from "@/types";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -14,7 +15,7 @@ const FONT_FAMILIES = [
     "Impact",
 ];
 
-const TextControls = ({
+const TextControls = forwardRef<HTMLDivElement, TextControlsProps>(({
     textContent,
     setTextContent,
     handleControlFocusOut,
@@ -23,11 +24,10 @@ const TextControls = ({
     makeCaps,
     changeTextStyle,
     changeTextAlign
-}: TextControlsProps) => {
+}, ref) => {
     const isAllCaps = textContent === textContent.toUpperCase() && textContent.length > 0;
-
     return (
-        <div className="p-4 rounded-lg border bg-gray-800" onBlur={handleControlFocusOut}>
+        <div className="p-4 rounded-lg border bg-gray-800" ref={ref} onBlur={handleControlFocusOut}>
             <h3 className="text-lg font-semibold mb-4">Text Controls</h3>
 
             <div className="space-y-4">
@@ -52,8 +52,8 @@ const TextControls = ({
                             <Button
                                 key={font}
                                 onClick={() => handleStyleChange("fontFamily", font)}
-                                variant={textStyle.fontFamily === font ? "outline" : "ghost"}
-                                className="justify-start"
+                                variant={textContent && textStyle.fontFamily === font ? "outline" : "ghost"}
+                                className="justify-start border" 
                                 style={{ fontFamily: font }}
                             >
                                 {font}
@@ -68,6 +68,7 @@ const TextControls = ({
                         value={[textStyle.fontSize]}
                         onValueChange={([value]) => handleStyleChange("fontSize", value)}
                         min={12}
+                        disabled={!!textContent === false}
                         max={100}
                         step={1}
                         className="mt-2"
@@ -80,6 +81,7 @@ const TextControls = ({
                         <div className="flex items-center gap-2">
                             <Input
                                 type="color"
+                                disabled={!!textContent === false}
                                 value={textStyle.fill}
                                 onChange={(e) => handleStyleChange("fill", e.target.value)}
                                 className="w-16 h-8 p-0 border-0"
@@ -133,6 +135,6 @@ const TextControls = ({
             </div>
         </div>
     );
-};
+});
 
 export default TextControls;

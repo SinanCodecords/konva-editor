@@ -38,7 +38,8 @@ const ImageEditor = () => {
         textStyle,
         handleControlFocusOut,
         changeTextStyle,
-        changeTextAlign
+        changeTextAlign,
+        controlsRef
     } = useImageEditor();
 
     // for keyborad egvents
@@ -55,6 +56,7 @@ const ImageEditor = () => {
                         textStyle={textStyle}
                         handleStyleChange={handleStyleChange}
                         makeCaps={makeCaps}
+                        ref={controlsRef}
                         changeTextStyle={changeTextStyle}
                         changeTextAlign={changeTextAlign}
                     />

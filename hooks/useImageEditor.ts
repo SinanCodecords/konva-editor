@@ -33,7 +33,8 @@ export const useImageEditor = () => {
         getCurrentTextStyle,
         handleControlFocusOut,
         changeTextStyle,
-        changeTextAlign
+        changeTextAlign,
+        controlsRef
     } = useTextEditor();
 
     const {
@@ -59,7 +60,6 @@ export const useImageEditor = () => {
                     isSelected: false,
                 }))
             );
-
             if (transformerRef.current) {
                 transformerRef.current.nodes([]);
                 transformerRef.current.getLayer()?.batchDraw();
@@ -109,6 +109,7 @@ export const useImageEditor = () => {
         handleStickerSelect,
         handleStickerRemove,
         changeTextStyle,
-        changeTextAlign
+        changeTextAlign,
+        controlsRef
     };
 };

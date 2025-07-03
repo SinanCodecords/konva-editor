@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import type Konva from 'konva';
 import { ElementStyles, TextAlign, TextElement, TextStyle } from '@/types';
 import { useEditorStore } from '@/lib/store';
@@ -24,6 +25,8 @@ export const useTextEditor = () => {
         previewTextElement,
         setPreviewTextElement,
     } = useEditorStore();
+
+    const controlsRef = useRef<HTMLDivElement>(null); 
 
     const selectedTextElement = textElements.find((el) => el.id === selectedElementId) || null;
 
@@ -61,7 +64,7 @@ export const useTextEditor = () => {
                 updateTextElement(selectedElementId, { align });
             }
         }
-    }
+    };
 
     const updateTextElement = (id: string, updates: Partial<TextElement>) => {
         setTextElements((prev) =>
@@ -90,7 +93,12 @@ export const useTextEditor = () => {
         }
     };
 
-    const handleControlFocusOut = () => {
+    const handleControlFocusOut = (e: React.FocusEvent<HTMLDivElement>) => {
+        const relatedTarget = e.relatedTarget as HTMLElement;
+        if (controlsRef.current && relatedTarget && controlsRef.current.contains(relatedTarget)) {
+            return;
+        }
+
         if (currentTextInput.trim() && !selectedElementId) {
             addTextElement(currentTextInput);
         }
@@ -100,8 +108,6 @@ export const useTextEditor = () => {
     };
 
     const handleStyleChange = (key: string, value: any) => {
-        console.log("KEY", key, "VALUE", value);
-
         if (selectedElementId) {
             updateTextElement(selectedElementId, { [key]: value });
         }
@@ -201,6 +207,7 @@ export const useTextEditor = () => {
         getCurrentTextStyle,
         handleControlFocusOut,
         changeTextStyle,
-        changeTextAlign
+        changeTextAlign,
+        controlsRef 
     };
 };
