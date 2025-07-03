@@ -1,5 +1,5 @@
 import type Konva from 'konva';
-import { TextElement, TextStyle } from '@/types';
+import { ElementStyles, TextAlign, TextElement, TextStyle } from '@/types';
 import { useEditorStore } from '@/lib/store';
 
 const DEFAULT_TEXT_STYLE = {
@@ -10,6 +10,7 @@ const DEFAULT_TEXT_STYLE = {
     scaleX: 1,
     scaleY: 1,
     fontStyle: 'normal' as TextStyle,
+    align: "center" as TextAlign
 };
 
 export const useTextEditor = () => {
@@ -52,6 +53,15 @@ export const useTextEditor = () => {
             }
         }
     };
+
+    const changeTextAlign = (align: TextAlign) => {
+        if (selectedElementId) {
+            const element = textElements.find((el) => el.id === selectedElementId);
+            if (element) {
+                updateTextElement(selectedElementId, { align });
+            }
+        }
+    }
 
     const updateTextElement = (id: string, updates: Partial<TextElement>) => {
         setTextElements((prev) =>
@@ -152,13 +162,14 @@ export const useTextEditor = () => {
         setCurrentTextInput('');
     };
 
-    const getCurrentTextStyle = () => {
+    const getCurrentTextStyle = (): ElementStyles => {
         if (selectedTextElement) {
             return {
                 fontSize: selectedTextElement.fontSize,
                 fontFamily: selectedTextElement.fontFamily,
                 fill: selectedTextElement.fill,
-                fontStyle: selectedTextElement.fontStyle || DEFAULT_TEXT_STYLE.fontStyle,
+                fontStyle: selectedTextElement.fontStyle,
+                align: selectedTextElement.align
             };
         }
 
@@ -167,6 +178,7 @@ export const useTextEditor = () => {
             fontFamily: DEFAULT_TEXT_STYLE.fontFamily,
             fill: DEFAULT_TEXT_STYLE.fill,
             fontStyle: DEFAULT_TEXT_STYLE.fontStyle,
+            align: DEFAULT_TEXT_STYLE.align
         };
     };
 
@@ -186,6 +198,7 @@ export const useTextEditor = () => {
         deselectAll,
         getCurrentTextStyle,
         handleTextInputBlur,
-        changeTextStyle
+        changeTextStyle,
+        changeTextAlign
     };
 };

@@ -37,7 +37,8 @@ const ImageEditor = () => {
         makeCaps,
         textStyle,
         handleTextInputBlur,
-        changeTextStyle
+        changeTextStyle,
+        changeTextAlign
     } = useImageEditor();
 
     useUndoRedoKeyboardShortcuts()
@@ -54,6 +55,7 @@ const ImageEditor = () => {
                         handleStyleChange={handleStyleChange}
                         makeCaps={makeCaps}
                         changeTextStyle={changeTextStyle}
+                        changeTextAlign={changeTextAlign}
                     />
                     <StickerControls
                         availableStickers={availableStickers}

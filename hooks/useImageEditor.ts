@@ -33,6 +33,7 @@ export const useImageEditor = () => {
         getCurrentTextStyle,
         handleTextInputBlur,
         changeTextStyle,
+        changeTextAlign
     } = useTextEditor();
 
     const {
@@ -107,6 +108,7 @@ export const useImageEditor = () => {
         handleStickerTransform,
         handleStickerSelect,
         handleStickerRemove,
-        changeTextStyle
+        changeTextStyle,
+        changeTextAlign
     };
 };

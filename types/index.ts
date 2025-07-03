@@ -9,21 +9,26 @@ export interface EditableTextProps {
     onClose: () => void;
 }
 
-export type TextStyle = "bold" | "normal" | "italic"
+export type TextStyle = "bold" | "normal" | "italic";
+export type TextAlign = "left" | "center" | "right";
+
+export type ElementStyles = {
+    fontSize: number;
+    fontFamily: string;
+    fill: string;
+    fontStyle: TextStyle;
+    align: TextAlign;
+}
 
 export interface TextControlsProps {
     textContent: string;
     setTextContent: (text: string) => void;
     handleTextInputBlur: () => void;
-    textStyle: {
-        fontSize: number;
-        fontFamily: string;
-        fill: string;
-        fontStyle?: string;
-    };
+    textStyle: ElementStyles;
     handleStyleChange: (key: string, value: any) => void;
     makeCaps: () => void;
     changeTextStyle: (text: TextStyle) => void;
+    changeTextAlign: (align: TextAlign) => void;
 }
 
 export interface TextElement {
@@ -39,6 +44,7 @@ export interface TextElement {
     scaleY: number;
     isSelected: boolean;
     fontStyle: TextStyle;
+    align: TextAlign;
 }
 
 export interface StickerControlsProps {

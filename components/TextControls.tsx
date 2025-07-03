@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Slider } from "./ui/slider";
+import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon } from "lucide-react";
 
 const FONT_FAMILIES = [
     "Arial",
@@ -28,7 +29,8 @@ const TextControls = ({
     textStyle,
     handleStyleChange,
     makeCaps,
-    changeTextStyle
+    changeTextStyle,
+    changeTextAlign
 }: TextControlsProps) => {
     const isAllCaps = textContent === textContent.toUpperCase() && textContent.length > 0;
 
@@ -118,6 +120,25 @@ const TextControls = ({
                         className={`italic`}
                     >
                         I
+                    </Button>
+                    <span className="border border-white" />
+                    <Button
+                        onClick={() => changeTextAlign("left")}
+                        variant={textContent && textStyle.align === "left" ? "default" : "ghost"}
+                    >
+                        <AlignLeftIcon />
+                    </Button>
+                    <Button
+                        onClick={() => changeTextAlign("center")}
+                        variant={textContent && textStyle.align === "center" ? "default" : "ghost"}
+                    >
+                        <AlignCenterIcon />
+                    </Button>
+                    <Button
+                        onClick={() => changeTextAlign("right")}
+                        variant={textContent && textStyle.align === "right" ? "default" : "ghost"}
+                    >
+                        <AlignRightIcon />
                     </Button>
                 </div>
             </div>
