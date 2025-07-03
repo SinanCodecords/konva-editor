@@ -24,7 +24,6 @@ export interface TextControlsProps {
     handleStyleChange: (key: string, value: any) => void;
     makeCaps: () => void;
     changeTextStyle: (text: TextStyle) => void;
-    currentTextStyle: TextStyle;
 }
 
 export interface TextElement {

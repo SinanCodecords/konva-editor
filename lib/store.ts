@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { temporal } from 'zundo';
-import { TextElement, TextStyle } from '@/types';
+import { TextElement } from '@/types';
 
 interface StoreState {
     stickers: any[];
@@ -9,7 +9,6 @@ interface StoreState {
     selectedStickerId: string | null;
     textElements: TextElement[];
     selectedElementId: string | null;
-    currentTextStyle: TextStyle
     currentTextInput: string;
     previewTextElement: TextElement | null;
     bgImageObj: HTMLImageElement | null;
@@ -17,7 +16,6 @@ interface StoreState {
     setAvailableStickers: (
         stickers: { name: string; src: string; }[] | ((prev: { name: string; src: string; }[]) => { name: string; src: string; }[])
     ) => void;
-    setCurrentTextStyle: (style: TextStyle) => void;
     setSelectedStickerId: (id: string | null) => void;
     setTextElements: (elements: TextElement[] | ((prev: TextElement[]) => TextElement[])) => void;
     setSelectedElementId: (id: string | null) => void;
@@ -33,7 +31,6 @@ export const useEditorStore = create<StoreState>()(
                 stickers: [],
                 availableStickers: [{ name: 'Sticker 1', src: '/sticker.svg' }],
                 selectedStickerId: null,
-                currentTextStyle: "normal",
                 textElements: [],
                 selectedElementId: null,
                 currentTextInput: '',
@@ -53,7 +50,6 @@ export const useEditorStore = create<StoreState>()(
                 setCurrentTextInput: (text) => set({ currentTextInput: text }),
                 setPreviewTextElement: (element) => set({ previewTextElement: element }),
                 setBgImageObj: (image) => set({ bgImageObj: image }),
-                setCurrentTextStyle: (style) => set({ currentTextStyle: style })
             }),
             {
                 // Configure which actions should be tracked for undo/redo

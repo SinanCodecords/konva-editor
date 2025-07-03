@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useUndoRedoStore } from '@/lib/store';
 
-export const useUnodRedoKeyboardShortcuts = () => {
+const useUndoRedo = () => {
     const { undo, redo, } = useUndoRedoStore();
 
     useEffect(() => {
@@ -24,3 +24,5 @@ export const useUnodRedoKeyboardShortcuts = () => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [undo, redo]);
 };
+
+export default useUndoRedo;

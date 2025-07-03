@@ -8,7 +8,7 @@ import { useImageEditor } from "../hooks/useImageEditor";
 import EditableSticker from "./EditableSticker";
 import StickerControls from "./StickerControls";
 import UndoRedoControls from "./UndoRedoControls";
-import { useUnodRedoKeyboardShortcuts } from "@/hooks/useUnodRedoKeyboardShortcuts";
+import useUndoRedoKeyboardShortcuts from "@/hooks/keyboardShortcuts/useUndo";
 
 const ImageEditor = () => {
     const {
@@ -37,11 +37,10 @@ const ImageEditor = () => {
         makeCaps,
         textStyle,
         handleTextInputBlur,
-        changeTextStyle,
-        currentTextStyle
+        changeTextStyle
     } = useImageEditor();
 
-    useUnodRedoKeyboardShortcuts()
+    useUndoRedoKeyboardShortcuts()
 
     return (
         <div className="p-4 max-w-[1400px] mx-auto">
@@ -49,7 +48,6 @@ const ImageEditor = () => {
                 <div className="lg:col-span-1 space-y-6">
                     <TextControls
                         textContent={currentTextInput}
-                        currentTextStyle={currentTextStyle}
                         setTextContent={setTextContent}
                         handleTextInputBlur={handleTextInputBlur}
                         textStyle={textStyle}

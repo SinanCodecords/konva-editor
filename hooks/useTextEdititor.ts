@@ -22,7 +22,6 @@ export const useTextEditor = () => {
         setCurrentTextInput,
         previewTextElement,
         setPreviewTextElement,
-        setCurrentTextStyle
     } = useEditorStore();
 
     const selectedTextElement = textElements.find((el) => el.id === selectedElementId) || null;
@@ -46,7 +45,6 @@ export const useTextEditor = () => {
     };
 
     const changeTextStyle = (style: TextStyle) => {
-        setCurrentTextStyle(style);
         if (selectedElementId) {
             const element = textElements.find((el) => el.id === selectedElementId);
             if (element) {
@@ -119,7 +117,6 @@ export const useTextEditor = () => {
         setSelectedElementId(id);
         updateTextElement(id, { isSelected: true });
         const element = textElements.find((el) => el.id === id);
-        setCurrentTextStyle(element?.fontStyle!)
         if (element) {
             setCurrentTextInput(element.text);
         }

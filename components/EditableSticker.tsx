@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Image as KonvaImage, Transformer, Group, Rect, Text as KonvaText } from "react-konva";
 import type Konva from "konva";
 import { EditableStickerProps } from "@/types";
-import useDeleteKeyboardShortcuts from "@/hooks/useDeleteKeyboardShortcuts";
+import useDelete from "@/hooks/keyboardShortcuts/useDelete";
 
 
 const EditableSticker = ({
@@ -15,6 +15,8 @@ const EditableSticker = ({
     transformerRef,
     onStickerRemove,
 }: EditableStickerProps) => {
+    useDelete();
+
     useEffect(() => {
         if (transformerRef?.current && stickerElement.isSelected) {
             const stage = transformerRef.current.getStage();
@@ -25,7 +27,6 @@ const EditableSticker = ({
             }
         }
     }, [stickerElement.isSelected, transformerRef, stickerElement.id]);
-    useDeleteKeyboardShortcuts()
 
     const handleTransformEnd = (e: Konva.KonvaEventObject<Event>) => {
         const node = e.target as Konva.Image;

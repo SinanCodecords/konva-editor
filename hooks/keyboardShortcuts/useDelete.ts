@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { useTextEditor } from './useTextEditing';
-import { useStickerEditor } from './useStickerEditing';
+import { useTextEditor } from '../useTextEdititor';
+import { useStickerEditor } from '../useStickerEditor';
 
-const useDeleteKeyboardShortcuts = () => {
+const useDelete = () => {
     const { selectedElementId, removeText } = useTextEditor();
     const { selectedStickerId, handleStickerRemove } = useStickerEditor();
 
@@ -69,4 +69,4 @@ const useDeleteKeyboardShortcuts = () => {
     }, [selectedElementId, selectedStickerId, removeText, handleStickerRemove]);
 };
 
-export default useDeleteKeyboardShortcuts;
+export default useDelete;

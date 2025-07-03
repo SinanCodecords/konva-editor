@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
 import type Konva from 'konva';
-import { useTextEditor } from './useTextEditing';
-import { useStickerEditor } from './useStickerEditing';
+import { useTextEditor } from './useTextEdititor';
+import { useStickerEditor } from './useStickerEditor';
 import { useEditorStore } from '@/lib/store';
 
 export const useImageEditor = () => {
     const stageRef = useRef<Konva.Stage>(null);
     const transformerRef = useRef<Konva.Transformer>(null);
-    const { bgImageObj, setBgImageObj, currentTextStyle } = useEditorStore();
+    const { bgImageObj, setBgImageObj } = useEditorStore();
 
     useEffect(() => {
         const bgImg = new window.Image();
@@ -87,7 +87,6 @@ export const useImageEditor = () => {
         textElements,
         previewTextElement,
         currentTextInput,
-        currentTextStyle,
         setTextContent,
         handleTextDragEnd: (id: string, e: Konva.KonvaEventObject<DragEvent>) => handleTextDragEnd(id, e),
         handleTextTransform: (id: string, node: Konva.Text) => handleTextTransform(id, node),

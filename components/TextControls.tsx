@@ -28,8 +28,7 @@ const TextControls = ({
     textStyle,
     handleStyleChange,
     makeCaps,
-    changeTextStyle,
-    currentTextStyle
+    changeTextStyle
 }: TextControlsProps) => {
     const isAllCaps = textContent === textContent.toUpperCase() && textContent.length > 0;
 
@@ -108,14 +107,14 @@ const TextControls = ({
                     </Button>
                     <Button
                         onClick={() => changeTextStyle("bold")}
-                        variant={currentTextStyle === "bold" ? "default" : "ghost"}
+                        variant={textStyle.fontStyle === "bold" ? "default" : "ghost"}
                         className={`font-extrabold`}
                     >
                         B
                     </Button>
                     <Button
                         onClick={() => changeTextStyle("italic")}
-                        variant={currentTextStyle === "italic" ? "default" : "ghost"}
+                        variant={textStyle.fontStyle === "italic" ? "default" : "ghost"}
                         className={`italic`}
                     >
                         I
