@@ -1,21 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import type Konva from "konva";
-import { useTextEditor } from "./useTextEditing";
-import { useStickerEditor } from "./useStickerEditing";
+import { useEffect, useRef } from 'react';
+import type Konva from 'konva';
+import { useTextEditor } from './useTextEditing';
+import { useStickerEditor } from './useStickerEditing';
+import { useEditorStore } from '@/lib/store';
 
 export const useImageEditor = () => {
     const stageRef = useRef<Konva.Stage>(null);
     const transformerRef = useRef<Konva.Transformer>(null);
-    const [bgImageObj, setBgImageObj] = useState<HTMLImageElement | null>(null);
+    const { bgImageObj, setBgImageObj } = useEditorStore();
 
     useEffect(() => {
         const bgImg = new window.Image();
-        bgImg.src = "/bg.jpg";
-        bgImg.crossOrigin = "anonymous";
+        bgImg.src = '/bg.jpg';
+        bgImg.crossOrigin = 'anonymous';
         bgImg.onload = () => {
             setBgImageObj(bgImg);
         };
-    }, []);
+    }, [setBgImageObj]);
 
     const {
         textElements,
@@ -48,13 +49,11 @@ export const useImageEditor = () => {
         handleStickerTransform,
         handleStickerSelect,
         setSelectedStickerId,
-        handleStickerRemove
+        handleStickerRemove,
     } = useStickerEditor();
 
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-        // Check if clicked on empty area (stage background)
-        if ((e.target._id === 3) && (e.target.getStage()?._id === 1)) {
-            // Deselect all elements
+        if (e.target._id === 3 && e.target.getStage()?._id === 1) {
             deselectAll();
             setSelectedStickerId(null);
             setStickers((prev) =>
@@ -80,8 +79,8 @@ export const useImageEditor = () => {
         }
 
         const dataURL = stageRef.current.toDataURL({ pixelRatio: 2 });
-        const link = document.createElement("a");
-        link.download = "composition.png";
+        const link = document.createElement('a');
+        link.download = 'composition.png';
         link.href = dataURL;
         link.click();
     };
@@ -89,7 +88,6 @@ export const useImageEditor = () => {
     return {
         stageRef,
         transformerRef,
-        // Text-related exports
         textElements,
         previewTextElement,
         selectedElementId,
@@ -106,11 +104,9 @@ export const useImageEditor = () => {
         makeCaps,
         handleTextInputBlur,
         textStyle: getCurrentTextStyle(),
-        // Stage and general
         handleStageClick,
         downloadImage,
         bgImageObj,
-        // Sticker-related exports
         stickers,
         availableStickers,
         addSticker,

@@ -1,12 +1,15 @@
-import { useState } from "react";
-import type Konva from "konva";
+import type Konva from 'konva';
+import { useEditorStore } from '@/lib/store';
 
 export const useStickerEditor = () => {
-    const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
-    const [stickers, setStickers] = useState<any[]>([]);
-    const [availableStickers, setAvailableStickers] = useState([
-        { name: "Sticker 1", src: "/sticker.svg" },
-    ]);
+    const {
+        stickers,
+        setStickers,
+        availableStickers,
+        setAvailableStickers,
+        selectedStickerId,
+        setSelectedStickerId,
+    } = useEditorStore();
 
     const addSticker = (src: string) => {
         setStickers((prev) => [
