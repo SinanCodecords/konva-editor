@@ -10,11 +10,13 @@ import StickerControls from "./StickerControls";
 
 const ImageEditor = () => {
     const {
-        selectedTextElement,
-        setTextContent,
-        textStyle,
         stageRef,
         transformerRef,
+        textElements,
+        previewTextElement,
+        currentTextInput,
+        setTextContent,
+        addTextElement,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
@@ -32,21 +34,22 @@ const ImageEditor = () => {
         handleStyleChange,
         isTextSelected,
         handleStickerRemove,
-        makeCaps
+        makeCaps,
+        textStyle,
+        handleTextInputBlur
     } = useImageEditor();
 
     return (
         <div className="p-4 max-w-[1400px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-
                 <div className="lg:col-span-1 space-y-6">
                     <TextControls
-                        textContent={selectedTextElement?.text || ""}
+                        textContent={currentTextInput}
                         setTextContent={setTextContent}
+                        handleTextInputBlur={handleTextInputBlur}
                         textStyle={textStyle}
                         handleStyleChange={handleStyleChange}
-                        isTextSelected={isTextSelected}
-                        onRemoveText={removeText}
+                        hasSelectedText={isTextSelected}
                         makeCaps={makeCaps}
                     />
                     <StickerControls
@@ -57,11 +60,15 @@ const ImageEditor = () => {
                 </div>
 
                 <div className="lg:col-span-3">
-
                     <div className="border rounded-lg overflow-hidden mb-4">
-                        <Stage width={1024} height={700} ref={stageRef} onClick={handleStageClick} onTap={handleStageClick}>
+                        <Stage
+                            width={1024}
+                            height={700}
+                            ref={stageRef}
+                            onClick={handleStageClick}
+                            onTap={handleStageClick}
+                        >
                             <Layer>
-
                                 {bgImageObj && (
                                     <KonvaImage
                                         image={bgImageObj}
@@ -73,12 +80,16 @@ const ImageEditor = () => {
                                     />
                                 )}
 
-
                                 {stickers.map((sticker) => (
                                     <EditableSticker
                                         key={sticker.id}
                                         stickerElement={sticker}
-                                        stickerImage={(() => { const img = new window.Image(); img.src = sticker.src; img.crossOrigin = "anonymous"; return img; })()}
+                                        stickerImage={(() => {
+                                            const img = new window.Image();
+                                            img.src = sticker.src;
+                                            img.crossOrigin = "anonymous";
+                                            return img;
+                                        })()}
                                         onDragEnd={(e) => handleStickerDragEnd(sticker.id, e)}
                                         onTransform={(node) => handleStickerTransform(sticker.id, node)}
                                         onSelect={() => handleStickerSelect(sticker.id)}
@@ -87,15 +98,27 @@ const ImageEditor = () => {
                                     />
                                 ))}
 
-
-                                {selectedTextElement && (
+                                {textElements.map((textElement) => (
                                     <EditableText
-                                        textElement={selectedTextElement}
-                                        onDragEnd={handleTextDragEnd}
-                                        onClose={removeText}
-                                        onTransform={handleTextTransform}
-                                        onSelect={handleTextSelect}
-                                        transformerRef={isTextSelected ? transformerRef : null}
+                                        key={textElement.id}
+                                        textElement={textElement}
+                                        onDragEnd={(e) => handleTextDragEnd(textElement.id, e)}
+                                        onClose={() => removeText()}
+                                        onTransform={(node) => handleTextTransform(textElement.id, node)}
+                                        onSelect={() => handleTextSelect(textElement.id)}
+                                        transformerRef={textElement.isSelected ? transformerRef : null}
+                                    />
+                                ))}
+
+                                {previewTextElement && (
+                                    <EditableText
+                                        key="preview"
+                                        textElement={previewTextElement}
+                                        onDragEnd={() => { }}
+                                        onClose={() => { }}
+                                        onTransform={() => { }}
+                                        onSelect={() => { }}
+                                        transformerRef={null}
                                     />
                                 )}
                             </Layer>

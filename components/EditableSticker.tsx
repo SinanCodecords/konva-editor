@@ -2,26 +2,8 @@ import type React from "react";
 import { useEffect } from "react";
 import { Image as KonvaImage, Transformer, Group, Rect, Text as KonvaText } from "react-konva";
 import type Konva from "konva";
+import { EditableStickerProps } from "@/types";
 
-interface StickerElement {
-    id: string;
-    x: number;
-    y: number;
-    rotation: number;
-    scaleX: number;
-    scaleY: number;
-    isSelected: boolean;
-}
-
-interface EditableStickerProps {
-    stickerElement: StickerElement;
-    stickerImage: HTMLImageElement;
-    onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
-    onTransform: (node: Konva.Image) => void;
-    onSelect: () => void;
-    transformerRef: React.RefObject<Konva.Transformer | null> | null;
-    onStickerRemove: (id: string) => void;
-}
 
 const EditableSticker = ({
     stickerElement,

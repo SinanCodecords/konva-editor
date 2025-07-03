@@ -10,95 +10,189 @@ export interface TextElement {
     fontFamily: string;
     fill: string;
     rotation: number;
+    scaleX: number;
+    scaleY: number;
     isSelected: boolean;
 }
 
-const DEFAULT_TEXT = {
-    text: "",
-    x: 200,
-    y: 200,
+const DEFAULT_TEXT_STYLE = {
     fontSize: 30,
-    fontFamily: "Arial",
+    fontFamily: "Arial",    
     fill: "#000000",
     rotation: 0,
-    isSelected: false
+    scaleX: 1,
+    scaleY: 1,
 };
 
 export const useTextEditor = () => {
-    const [selectedTextElement, setSelectedTextElement] = useState<TextElement | null>(null);
-    const [isTextSelected, setIsTextSelected] = useState(false);
-    const [textElements, setTextElements] = useState([]);
-    const [textStyle, setTextStyle] = useState({
-        fontSize: 30,
-        fontFamily: "Arial",
-        fill: "#000000",
-    });
+    const [textElements, setTextElements] = useState<TextElement[]>([]);
+    const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
+    const [currentTextInput, setCurrentTextInput] = useState("");
+    const [previewTextElement, setPreviewTextElement] = useState<TextElement | null>(null);
 
-    const handleStyleChange = (key: string, value: any) => {
-        setTextStyle((prev) => ({ ...prev, [key]: value }));
-        if (selectedTextElement) {
-            setSelectedTextElement((prev) => prev ? { ...prev, [key]: value } : prev);
-        }
-    };
+    // Get the currently selected text element
+    const selectedTextElement = textElements.find(el => el.id === selectedElementId) || null;
 
-    const setTextContent = (text: string) => {
+    const addTextElement = (text: string) => {
         if (text.trim()) {
-            setSelectedTextElement((prev) => ({
-                ...(prev || DEFAULT_TEXT),
-                text,
-                id: `text-${new Date()}`
-            }));
-        } else {
-            setSelectedTextElement(null);
+            const newElement: TextElement = {
+                id: `text-${Date.now()}-${Math.random()}`,
+                text: text.trim(),
+                x: 200 + Math.random() * 100, // Add some randomness to position
+                y: 200 + Math.random() * 100,
+                ...DEFAULT_TEXT_STYLE,
+                isSelected: false
+            };
+
+            setTextElements(prev => [...prev, newElement]);
+            setSelectedElementId(newElement.id);
+            setCurrentTextInput(""); // Clear input after adding
+            setPreviewTextElement(null); // Clear preview
         }
     };
 
-    const handleTextDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-        setSelectedTextElement((prev) => prev ? { ...prev, x: e.target.x(), y: e.target.y() } : prev);
-    };
-
-    const handleTextTransform = (node: Konva.Text) => {
-        setSelectedTextElement((prev) =>
-            prev
-                ? {
-                    ...prev,
-                    x: node.x(),
-                    y: node.y(),
-                    rotation: node.rotation(),
-                    scaleX: node.scaleX(),
-                    scaleY: node.scaleY(),
-                }
-                : prev
+    const updateTextElement = (id: string, updates: Partial<TextElement>) => {
+        setTextElements(prev =>
+            prev.map(el =>
+                el.id === id ? { ...el, ...updates } : el
+            )
         );
     };
 
-    const handleTextSelect = () => {
-        setIsTextSelected(true);
-        setSelectedTextElement((prev) => prev ? { ...prev, isSelected: true } : prev);
+    const setTextContent = (text: string) => {
+        setCurrentTextInput(text);
+
+        // If we have a selected element, update it in real-time
+        if (selectedElementId) {
+            updateTextElement(selectedElementId, { text });
+        } else {
+        // If no selected element, show preview
+            if (text.trim()) {
+                setPreviewTextElement({
+                    id: 'preview',
+                    text: text.trim(),
+                    x: 200,
+                    y: 200,
+                    ...DEFAULT_TEXT_STYLE,
+                    isSelected: false
+                });
+            } else {
+                setPreviewTextElement(null);
+            }
+        }
     };
 
-    const removeText = () => {
-        setSelectedTextElement(null);
-        setIsTextSelected(false);
+    const handleTextInputBlur = () => {
+        setCurrentTextInput("");
+        if (currentTextInput.trim() && !selectedElementId) {
+            addTextElement(currentTextInput);
+        }
+    };
+
+    const handleStyleChange = (key: string, value: any) => {
+        if (selectedElementId) {
+            updateTextElement(selectedElementId, { [key]: value });
+        }
+    };
+
+    const handleTextDragEnd = (id: string, e: Konva.KonvaEventObject<DragEvent>) => {
+        updateTextElement(id, {
+            x: e.target.x(),
+            y: e.target.y()
+        });
+    };
+
+    const handleTextTransform = (id: string, node: Konva.Text) => {
+        updateTextElement(id, {
+            x: node.x(),
+            y: node.y(),
+            rotation: node.rotation(),
+            scaleX: node.scaleX(),
+            scaleY: node.scaleY(),
+        });
+    };
+
+    const handleTextSelect = (id: string) => {
+        // Deselect all elements first
+        setTextElements(prev =>
+            prev.map(el => ({ ...el, isSelected: false }))
+        );
+
+        // Select the clicked element
+        setSelectedElementId(id);
+        updateTextElement(id, { isSelected: true });
+
+        // Set the current text input to the selected element's text
+        const element = textElements.find(el => el.id === id);
+        if (element) {
+            setCurrentTextInput(element.text);
+        }
+    };
+
+    const removeText = (id?: string) => {
+        const targetId = id || selectedElementId;
+        if (targetId) {
+            setTextElements(prev => prev.filter(el => el.id !== targetId));
+            if (selectedElementId === targetId) {
+                setSelectedElementId(null);
+                setCurrentTextInput("");
+            }
+        }
     };
 
     const makeCaps = () => {
-        setSelectedTextElement((prev) => prev ? { ...prev, text: prev?.text.toUpperCase() } : prev);
+        if (selectedElementId) {
+            const element = textElements.find(el => el.id === selectedElementId);
+            if (element) {
+                const uppercaseText = element.text.toUpperCase();
+                updateTextElement(selectedElementId, { text: uppercaseText });
+                setCurrentTextInput(uppercaseText);
+            }
+        }
+    };
+
+    const deselectAll = () => {
+        setTextElements(prev =>
+            prev.map(el => ({ ...el, isSelected: false }))
+        );
+        setSelectedElementId(null);
+        setPreviewTextElement(null);
+    };
+
+    // Get current text style (from selected element or default)
+    const getCurrentTextStyle = () => {
+        if (selectedTextElement) {
+            return {
+                fontSize: selectedTextElement.fontSize,
+                fontFamily: selectedTextElement.fontFamily,
+                fill: selectedTextElement.fill,
+            };
+        }
+        return {
+            fontSize: DEFAULT_TEXT_STYLE.fontSize,
+            fontFamily: DEFAULT_TEXT_STYLE.fontFamily,
+            fill: DEFAULT_TEXT_STYLE.fill,
+        };
     };
 
     return {
+        textElements,
+        selectedElementId,
         selectedTextElement,
+        previewTextElement,
+        currentTextInput,
         setTextContent,
-        isTextSelected,
-        setIsTextSelected,
-        textStyle,
+        addTextElement,
+        updateTextElement,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
         removeText,
         handleStyleChange,
         makeCaps,
-        setSelectedTextElement,
-        textElements
+        deselectAll,
+        getCurrentTextStyle,
+        handleTextInputBlur,
+        isTextSelected: selectedElementId !== null,
     };
 };

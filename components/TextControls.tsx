@@ -1,22 +1,10 @@
+import { TextControlsProps } from "@/types";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Slider, } from "./ui/slider";
+import { Slider } from "./ui/slider";
 
-interface TextControlsProps {
-    textContent: string;
-    setTextContent: (text: string) => void;
-    textStyle: {
-        fontSize: number;
-        fontFamily: string;
-        fill: string;
-    };
-    isTextSelected: boolean;
-    onRemoveText: () => void;
-    handleStyleChange: (key: string, value: any) => void;
-    makeCaps: () => void;
-}
 
 const FONT_FAMILIES = [
     "Arial",
@@ -34,20 +22,21 @@ const FONT_FAMILIES = [
     "Impact",
 ];
 
-
 const TextControls = ({
     textContent,
     setTextContent,
+    handleTextInputBlur,
     textStyle,
     handleStyleChange,
-    makeCaps
+    makeCaps,
+    hasSelectedText
 }: TextControlsProps) => {
+
     return (
         <div className="p-4 rounded-lg border bg-gray-800">
             <h3 className="text-lg font-semibold mb-4">Text Controls</h3>
 
             <div className="space-y-4">
-
                 <div>
                     <Label htmlFor="live-text">Text Input</Label>
                     <div className="flex gap-2">
@@ -56,61 +45,71 @@ const TextControls = ({
                             type="text"
                             value={textContent}
                             onChange={(e) => setTextContent(e.target.value)}
-                            placeholder="Type and press Enter to add..."
+                            onBlur={handleTextInputBlur}
+                            placeholder="Type to add text..."
                             className="mt-1"
                         />
                     </div>
                 </div>
 
-                <div>
-                    <Label>Font Family</Label>
-                    <Select
-                        value={textStyle.fontFamily}
-                        onValueChange={(value) => handleStyleChange("fontFamily", value)}
-                    >
-                        <SelectTrigger className="mt-1">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {FONT_FAMILIES.map((font) => (
-                                <SelectItem key={font} value={font} style={{ fontFamily: font }}>
-                                    {font}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+                <>
+                    <div>
+                        <Label>Font Family</Label>
+                        <Select
+                            value={textStyle.fontFamily}
+                            onValueChange={(value) => handleStyleChange("fontFamily", value)}
+                        >
+                            <SelectTrigger className="mt-1">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {FONT_FAMILIES.map((font) => (
+                                    <SelectItem key={font} value={font} style={{ fontFamily: font }}>
+                                        {font}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                <div>
-                    <Label>Font Size: {Math.round(textStyle.fontSize)}px</Label>
-                    <Slider
-                        value={[textStyle.fontSize]}
-                        onValueChange={([value]) => handleStyleChange("fontSize", value)}
-                        min={12}
-                        max={100}
-                        step={1}
-                        className="mt-2"
-                    />
-                </div>
+                    <div>
+                        <Label>Font Size: {Math.round(textStyle.fontSize)}px</Label>
+                        <Slider
+                            value={[textStyle.fontSize]}
+                            onValueChange={([value]) => handleStyleChange("fontSize", value)}
+                            min={12}
+                            max={100}
+                            step={1}
+                            className="mt-2"
+                        />
+                    </div>
 
-                <div>
-                    <Label>Text Color</Label>
-                    <div className="mt-2 space-y-2">
-                        <div className="flex items-center gap-2">
-                            <Input
-                                type="color"
-                                value={textStyle.fill}
-                                onChange={(e) => handleStyleChange("fill", e.target.value)}
-                                className="w-16 h-8 p-0 border-0"
-                            />
+                    <div>
+                        <Label>Text Color</Label>
+                        <div className="mt-2 space-y-2">
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    type="color"
+                                    value={textStyle.fill}
+                                    onChange={(e) => handleStyleChange("fill", e.target.value)}
+                                    className="w-16 h-8 p-0 border-0"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <Button onClick={makeCaps} variant={'outline'}>
-                        B
-                    </Button>
-                </div>
+
+                    <div className="flex gap-2">
+                        <Button onClick={makeCaps} variant={'outline'}>
+                            CAPS
+                        </Button>
+                    </div>
+                </>
+
+                {!hasSelectedText && (
+                    <p className="text-sm text-gray-400 mt-4">
+                        Select a text element to edit its properties
+                    </p>
+                )}
             </div>
         </div>
     );

@@ -3,18 +3,16 @@
 import { useEffect, useRef } from "react";
 import { Text, Transformer, Group, Rect } from "react-konva";
 import type Konva from "konva";
-import type { TextElement } from "../hooks/useTextEditing";
+import { EditableTextProps } from "@/types";
 
-interface EditableTextProps {
-    textElement: TextElement;
-    onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
-    onTransform: (node: Konva.Text) => void;
-    onSelect: () => void;
-    transformerRef: React.RefObject<Konva.Transformer | null> | null;
-    onClose: () => void;
-}
-
-const EditableText = ({ textElement, onDragEnd, onTransform, onSelect, transformerRef, onClose }: EditableTextProps) => {
+const EditableText = ({
+    textElement,
+    onDragEnd,
+    onTransform,
+    onSelect,
+    transformerRef,
+    onClose
+}: EditableTextProps) => {
     const textRef = useRef<Konva.Text>(null);
 
     useEffect(() => {
@@ -35,9 +33,11 @@ const EditableText = ({ textElement, onDragEnd, onTransform, onSelect, transform
         onClose();
     };
 
+    // Calculate position for the close button
+    const textWidth = textRef.current?.width() || 0;
     const xSize = 24;
     const xOffset = 8;
-    const x = textElement.x + (textRef.current?.width() || 0) + xOffset;
+    const x = textElement.x + textWidth + xOffset;
     const y = textElement.y - xOffset;
 
     return (
@@ -53,6 +53,8 @@ const EditableText = ({ textElement, onDragEnd, onTransform, onSelect, transform
                     fontFamily={textElement.fontFamily}
                     fill={textElement.fill}
                     rotation={textElement.rotation}
+                    scaleX={textElement.scaleX}
+                    scaleY={textElement.scaleY}
                     draggable={true}
                     onDragEnd={onDragEnd}
                     onTransformEnd={handleTransformEnd}
@@ -64,7 +66,14 @@ const EditableText = ({ textElement, onDragEnd, onTransform, onSelect, transform
                 />
                 {textElement.isSelected && (
                     <Group x={x} y={y} onClick={handleClose} onTap={handleClose}>
-                        <Rect width={xSize} height={xSize} stroke="#f00" strokeWidth={2} cornerRadius={6} shadowBlur={2} />
+                        <Rect
+                            width={xSize}
+                            height={xSize}
+                            stroke="#f00"
+                            strokeWidth={2}
+                            cornerRadius={6}
+                            shadowBlur={2}
+                        />
                         <Text
                             text="×"
                             fontSize={20}

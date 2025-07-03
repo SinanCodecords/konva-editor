@@ -1,12 +1,7 @@
 import { useRef } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-
-interface StickerControlsProps {
-    availableStickers: { name: string; src: string; }[];
-    addSticker: (src: string) => void;
-    addAvailableSticker: (src: string) => void;
-}
+import { StickerControlsProps } from "@/types";
 
 const StickerControls = ({ availableStickers, addSticker, addAvailableSticker }: StickerControlsProps) => {
     const fileInputRef = useRef<HTMLInputElement>(null);

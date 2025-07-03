@@ -18,19 +18,24 @@ export const useImageEditor = () => {
     }, []);
 
     const {
+        textElements,
+        selectedElementId,
         selectedTextElement,
+        previewTextElement,
+        currentTextInput,
         setTextContent,
-        isTextSelected,
-        setIsTextSelected,
-        textStyle,
+        addTextElement,
+        updateTextElement,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
         removeText,
         handleStyleChange,
         makeCaps,
-        setSelectedTextElement,
-        textElements
+        deselectAll,
+        getCurrentTextStyle,
+        handleTextInputBlur,
+        isTextSelected,
     } = useTextEditor();
 
     const {
@@ -46,18 +51,20 @@ export const useImageEditor = () => {
         setSelectedStickerId,
         handleStickerRemove
     } = useStickerEditor();
-    const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-        if ((e.target._id === 3) && (e.target.getStage()?._id === 1)) {
 
-            setIsTextSelected(false);
+    const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+        // Check if clicked on empty area (stage background)
+        if ((e.target._id === 3) && (e.target.getStage()?._id === 1)) {
+            // Deselect all elements
+            deselectAll();
             setSelectedStickerId(null);
-            setSelectedTextElement((prev) => prev ? { ...prev, isSelected: false } : prev);
             setStickers((prev) =>
                 prev.map((sticker) => ({
                     ...sticker,
                     isSelected: false,
                 }))
             );
+
             if (transformerRef.current) {
                 transformerRef.current.nodes([]);
                 transformerRef.current.getLayer()?.batchDraw();
@@ -83,17 +90,29 @@ export const useImageEditor = () => {
     return {
         stageRef,
         transformerRef,
+        // Text-related exports
+        textElements,
+        previewTextElement,
+        selectedElementId,
         selectedTextElement,
+        currentTextInput,
         setTextContent,
+        addTextElement,
+        updateTextElement,
+        handleTextDragEnd: (id: string, e: Konva.KonvaEventObject<DragEvent>) => handleTextDragEnd(id, e),
+        handleTextTransform: (id: string, node: Konva.Text) => handleTextTransform(id, node),
+        handleTextSelect: (id: string) => handleTextSelect(id),
+        removeText: () => removeText(),
+        handleStyleChange,
+        makeCaps,
+        handleTextInputBlur,
         isTextSelected,
-        textStyle,
-        handleTextDragEnd,
-        handleTextTransform,
-        handleTextSelect,
+        textStyle: getCurrentTextStyle(),
+        // Stage and general
         handleStageClick,
-        removeText,
         downloadImage,
         bgImageObj,
+        // Sticker-related exports
         stickers,
         availableStickers,
         addSticker,
@@ -102,9 +121,6 @@ export const useImageEditor = () => {
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
-        handleStyleChange,
-        makeCaps,
         handleStickerRemove,
-        textElements
     };
 };
