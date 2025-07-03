@@ -1,10 +1,10 @@
 import type React from "react";
 import { useEffect } from "react";
-import { Image as KonvaImage, Transformer, Group, Rect, Text as KonvaText } from "react-konva";
+import { Image as KonvaImage, Transformer, Group } from "react-konva";
 import type Konva from "konva";
 import { EditableStickerProps } from "@/types";
 import useDelete from "@/hooks/keyboardShortcuts/useDelete";
-
+import XButton from "./XButton";
 
 const EditableSticker = ({
     stickerElement,
@@ -15,6 +15,7 @@ const EditableSticker = ({
     transformerRef,
     onStickerRemove,
 }: EditableStickerProps) => {
+    // for kyboard events
     useDelete();
 
     useEffect(() => {
@@ -33,7 +34,7 @@ const EditableSticker = ({
         onTransform(node);
     };
 
-    // X button size and offset
+    // X button positioning
     const xSize = 24;
     const xOffset = 8;
     const x = stickerElement.x + (stickerImage?.width || 80) * stickerElement.scaleX + xOffset;
@@ -56,20 +57,14 @@ const EditableSticker = ({
                     onClick={onSelect}
                     onTap={onSelect}
                 />
-                {stickerElement.isSelected && (
-                    <Group x={x} y={y} onClick={() => onStickerRemove(stickerElement.id)} onTap={() => onStickerRemove(stickerElement.id)}>
-                        <Rect width={xSize} height={xSize} stroke="#ff0000" strokeWidth={2} cornerRadius={6} shadowBlur={2} />
-                        <KonvaText
-                            text="×"
-                            fontSize={20}
-                            fill="#ff0000"
-                            width={xSize}
-                            height={xSize}
-                            align="center"
-                            verticalAlign="middle"
-                        />
-                    </Group>
-                )}
+                <XButton
+                    x={x}
+                    y={y}
+                    size={xSize}
+                    isSelected={stickerElement.isSelected}
+                    onClick={() => onStickerRemove(stickerElement.id)}
+                    onTap={() => onStickerRemove(stickerElement.id)}
+                />
             </Group>
             {stickerElement.isSelected && transformerRef && (
                 <Transformer

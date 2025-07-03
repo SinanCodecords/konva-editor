@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
-import { Text, Transformer, Group, Rect } from "react-konva";
+import { Text, Transformer, Group } from "react-konva";
 import Konva from "konva";
 import { EditableTextProps } from "@/types";
 import useDelete from "@/hooks/keyboardShortcuts/useDelete";
+import XButton from "./XButton";
 
 const EditableText = ({
     textElement,
@@ -12,6 +13,7 @@ const EditableText = ({
     transformerRef,
     onClose
 }: EditableTextProps) => {
+    // for keyboard events
     useDelete();
     const textRef = useRef<Konva.Text>(null);
 
@@ -29,16 +31,11 @@ const EditableText = ({
         }
     };
 
-    const handleClose = () => {
-        onClose();
-    };
-
     const baseTextWidth = textRef.current?.width() || 0;
     const scaledTextWidth = baseTextWidth * textElement.scaleX;
 
     const xSize = 20;
     const xOffset = 5;
-
     const x = textElement.x + scaledTextWidth + xOffset;
     const y = textElement.y - xOffset;
 
@@ -67,31 +64,14 @@ const EditableText = ({
                     shadowBlur={textElement.isSelected ? 5 : 0}
                     shadowOpacity={textElement.isSelected ? 0.3 : 0}
                 />
-                {textElement.isSelected && (
-                    <Group x={x} y={y} onClick={handleClose} onTap={handleClose}>
-                        <Rect
-                            width={xSize}
-                            height={xSize}
-                            strokeWidth={1.5}
-                            stroke="#ff0000"
-                            cornerRadius={4}
-                            shadowBlur={2}
-                            shadowColor="#000000"
-                            shadowOpacity={0.2}
-                            opacity={0.9}
-                        />
-                        <Text
-                            text="×"
-                            fontSize={16}
-                            fill="#ff0000"
-                            width={xSize}
-                            height={xSize}
-                            align="center"
-                            verticalAlign="middle"
-                            fontStyle="bold"
-                        />
-                    </Group>
-                )}
+                <XButton
+                    x={x}
+                    y={y}
+                    size={xSize}
+                    isSelected={textElement.isSelected}
+                    onClick={onClose}
+                    onTap={onClose}
+                />
             </Group>
             {textElement.isSelected && transformerRef && (
                 <Transformer

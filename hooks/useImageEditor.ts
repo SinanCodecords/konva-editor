@@ -31,7 +31,7 @@ export const useImageEditor = () => {
         makeCaps,
         deselectAll,
         getCurrentTextStyle,
-        handleTextInputBlur,
+        handleControlFocusOut,
         changeTextStyle,
         changeTextAlign
     } = useTextEditor();
@@ -95,7 +95,7 @@ export const useImageEditor = () => {
         removeText: () => removeText(),
         handleStyleChange,
         makeCaps,
-        handleTextInputBlur,
+        handleControlFocusOut,
         textStyle: getCurrentTextStyle(),
         handleStageClick,
         downloadImage,

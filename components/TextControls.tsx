@@ -25,7 +25,7 @@ const FONT_FAMILIES = [
 const TextControls = ({
     textContent,
     setTextContent,
-    handleTextInputBlur,
+    handleControlFocusOut,
     textStyle,
     handleStyleChange,
     makeCaps,
@@ -35,7 +35,7 @@ const TextControls = ({
     const isAllCaps = textContent === textContent.toUpperCase() && textContent.length > 0;
 
     return (
-        <div className="p-4 rounded-lg border bg-gray-800">
+        <div className="p-4 rounded-lg border bg-gray-800" onBlur={handleControlFocusOut}>
             <h3 className="text-lg font-semibold mb-4">Text Controls</h3>
 
             <div className="space-y-4">
@@ -47,7 +47,6 @@ const TextControls = ({
                             type="text"
                             value={textContent}
                             onChange={(e) => setTextContent(e.target.value)}
-                            onBlur={handleTextInputBlur}
                             placeholder="Type to add text..."
                             className="mt-1"
                         />

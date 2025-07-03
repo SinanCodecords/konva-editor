@@ -90,7 +90,7 @@ export const useTextEditor = () => {
         }
     };
 
-    const handleTextInputBlur = () => {
+    const handleControlFocusOut = () => {
         if (currentTextInput.trim() && !selectedElementId) {
             addTextElement(currentTextInput);
         }
@@ -197,7 +197,7 @@ export const useTextEditor = () => {
         makeCaps,
         deselectAll,
         getCurrentTextStyle,
-        handleTextInputBlur,
+        handleControlFocusOut,
         changeTextStyle,
         changeTextAlign
     };

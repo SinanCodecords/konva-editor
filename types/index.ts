@@ -23,7 +23,7 @@ export type ElementStyles = {
 export interface TextControlsProps {
     textContent: string;
     setTextContent: (text: string) => void;
-    handleTextInputBlur: () => void;
+    handleControlFocusOut: () => void;
     textStyle: ElementStyles;
     handleStyleChange: (key: string, value: any) => void;
     makeCaps: () => void;
@@ -71,4 +71,13 @@ export interface EditableStickerProps {
     onSelect: () => void;
     transformerRef: React.RefObject<Konva.Transformer | null> | null;
     onStickerRemove: (id: string) => void;
+}
+
+export interface XButtonProps {
+    x: number;
+    y: number;
+    size?: number;
+    onClick: () => void;
+    onTap: () => void;
+    isSelected: boolean;
 }

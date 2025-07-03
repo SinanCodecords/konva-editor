@@ -36,11 +36,12 @@ const ImageEditor = () => {
         handleStickerRemove,
         makeCaps,
         textStyle,
-        handleTextInputBlur,
+        handleControlFocusOut,
         changeTextStyle,
         changeTextAlign
     } = useImageEditor();
 
+    // for keyborad egvents
     useUndoRedoKeyboardShortcuts()
 
     return (
@@ -50,7 +51,7 @@ const ImageEditor = () => {
                     <TextControls
                         textContent={currentTextInput}
                         setTextContent={setTextContent}
-                        handleTextInputBlur={handleTextInputBlur}
+                        handleControlFocusOut={handleControlFocusOut}
                         textStyle={textStyle}
                         handleStyleChange={handleStyleChange}
                         makeCaps={makeCaps}
