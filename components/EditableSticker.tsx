@@ -55,11 +55,11 @@ const EditableSticker = ({
                 />
                 {stickerElement.isSelected && (
                     <Group x={x} y={y} onClick={() => onStickerRemove(stickerElement.id)} onTap={() => onStickerRemove(stickerElement.id)}>
-                        <Rect width={xSize} height={xSize} stroke="#f00" strokeWidth={2} cornerRadius={6} shadowBlur={2} fill="#fff" />
+                        <Rect width={xSize} height={xSize} stroke="#ff0000" strokeWidth={2} cornerRadius={6} shadowBlur={2} />
                         <KonvaText
                             text="×"
                             fontSize={20}
-                            fill="#f00"
+                            fill="#ff0000"
                             width={xSize}
                             height={xSize}
                             align="center"

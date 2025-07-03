@@ -33,10 +33,13 @@ const EditableText = ({
         onClose();
     };
 
-    const textWidth = textRef.current?.width() || 0;
-    const xSize = 24;
-    const xOffset = 8;
-    const x = textElement.x + textWidth + xOffset;
+    const baseTextWidth = textRef.current?.width() || 0;
+    const scaledTextWidth = baseTextWidth * textElement.scaleX;
+
+    const xSize = 20;
+    const xOffset = 5;
+
+    const x = textElement.x + scaledTextWidth + xOffset;
     const y = textElement.y - xOffset;
 
     return (
@@ -68,19 +71,23 @@ const EditableText = ({
                         <Rect
                             width={xSize}
                             height={xSize}
-                            stroke="#f00"
-                            strokeWidth={2}
-                            cornerRadius={6}
+                            strokeWidth={1.5}
+                            stroke="#ff0000"
+                            cornerRadius={4}
                             shadowBlur={2}
+                            shadowColor="#000000"
+                            shadowOpacity={0.2}
+                            opacity={0.9}
                         />
                         <Text
                             text="×"
-                            fontSize={20}
-                            fill="#f00"
+                            fontSize={16}
+                            fill="#ff0000"
                             width={xSize}
                             height={xSize}
                             align="center"
                             verticalAlign="middle"
+                            fontStyle="bold"
                         />
                     </Group>
                 )}
