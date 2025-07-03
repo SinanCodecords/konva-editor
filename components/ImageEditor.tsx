@@ -7,6 +7,8 @@ import EditableText from "./EditableText";
 import { useImageEditor } from "../hooks/useImageEditor";
 import EditableSticker from "./EditableSticker";
 import StickerControls from "./StickerControls";
+import UndoRedoControls from "./UndoRedoControls";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 const ImageEditor = () => {
     const {
@@ -37,6 +39,8 @@ const ImageEditor = () => {
         handleTextInputBlur
     } = useImageEditor();
 
+    useKeyboardShortcuts()
+
     return (
         <div className="p-4 max-w-[1400px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -54,6 +58,8 @@ const ImageEditor = () => {
                         addSticker={addSticker}
                         addAvailableSticker={addAvailableSticker}
                     />
+
+                    <UndoRedoControls />
                 </div>
 
                 <div className="lg:col-span-3">

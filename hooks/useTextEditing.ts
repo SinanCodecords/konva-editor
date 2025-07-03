@@ -71,10 +71,12 @@ export const useTextEditor = () => {
     };
 
     const handleTextInputBlur = () => {
-        setCurrentTextInput('');
         if (currentTextInput.trim() && !selectedElementId) {
             addTextElement(currentTextInput);
         }
+        setCurrentTextInput('');
+        setSelectedElementId(null);
+        setPreviewTextElement(null);
     };
 
     const handleStyleChange = (key: string, value: any) => {
