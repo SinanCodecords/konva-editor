@@ -9,6 +9,7 @@ export interface EditableTextProps {
     onClose: () => void;
 }
 
+export type TextStyle = "bold" | "normal" | "italic"
 
 export interface TextControlsProps {
     textContent: string;
@@ -18,11 +19,13 @@ export interface TextControlsProps {
         fontSize: number;
         fontFamily: string;
         fill: string;
+        fontStyle?: string;
     };
     handleStyleChange: (key: string, value: any) => void;
     makeCaps: () => void;
+    changeTextStyle: (text: TextStyle) => void;
+    currentTextStyle: TextStyle;
 }
-
 
 export interface TextElement {
     id: string;
@@ -36,6 +39,7 @@ export interface TextElement {
     scaleX: number;
     scaleY: number;
     isSelected: boolean;
+    fontStyle: TextStyle;
 }
 
 export interface StickerControlsProps {

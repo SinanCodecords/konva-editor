@@ -7,7 +7,7 @@ import { useEditorStore } from '@/lib/store';
 export const useImageEditor = () => {
     const stageRef = useRef<Konva.Stage>(null);
     const transformerRef = useRef<Konva.Transformer>(null);
-    const { bgImageObj, setBgImageObj } = useEditorStore();
+    const { bgImageObj, setBgImageObj, currentTextStyle } = useEditorStore();
 
     useEffect(() => {
         const bgImg = new window.Image();
@@ -20,13 +20,9 @@ export const useImageEditor = () => {
 
     const {
         textElements,
-        selectedElementId,
-        selectedTextElement,
         previewTextElement,
         currentTextInput,
         setTextContent,
-        addTextElement,
-        updateTextElement,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
@@ -36,6 +32,7 @@ export const useImageEditor = () => {
         deselectAll,
         getCurrentTextStyle,
         handleTextInputBlur,
+        changeTextStyle,
     } = useTextEditor();
 
     const {
@@ -44,7 +41,6 @@ export const useImageEditor = () => {
         availableStickers,
         addSticker,
         addAvailableSticker,
-        selectedStickerId,
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
@@ -90,12 +86,9 @@ export const useImageEditor = () => {
         transformerRef,
         textElements,
         previewTextElement,
-        selectedElementId,
-        selectedTextElement,
         currentTextInput,
+        currentTextStyle,
         setTextContent,
-        addTextElement,
-        updateTextElement,
         handleTextDragEnd: (id: string, e: Konva.KonvaEventObject<DragEvent>) => handleTextDragEnd(id, e),
         handleTextTransform: (id: string, node: Konva.Text) => handleTextTransform(id, node),
         handleTextSelect: (id: string) => handleTextSelect(id),
@@ -111,10 +104,10 @@ export const useImageEditor = () => {
         availableStickers,
         addSticker,
         addAvailableSticker,
-        selectedStickerId,
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
         handleStickerRemove,
+        changeTextStyle
     };
 };

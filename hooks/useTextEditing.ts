@@ -1,5 +1,5 @@
 import type Konva from 'konva';
-import { TextElement } from '@/types';
+import { TextElement, TextStyle } from '@/types';
 import { useEditorStore } from '@/lib/store';
 
 const DEFAULT_TEXT_STYLE = {
@@ -9,6 +9,7 @@ const DEFAULT_TEXT_STYLE = {
     rotation: 0,
     scaleX: 1,
     scaleY: 1,
+    fontStyle: 'normal' as TextStyle,
 };
 
 export const useTextEditor = () => {
@@ -21,6 +22,7 @@ export const useTextEditor = () => {
         setCurrentTextInput,
         previewTextElement,
         setPreviewTextElement,
+        setCurrentTextStyle
     } = useEditorStore();
 
     const selectedTextElement = textElements.find((el) => el.id === selectedElementId) || null;
@@ -43,6 +45,16 @@ export const useTextEditor = () => {
         }
     };
 
+    const changeTextStyle = (style: TextStyle) => {
+        setCurrentTextStyle(style);
+        if (selectedElementId) {
+            const element = textElements.find((el) => el.id === selectedElementId);
+            if (element) {
+                updateTextElement(selectedElementId, { fontStyle: style });
+            }
+        }
+    };
+
     const updateTextElement = (id: string, updates: Partial<TextElement>) => {
         setTextElements((prev) =>
             prev.map((el) => (el.id === id ? { ...el, ...updates } : el))
@@ -55,15 +67,15 @@ export const useTextEditor = () => {
         if (selectedElementId) {
             updateTextElement(selectedElementId, { text });
         } else {
-          if (text.trim()) {
-              setPreviewTextElement({
-                  id: 'preview',
-                  text: text.trim(),
-                  x: 200,
-                  y: 200,
-                  ...DEFAULT_TEXT_STYLE,
-                isSelected: false,
-            });
+            if (text.trim()) {
+                setPreviewTextElement({
+                    id: 'preview',
+                    text: text.trim(),
+                    x: 200,
+                    y: 200,
+                    ...DEFAULT_TEXT_STYLE,
+                    isSelected: false,
+                });
             } else {
                 setPreviewTextElement(null);
             }
@@ -107,6 +119,7 @@ export const useTextEditor = () => {
         setSelectedElementId(id);
         updateTextElement(id, { isSelected: true });
         const element = textElements.find((el) => el.id === id);
+        setCurrentTextStyle(element?.fontStyle!)
         if (element) {
             setCurrentTextInput(element.text);
         }
@@ -148,12 +161,15 @@ export const useTextEditor = () => {
                 fontSize: selectedTextElement.fontSize,
                 fontFamily: selectedTextElement.fontFamily,
                 fill: selectedTextElement.fill,
+                fontStyle: selectedTextElement.fontStyle || DEFAULT_TEXT_STYLE.fontStyle,
             };
         }
+
         return {
             fontSize: DEFAULT_TEXT_STYLE.fontSize,
             fontFamily: DEFAULT_TEXT_STYLE.fontFamily,
             fill: DEFAULT_TEXT_STYLE.fill,
+            fontStyle: DEFAULT_TEXT_STYLE.fontStyle,
         };
     };
 
@@ -164,8 +180,6 @@ export const useTextEditor = () => {
         previewTextElement,
         currentTextInput,
         setTextContent,
-        addTextElement,
-        updateTextElement,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
@@ -175,5 +189,6 @@ export const useTextEditor = () => {
         deselectAll,
         getCurrentTextStyle,
         handleTextInputBlur,
+        changeTextStyle
     };
 };

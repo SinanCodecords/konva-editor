@@ -36,7 +36,9 @@ const ImageEditor = () => {
         handleStickerRemove,
         makeCaps,
         textStyle,
-        handleTextInputBlur
+        handleTextInputBlur,
+        changeTextStyle,
+        currentTextStyle
     } = useImageEditor();
 
     useUnodRedoKeyboardShortcuts()
@@ -47,11 +49,13 @@ const ImageEditor = () => {
                 <div className="lg:col-span-1 space-y-6">
                     <TextControls
                         textContent={currentTextInput}
+                        currentTextStyle={currentTextStyle}
                         setTextContent={setTextContent}
                         handleTextInputBlur={handleTextInputBlur}
                         textStyle={textStyle}
                         handleStyleChange={handleStyleChange}
                         makeCaps={makeCaps}
+                        changeTextStyle={changeTextStyle}
                     />
                     <StickerControls
                         availableStickers={availableStickers}
