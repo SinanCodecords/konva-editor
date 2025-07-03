@@ -2,22 +2,14 @@ import { TextControlsProps } from "@/types";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Slider } from "./ui/slider";
 import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon } from "lucide-react";
 
 const FONT_FAMILIES = [
     "Arial",
     "Helvetica",
-    "Times New Roman",
-    "Courier New",
-    "Verdana",
-    "Georgia",
-    "Palatino",
     "Garamond",
-    "Bookman",
     "Comic Sans MS",
-    "Trebuchet MS",
     "Arial Black",
     "Impact",
 ];
@@ -55,21 +47,19 @@ const TextControls = ({
 
                 <div>
                     <Label>Font Family</Label>
-                    <Select
-                        value={textStyle.fontFamily}
-                        onValueChange={(value) => handleStyleChange("fontFamily", value)}
-                    >
-                        <SelectTrigger className="mt-1">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {FONT_FAMILIES.map((font) => (
-                                <SelectItem key={font} value={font} style={{ fontFamily: font }}>
-                                    {font}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                        {FONT_FAMILIES.map((font) => (
+                            <Button
+                                key={font}
+                                onClick={() => handleStyleChange("fontFamily", font)}
+                                variant={textStyle.fontFamily === font ? "outline" : "ghost"}
+                                className="justify-start"
+                                style={{ fontFamily: font }}
+                            >
+                                {font}
+                            </Button>
+                        ))}
+                    </div>
                 </div>
 
                 <div>

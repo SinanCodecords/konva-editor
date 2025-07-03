@@ -100,6 +100,8 @@ export const useTextEditor = () => {
     };
 
     const handleStyleChange = (key: string, value: any) => {
+        console.log("KEY", key, "VALUE", value);
+
         if (selectedElementId) {
             updateTextElement(selectedElementId, { [key]: value });
         }
