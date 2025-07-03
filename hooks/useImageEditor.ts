@@ -35,7 +35,6 @@ export const useImageEditor = () => {
         deselectAll,
         getCurrentTextStyle,
         handleTextInputBlur,
-        isTextSelected,
     } = useTextEditor();
 
     const {
@@ -106,7 +105,6 @@ export const useImageEditor = () => {
         handleStyleChange,
         makeCaps,
         handleTextInputBlur,
-        isTextSelected,
         textStyle: getCurrentTextStyle(),
         // Stage and general
         handleStageClick,

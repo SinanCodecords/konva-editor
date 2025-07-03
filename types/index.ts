@@ -21,7 +21,6 @@ export interface TextControlsProps {
     };
     handleStyleChange: (key: string, value: any) => void;
     makeCaps: () => void;
-    hasSelectedText: boolean;
 }
 
 

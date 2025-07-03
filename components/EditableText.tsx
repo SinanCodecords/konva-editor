@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Text, Transformer, Group, Rect } from "react-konva";
-import type Konva from "konva";
+import Konva from "konva";
 import { EditableTextProps } from "@/types";
 
 const EditableText = ({
@@ -33,7 +33,6 @@ const EditableText = ({
         onClose();
     };
 
-    // Calculate position for the close button
     const textWidth = textRef.current?.width() || 0;
     const xSize = 24;
     const xOffset = 8;

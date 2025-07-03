@@ -28,8 +28,7 @@ const TextControls = ({
     handleTextInputBlur,
     textStyle,
     handleStyleChange,
-    makeCaps,
-    hasSelectedText
+    makeCaps
 }: TextControlsProps) => {
 
     return (
@@ -105,11 +104,6 @@ const TextControls = ({
                     </div>
                 </>
 
-                {!hasSelectedText && (
-                    <p className="text-sm text-gray-400 mt-4">
-                        Select a text element to edit its properties
-                    </p>
-                )}
             </div>
         </div>
     );

@@ -1,19 +1,6 @@
 import { useState } from "react";
 import type Konva from "konva";
-
-export interface TextElement {
-    id: string;
-    text: string;
-    x: number;
-    y: number;
-    fontSize: number;
-    fontFamily: string;
-    fill: string;
-    rotation: number;
-    scaleX: number;
-    scaleY: number;
-    isSelected: boolean;
-}
+import { TextElement } from "@/types";
 
 const DEFAULT_TEXT_STYLE = {
     fontSize: 30,
@@ -30,7 +17,6 @@ export const useTextEditor = () => {
     const [currentTextInput, setCurrentTextInput] = useState("");
     const [previewTextElement, setPreviewTextElement] = useState<TextElement | null>(null);
 
-    // Get the currently selected text element
     const selectedTextElement = textElements.find(el => el.id === selectedElementId) || null;
 
     const addTextElement = (text: string) => {
@@ -38,15 +24,15 @@ export const useTextEditor = () => {
             const newElement: TextElement = {
                 id: `text-${Date.now()}-${Math.random()}`,
                 text: text.trim(),
-                x: 200 + Math.random() * 100, // Add some randomness to position
-                y: 200 + Math.random() * 100,
+                x: 200,
+                y: 200,
                 ...DEFAULT_TEXT_STYLE,
                 isSelected: false
             };
 
             setTextElements(prev => [...prev, newElement]);
             setSelectedElementId(newElement.id);
-            setCurrentTextInput(""); // Clear input after adding
+            setCurrentTextInput(""); 
             setPreviewTextElement(null); // Clear preview
         }
     };
@@ -192,7 +178,6 @@ export const useTextEditor = () => {
         makeCaps,
         deselectAll,
         getCurrentTextStyle,
-        handleTextInputBlur,
-        isTextSelected: selectedElementId !== null,
+        handleTextInputBlur
     };
 };

@@ -16,7 +16,6 @@ const ImageEditor = () => {
         previewTextElement,
         currentTextInput,
         setTextContent,
-        addTextElement,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
@@ -32,7 +31,6 @@ const ImageEditor = () => {
         handleStickerTransform,
         handleStickerSelect,
         handleStyleChange,
-        isTextSelected,
         handleStickerRemove,
         makeCaps,
         textStyle,
@@ -49,7 +47,6 @@ const ImageEditor = () => {
                         handleTextInputBlur={handleTextInputBlur}
                         textStyle={textStyle}
                         handleStyleChange={handleStyleChange}
-                        hasSelectedText={isTextSelected}
                         makeCaps={makeCaps}
                     />
                     <StickerControls
