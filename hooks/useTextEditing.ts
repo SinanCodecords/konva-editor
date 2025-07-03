@@ -119,6 +119,7 @@ export const useTextEditor = () => {
             if (selectedElementId === targetId) {
                 setSelectedElementId(null);
                 setCurrentTextInput('');
+                setPreviewTextElement(null);
             }
         }
     };
@@ -138,6 +139,7 @@ export const useTextEditor = () => {
         setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
         setSelectedElementId(null);
         setPreviewTextElement(null);
+        setCurrentTextInput('');
     };
 
     const getCurrentTextStyle = () => {

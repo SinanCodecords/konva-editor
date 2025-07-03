@@ -1,9 +1,8 @@
-"use client";
-
 import { useEffect, useRef } from "react";
 import { Text, Transformer, Group, Rect } from "react-konva";
 import Konva from "konva";
 import { EditableTextProps } from "@/types";
+import useDeleteKeyboardShortcuts from "@/hooks/useDeleteKeyboardShortcuts";
 
 const EditableText = ({
     textElement,
@@ -13,6 +12,7 @@ const EditableText = ({
     transformerRef,
     onClose
 }: EditableTextProps) => {
+    useDeleteKeyboardShortcuts()
     const textRef = useRef<Konva.Text>(null);
 
     useEffect(() => {

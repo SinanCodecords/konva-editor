@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useUndoRedoStore } from '@/lib/store';
 
-export const useKeyboardShortcuts = () => {
+export const useUnodRedoKeyboardShortcuts = () => {
     const { undo, redo, } = useUndoRedoStore();
 
     useEffect(() => {

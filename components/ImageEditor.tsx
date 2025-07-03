@@ -8,7 +8,7 @@ import { useImageEditor } from "../hooks/useImageEditor";
 import EditableSticker from "./EditableSticker";
 import StickerControls from "./StickerControls";
 import UndoRedoControls from "./UndoRedoControls";
-import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { useUnodRedoKeyboardShortcuts } from "@/hooks/useUnodRedoKeyboardShortcuts";
 
 const ImageEditor = () => {
     const {
@@ -39,7 +39,7 @@ const ImageEditor = () => {
         handleTextInputBlur
     } = useImageEditor();
 
-    useKeyboardShortcuts()
+    useUnodRedoKeyboardShortcuts()
 
     return (
         <div className="p-4 max-w-[1400px] mx-auto">
