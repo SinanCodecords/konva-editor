@@ -11,7 +11,8 @@ const DEFAULT_TEXT_STYLE = {
     scaleX: 1,
     scaleY: 1,
     fontStyle: 'normal' as TextStyle,
-    align: "center" as TextAlign
+    align: "center" as TextAlign,
+    opacity: 1
 };
 
 export const useTextEditor = () => {
@@ -177,7 +178,8 @@ export const useTextEditor = () => {
                 fontFamily: selectedTextElement.fontFamily,
                 fill: selectedTextElement.fill,
                 fontStyle: selectedTextElement.fontStyle,
-                align: selectedTextElement.align
+                align: selectedTextElement.align,
+                opacity: selectedTextElement.opacity,
             };
         }
 
@@ -186,7 +188,8 @@ export const useTextEditor = () => {
             fontFamily: DEFAULT_TEXT_STYLE.fontFamily,
             fill: DEFAULT_TEXT_STYLE.fill,
             fontStyle: DEFAULT_TEXT_STYLE.fontStyle,
-            align: DEFAULT_TEXT_STYLE.align
+            align: DEFAULT_TEXT_STYLE.align,
+            opacity: DEFAULT_TEXT_STYLE.opacity,
         };
     };
 

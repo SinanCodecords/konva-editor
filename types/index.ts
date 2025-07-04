@@ -17,6 +17,7 @@ export type ElementStyles = {
     fontFamily: string;
     fill: string;
     fontStyle: TextStyle;
+    opacity: number;
     align: TextAlign;
 }
 
@@ -48,6 +49,7 @@ export interface TextElement {
     isSelected: boolean;
     fontStyle: TextStyle;
     align: TextAlign;
+    opacity: number;
 }
 
 export interface StickerControlsProps {

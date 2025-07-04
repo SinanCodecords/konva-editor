@@ -53,6 +53,7 @@ const EditableText = ({
                     fill={textElement.fill}
                     rotation={textElement.rotation}
                     fontStyle={textElement.fontStyle}
+                    opacity={textElement.opacity}
                     scaleX={textElement.scaleX}
                     scaleY={textElement.scaleY}
                     draggable={true}

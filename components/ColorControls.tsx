@@ -3,6 +3,7 @@ import { ColorControlsProps } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "./ui/slider";
 
 const ColorControls = ({
     textStyle,
@@ -60,7 +61,6 @@ const ColorControls = ({
                 <Label className="text-sm font-medium">Text Color</Label>
             </div>
 
-            {/* Color Picker and Preset Colors */}
             <div className="flex gap-2 items-center flex-wrap">
                 <Input
                     type="color"
@@ -80,7 +80,6 @@ const ColorControls = ({
                 ))}
             </div>
 
-            {/* Format Selection and Text Input */}
             <div className="flex gap-2 items-center">
                 <Select value={colorFormat} onValueChange={(value: "string" | "hex" | "rgb") => setColorFormat(value)}>
                     <SelectTrigger className="w-24">
@@ -100,6 +99,17 @@ const ColorControls = ({
                     onBlur={handleTextInputBlur}
                     onKeyDown={handleKeyDown}
                     className="flex-1"
+                />
+            </div>
+            <div>
+                <Label>Text Opacity</Label>
+                <Slider
+                    value={[textStyle.opacity]}
+                    onValueChange={([value]) => handleStyleChange("opacity", value)}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    className="mt-2"
                 />
             </div>
         </div>
