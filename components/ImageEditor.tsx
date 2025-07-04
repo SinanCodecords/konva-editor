@@ -47,7 +47,7 @@ const ImageEditor = () => {
 
     return (
         <div className="p-4 max-w-[1400px] mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-3 gap-6">
                 <div className="lg:col-span-1 space-y-6">
                     <TextControls
                         textContent={currentTextInput}
@@ -69,7 +69,7 @@ const ImageEditor = () => {
                     <UndoRedoControls />
                 </div>
 
-                <div className="lg:col-span-3">
+                <div className="lg:col-span-2">
                     <div className="border rounded-lg overflow-hidden mb-4">
                         <Stage
                             width={1024}

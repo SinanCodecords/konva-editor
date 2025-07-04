@@ -14,7 +14,7 @@ const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
     changeTextAlign
 }, ref) => {
     return (
-        <div className="p-4 rounded-lg border bg-gray-800" ref={ref} onBlur={handleControlFocusOut}>
+        <div className="p-4 rounded-lg border bg-gray-80" ref={ref} onBlur={handleControlFocusOut}>
             <h3 className="text-lg font-semibold mb-4">Text Controls</h3>
             <div className="space-y-4">
                 <FontControls
@@ -27,7 +27,6 @@ const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
                     changeTextAlign={changeTextAlign}
                 />
                 <ColorControls
-                    textContent={textContent}
                     textStyle={textStyle}
                     handleStyleChange={handleStyleChange}
                 />
