@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ColorInputTypes, TextStyleControlsProps } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,10 +12,6 @@ const ColorControls = ({
 }: TextStyleControlsProps) => {
     const [textColorFormat, setTextColorFormat] = useState<ColorInputTypes>("hex");
     const [textInputValue, setTextInputValue] = useState(textStyle.fill);
-
-    useEffect(() => {
-        setTextInputValue(textStyle.fill);
-    }, [textStyle.fill]);
 
     const handleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTextInputValue(e.target.value);

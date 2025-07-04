@@ -8,7 +8,7 @@ import FontControls from './FontControls';
 import TextInput from './TextInput';
 import { Separator } from '../ui/separator';
 
-const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
+const TextControls = forwardRef<HTMLDivElement, TextControlsProps>(({
     textContent,
     setTextContent,
     handleControlFocusOut,
@@ -25,7 +25,6 @@ const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
             onBlur={handleControlFocusOut}
             tabIndex={-1}
         >
-            <h3 className="text-lg font-semibold mb-4">Text Controls</h3>
             <Tabs defaultValue="text" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="text">Text</TabsTrigger>
@@ -55,17 +54,17 @@ const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
                             textStyle={textStyle}
                             handleStyleChange={handleStyleChange}
                         />
+                        <Separator />
+                        <BorderControl
+                            textStyle={textStyle}
+                            handleStyleChange={handleStyleChange}
+                        />
                     </div>
                 </TabsContent>
                 <TabsContent value="font">
                     <div className="space-y-4">
                         <FontControls
                             textContent={textContent}
-                            textStyle={textStyle}
-                            handleStyleChange={handleStyleChange}
-                        />
-                        <Separator />
-                        <BorderControl
                             textStyle={textStyle}
                             handleStyleChange={handleStyleChange}
                         />
@@ -76,6 +75,5 @@ const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
     );
 });
 
-ControlPanel.displayName = 'ControlPanel';
 
-export default ControlPanel;
+export default TextControls;

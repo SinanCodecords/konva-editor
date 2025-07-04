@@ -24,7 +24,6 @@ const StickerControls = ({ availableStickers, addSticker, addAvailableSticker }:
 
     return (
         <div className="p-4 rounded-lg border bg-gray-900">
-            <h3 className="text-lg font-semibold mb-4">Sticker Controls</h3>
             <div className="space-y-4">
                 <div>
                     <div className="flex flex-wrap gap-2 mb-2">

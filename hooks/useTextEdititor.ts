@@ -13,13 +13,10 @@ const DEFAULT_TEXT_STYLE = {
     fontStyle: 'normal' as TextStyle,
     align: "center" as TextAlign,
     opacity: 1,
-
     hasBackground: false,
     backgroundColor: '#ffffff',
     backgroundOpacity: 0.8,
-    backgroundRadius: 5,
-
-    // New border properties
+    backgroundRadius: 0,
     hasBorder: false,
     borderColor: '#000000',
     borderWidth: 2,
@@ -49,7 +46,7 @@ export const useTextEditor = () => {
                 x: 200,
                 y: 200,
                 ...DEFAULT_TEXT_STYLE,
-                isSelected: false,
+                isSelected: true, 
             };
 
             setTextElements((prev) => [...prev, newElement]);
@@ -112,10 +109,13 @@ export const useTextEditor = () => {
 
         if (currentTextInput.trim() && !selectedElementId) {
             addTextElement(currentTextInput);
+        } else {
+            console.log("HERER");
+
+            setCurrentTextInput('');
+            setSelectedElementId(null);
+            setPreviewTextElement(null);
         }
-        setCurrentTextInput('');
-        setSelectedElementId(null);
-        setPreviewTextElement(null);
     };
 
     const handleStyleChange = (key: string, value: any) => {

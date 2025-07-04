@@ -29,7 +29,10 @@ export const useEditorStore = create<StoreState>()(
         temporal(
             (set) => ({
                 stickers: [],
-                availableStickers: [{ name: 'Sticker 1', src: '/sticker.svg' }],
+                availableStickers: [
+                    { name: 'Sticker 1', src: '/sticker.svg' },
+                    { name: 'Sticker 2', src: '/s.svg' }
+                ],
                 selectedStickerId: null,
                 textElements: [],
                 selectedElementId: null,

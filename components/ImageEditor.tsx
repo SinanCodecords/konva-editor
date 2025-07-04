@@ -1,13 +1,14 @@
+"use client";
 
 import { Stage, Layer, Image as KonvaImage } from "react-konva";
 import { Button } from "./ui/button";
-import TextControls from "./text-controls/TextControls";
 import EditableText from "./EditableText";
 import { useImageEditor } from "../hooks/useImageEditor";
 import EditableSticker from "./EditableSticker";
 import StickerControls from "./StickerControls";
 import UndoRedoControls from "./UndoRedoControls";
 import useUndoRedoKeyboardShortcuts from "@/hooks/keyboardShortcuts/useUndo";
+import TextControls from "./text-controls/TextControls";
 
 const ImageEditor = () => {
     const {
@@ -46,7 +47,7 @@ const ImageEditor = () => {
 
     return (
         <div className="p-4 max-w-[1400px] mx-auto">
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div className="lg:col-span-1 space-y-6">
                     <TextControls
                         textContent={currentTextInput}
@@ -68,7 +69,7 @@ const ImageEditor = () => {
                     <UndoRedoControls />
                 </div>
 
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-3">
                     <div className="border rounded-lg overflow-hidden mb-4">
                         <Stage
                             width={1024}
