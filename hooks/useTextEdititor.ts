@@ -17,7 +17,12 @@ const DEFAULT_TEXT_STYLE = {
     hasBackground: false,
     backgroundColor: '#ffffff',
     backgroundOpacity: 0.8,
-    backgroundRadius: 5
+    backgroundRadius: 5,
+
+    // New border properties
+    hasBorder: false,
+    borderColor: '#000000',
+    borderWidth: 2,
 };
 
 export const useTextEditor = () => {
@@ -196,6 +201,9 @@ export const useTextEditor = () => {
                 backgroundColor: selectedTextElement.backgroundColor,
                 backgroundOpacity: selectedTextElement.backgroundOpacity,
                 backgroundRadius: selectedTextElement.backgroundRadius,
+                hasBorder: selectedTextElement.hasBorder,
+                borderColor: selectedTextElement.borderColor,
+                borderWidth: selectedTextElement.borderWidth,
             };
         }
 
@@ -210,6 +218,9 @@ export const useTextEditor = () => {
             backgroundColor: DEFAULT_TEXT_STYLE.backgroundColor,
             backgroundOpacity: DEFAULT_TEXT_STYLE.backgroundOpacity,
             backgroundRadius: DEFAULT_TEXT_STYLE.backgroundRadius,
+            hasBorder: DEFAULT_TEXT_STYLE.hasBorder,
+            borderColor: DEFAULT_TEXT_STYLE.borderColor,
+            borderWidth: DEFAULT_TEXT_STYLE.borderWidth,
         };
     };
 

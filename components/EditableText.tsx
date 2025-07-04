@@ -25,13 +25,6 @@ const EditableText = ({
         }
     }, [textElement.isSelected, transformerRef]);
 
-    const handleTransformEnd = () => {
-        if (textRef.current) {
-            const node = textRef.current;
-            onTransform(node);
-        }
-    };
-
     const handleGroupTransformEnd = () => {
         if (groupRef.current && textRef.current) {
             const group = groupRef.current;
@@ -57,7 +50,6 @@ const EditableText = ({
     const textWidth = textRef.current?.width() || 0;
     const textHeight = textRef.current?.height() || 0;
     const scaledTextWidth = textWidth * textElement.scaleX;
-
 
     const backgroundPadding = 8;
     const backgroundWidth = textWidth + (backgroundPadding * 2);
@@ -95,6 +87,9 @@ const EditableText = ({
                         shadowColor={textElement.isSelected ? "#4A90E2" : "transparent"}
                         shadowBlur={textElement.isSelected ? 5 : 0}
                         shadowOpacity={textElement.isSelected ? 0.3 : 0}
+
+                        stroke={textElement.hasBorder ? textElement.borderColor : undefined}
+                        strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
                     />
                 )}
                 <Text
@@ -109,9 +104,11 @@ const EditableText = ({
                     fontStyle={textElement.fontStyle}
                     opacity={textElement.opacity}
                     align={textElement.align}
+
+                    stroke={textElement.hasBorder ? textElement.borderColor : undefined}
+                    strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
                     shadowColor={!textElement.hasBackground && textElement.isSelected ? "#4A90E2" : "transparent"}
                     shadowBlur={!textElement.hasBackground && textElement.isSelected ? 5 : 0}
-                    shadowOpacity={!textElement.hasBackground && textElement.isSelected ? 0.3 : 0}
                 />
             </Group>
             <XButton

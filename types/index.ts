@@ -12,7 +12,7 @@ export interface EditableTextProps {
 export type TextStyle = "bold" | "normal" | "italic";
 export type TextAlign = "left" | "center" | "right";
 
-export type ElementStyles = {
+export interface ElementStyles {
     fontSize: number;
     fontFamily: string;
     fill: string;
@@ -24,6 +24,10 @@ export type ElementStyles = {
     backgroundColor: string;
     backgroundOpacity: number;
     backgroundRadius: number;
+
+    hasBorder: boolean;
+    borderColor: string;
+    borderWidth: number;
 }
 
 export interface TextControlsProps {
@@ -40,26 +44,15 @@ export interface TextControlsProps {
 export type ColorControlsProps = Pick<TextControlsProps, 'textStyle' | 'handleStyleChange'>;
 export type FontControlsProps = Omit<TextControlsProps, "handleControlFocusOut">;
 
-export interface TextElement {
+export interface TextElement extends ElementStyles {
     id: string;
     text: string;
     x: number;
     y: number;
-    fontSize: number;
-    fontFamily: string;
-    fill: string;
     rotation: number;
     scaleX: number;
     scaleY: number;
     isSelected: boolean;
-    fontStyle: TextStyle;
-    align: TextAlign;
-    opacity: number;
-
-    hasBackground: boolean;
-    backgroundColor: string;
-    backgroundOpacity: number;
-    backgroundRadius: number;
 }
 
 export interface StickerControlsProps {
