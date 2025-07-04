@@ -19,6 +19,11 @@ export type ElementStyles = {
     fontStyle: TextStyle;
     opacity: number;
     align: TextAlign;
+
+    hasBackground: boolean;
+    backgroundColor: string;
+    backgroundOpacity: number;
+    backgroundRadius: number;
 }
 
 export interface TextControlsProps {
@@ -50,6 +55,11 @@ export interface TextElement {
     fontStyle: TextStyle;
     align: TextAlign;
     opacity: number;
+
+    hasBackground: boolean;
+    backgroundColor: string;
+    backgroundOpacity: number;
+    backgroundRadius: number;
 }
 
 export interface StickerControlsProps {

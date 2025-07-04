@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Text, Transformer, Group } from "react-konva";
+import { Text, Transformer, Group, Rect } from "react-konva";
 import Konva from "konva";
 import { EditableTextProps } from "@/types";
 import useDelete from "@/hooks/keyboardShortcuts/useDelete";
@@ -16,10 +16,11 @@ const EditableText = ({
     // for keyboard events
     useDelete();
     const textRef = useRef<Konva.Text>(null);
+    const groupRef = useRef<Konva.Group>(null);
 
     useEffect(() => {
-        if (transformerRef?.current && textRef.current && textElement.isSelected) {
-            transformerRef.current.nodes([textRef.current]);
+        if (transformerRef?.current && groupRef.current && textElement.isSelected) {
+            transformerRef.current.nodes([groupRef.current]);
             transformerRef.current.getLayer()?.batchDraw();
         }
     }, [textElement.isSelected, transformerRef]);
@@ -31,8 +32,36 @@ const EditableText = ({
         }
     };
 
-    const baseTextWidth = textRef.current?.width() || 0;
-    const scaledTextWidth = baseTextWidth * textElement.scaleX;
+    const handleGroupTransformEnd = () => {
+        if (groupRef.current && textRef.current) {
+            const group = groupRef.current;
+            const textNode = textRef.current;
+
+            // Create a mock Konva.Text object with the transformed properties
+            const mockTextNode = {
+                ...textNode,
+                x: () => group.x(),
+                y: () => group.y(),
+                rotation: () => group.rotation(),
+                scaleX: () => group.scaleX(),
+                scaleY: () => group.scaleY(),
+                width: () => textNode.width() * group.scaleX(),
+                height: () => textNode.height() * group.scaleY(),
+            } as Konva.Text;
+
+            onTransform(mockTextNode);
+        }
+    };
+
+    // Calculate text dimensions for background
+    const textWidth = textRef.current?.width() || 0;
+    const textHeight = textRef.current?.height() || 0;
+    const scaledTextWidth = textWidth * textElement.scaleX;
+
+
+    const backgroundPadding = 8;
+    const backgroundWidth = textWidth + (backgroundPadding * 2);
+    const backgroundHeight = textHeight + (backgroundPadding * 2);
 
     const xSize = 20;
     const xOffset = 5;
@@ -41,39 +70,58 @@ const EditableText = ({
 
     return (
         <>
-            <Group>
+            <Group
+                ref={groupRef}
+                x={textElement.x}
+                y={textElement.y}
+                rotation={textElement.rotation}
+                scaleX={textElement.scaleX}
+                scaleY={textElement.scaleY}
+                draggable={true}
+                onDragEnd={onDragEnd}
+                onTransformEnd={handleGroupTransformEnd}
+                onClick={onSelect}
+                onTap={onSelect}
+            >
+                {textElement.hasBackground && (
+                    <Rect
+                        x={-backgroundPadding}
+                        y={-backgroundPadding}
+                        width={backgroundWidth}
+                        height={backgroundHeight}
+                        fill={textElement.backgroundColor}
+                        opacity={textElement.backgroundOpacity}
+                        cornerRadius={textElement.backgroundRadius}
+                        shadowColor={textElement.isSelected ? "#4A90E2" : "transparent"}
+                        shadowBlur={textElement.isSelected ? 5 : 0}
+                        shadowOpacity={textElement.isSelected ? 0.3 : 0}
+                    />
+                )}
                 <Text
                     ref={textRef}
                     id={textElement.id}
                     text={textElement.text}
-                    x={textElement.x}
-                    y={textElement.y}
+                    x={0}
+                    y={0}
                     fontSize={textElement.fontSize}
                     fontFamily={textElement.fontFamily}
                     fill={textElement.fill}
-                    rotation={textElement.rotation}
                     fontStyle={textElement.fontStyle}
                     opacity={textElement.opacity}
-                    scaleX={textElement.scaleX}
-                    scaleY={textElement.scaleY}
-                    draggable={true}
-                    onDragEnd={onDragEnd}
-                    onTransformEnd={handleTransformEnd}
-                    onClick={onSelect}
-                    onTap={onSelect}
-                    shadowColor={textElement.isSelected ? "#4A90E2" : "transparent"}
-                    shadowBlur={textElement.isSelected ? 5 : 0}
-                    shadowOpacity={textElement.isSelected ? 0.3 : 0}
-                />
-                <XButton
-                    x={x}
-                    y={y}
-                    size={xSize}
-                    isSelected={textElement.isSelected}
-                    onClick={onClose}
-                    onTap={onClose}
+                    align={textElement.align}
+                    shadowColor={!textElement.hasBackground && textElement.isSelected ? "#4A90E2" : "transparent"}
+                    shadowBlur={!textElement.hasBackground && textElement.isSelected ? 5 : 0}
+                    shadowOpacity={!textElement.hasBackground && textElement.isSelected ? 0.3 : 0}
                 />
             </Group>
+            <XButton
+                x={x}
+                y={y}
+                size={xSize}
+                isSelected={textElement.isSelected}
+                onClick={onClose}
+                onTap={onClose}
+            />
             {textElement.isSelected && transformerRef && (
                 <Transformer
                     ref={transformerRef}

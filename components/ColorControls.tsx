@@ -4,113 +4,179 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "./ui/slider";
+import { Switch } from "./ui/switch";
+
+import ColorPicker from "./ColorPicker";
 
 const ColorControls = ({
     textStyle,
     handleStyleChange
 }: ColorControlsProps) => {
-    const [colorFormat, setColorFormat] = useState<"string" | "hex" | "rgb">("hex");
-    const [inputValue, setInputValue] = useState(textStyle.fill);
+    const [textColorFormat, setTextColorFormat] = useState<"string" | "hex" | "rgb">("hex");
+    const [backgroundColorFormat, setBackgroundColorFormat] = useState<"string" | "hex" | "rgb">("hex");
+    const [textInputValue, setTextInputValue] = useState(textStyle.fill);
+    const [backgroundInputValue, setBackgroundInputValue] = useState(textStyle.backgroundColor);
 
     useEffect(() => {
-        setInputValue(textStyle.fill);
+        setTextInputValue(textStyle.fill);
     }, [textStyle.fill]);
 
-    const colors = [
-        "#FF0000",
-        "#FFFFFF",
-        "#000000",
-        "#00FFFF",
-        "#00FF00",
-        "#FFFF00",
-        "#0000FF",
-        "#FF6347",
-        "#008080",
-        "#800080"
-    ];
-
-    const handleColorSelect = (color: string) => {
-        setInputValue(color);
-        handleStyleChange("fill", color);
-    };
-
-    const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setInputValue(value);
-        handleStyleChange("fill", value);
-    };
+    useEffect(() => {
+        setBackgroundInputValue(textStyle.backgroundColor);
+    }, [textStyle.backgroundColor]);
 
     const handleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
+        setTextInputValue(e.target.value);
     };
 
     const handleTextInputBlur = () => {
-        handleStyleChange("fill", inputValue);
+        handleStyleChange("fill", textInputValue);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleTextKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            handleStyleChange("fill", inputValue);
+            handleStyleChange("fill", textInputValue);
+            e.currentTarget.blur();
+        }
+    };
+
+    const handleBackgroundInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBackgroundInputValue(e.target.value);
+    };
+
+    const handleBackgroundInputBlur = () => {
+        handleStyleChange("backgroundColor", backgroundInputValue);
+    };
+
+    const handleBackgroundKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleStyleChange("backgroundColor", backgroundInputValue);
             e.currentTarget.blur();
         }
     };
 
     return (
-        <div className="space-y-4">
-            <div>
-                <Label className="text-sm font-medium">Text Color</Label>
-            </div>
+        <div className="space-y-6">
+            {/* Text Color Section */}
+            <div className="space-y-4">
+                <div>
+                    <Label className="text-sm font-medium">Text Color</Label>
+                </div>
 
-            <div className="flex gap-2 items-center flex-wrap">
-                <Input
-                    type="color"
-                    value={textStyle.fill.startsWith('#') ? textStyle.fill : '#000000'}
-                    onChange={handleColorPickerChange}
-                    className="w-12 h-8 p-0 border-2 rounded-lg cursor-pointer"
+                <ColorPicker
+                    value={textStyle.fill}
+                    onChange={(color) => {
+                        setTextInputValue(color);
+                        handleStyleChange("fill", color);
+                    }}
                 />
-                {colors.map((color, index) => (
-                    <div
-                        key={index}
-                        className={`w-8 h-8 rounded-full border-2 cursor-pointer transition-all hover:scale-110 ${textStyle.fill === color ? 'border-gray-800 shadow-lg' : 'border-gray-300'
-                            }`}
-                        style={{ backgroundColor: color }}
-                        onClick={() => handleColorSelect(color)}
-                        title={color}
+
+                <div className="flex gap-2 items-center">
+                    <Select value={textColorFormat} onValueChange={(value: "string" | "hex" | "rgb") => setTextColorFormat(value)}>
+                        <SelectTrigger className="w-24">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="hex">Hex</SelectItem>
+                            <SelectItem value="rgb">RGB</SelectItem>
+                            <SelectItem value="string">String</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Input
+                        type="text"
+                        value={textInputValue}
+                        onChange={handleTextInputChange}
+                        onBlur={handleTextInputBlur}
+                        onKeyDown={handleTextKeyDown}
+                        className="flex-1"
                     />
-                ))}
+                </div>
+
+                <div>
+                    <Label>Text Opacity</Label>
+                    <Slider
+                        value={[textStyle.opacity]}
+                        onValueChange={([value]) => handleStyleChange("opacity", value)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        className="mt-2"
+                    />
+                </div>
             </div>
 
-            <div className="flex gap-2 items-center">
-                <Select value={colorFormat} onValueChange={(value: "string" | "hex" | "rgb") => setColorFormat(value)}>
-                    <SelectTrigger className="w-24">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="hex">Hex</SelectItem>
-                        <SelectItem value="rgb">RGB</SelectItem>
-                        <SelectItem value="string">String</SelectItem>
-                    </SelectContent>
-                </Select>
 
-                <Input
-                    type="text"
-                    value={inputValue}
-                    onChange={handleTextInputChange}
-                    onBlur={handleTextInputBlur}
-                    onKeyDown={handleKeyDown}
-                    className="flex-1"
-                />
-            </div>
-            <div>
-                <Label>Text Opacity</Label>
-                <Slider
-                    value={[textStyle.opacity]}
-                    onValueChange={([value]) => handleStyleChange("opacity", value)}
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    className="mt-2"
-                />
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Text Background</Label>
+                    <Switch
+                        checked={textStyle.hasBackground}
+                        onCheckedChange={(checked) => handleStyleChange("hasBackground", checked)}
+                    />
+                </div>
+
+                {textStyle.hasBackground && (
+                    <div className="space-y-4">
+                        <div>
+                            <Label className="text-sm font-medium">Background Color</Label>
+                        </div>
+
+                        <ColorPicker
+                            value={textStyle.backgroundColor}
+                            onChange={(color) => {
+                                setBackgroundInputValue(color);
+                                handleStyleChange("backgroundColor", color);
+                            }}
+                        />
+
+                        <div className="flex gap-2 items-center">
+                            <Select value={backgroundColorFormat} onValueChange={(value: "string" | "hex" | "rgb") => setBackgroundColorFormat(value)}>
+                                <SelectTrigger className="w-24">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="hex">Hex</SelectItem>
+                                    <SelectItem value="rgb">RGB</SelectItem>
+                                    <SelectItem value="string">String</SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            <Input
+                                type="text"
+                                value={backgroundInputValue}
+                                onChange={handleBackgroundInputChange}
+                                onBlur={handleBackgroundInputBlur}
+                                onKeyDown={handleBackgroundKeyDown}
+                                className="flex-1"
+                            />
+                        </div>
+
+                        <div>
+                            <Label>Background Opacity</Label>
+                            <Slider
+                                value={[textStyle.backgroundOpacity]}
+                                onValueChange={([value]) => handleStyleChange("backgroundOpacity", value)}
+                                min={0}
+                                max={1}
+                                step={0.01}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        <div>
+                            <Label>Background Radius</Label>
+                            <Slider
+                                value={[textStyle.backgroundRadius]}
+                                onValueChange={([value]) => handleStyleChange("backgroundRadius", value)}
+                                min={0}
+                                max={50}
+                                step={1}
+                                className="mt-2"
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -12,7 +12,12 @@ const DEFAULT_TEXT_STYLE = {
     scaleY: 1,
     fontStyle: 'normal' as TextStyle,
     align: "center" as TextAlign,
-    opacity: 1
+    opacity: 1,
+
+    hasBackground: false,
+    backgroundColor: '#ffffff',
+    backgroundOpacity: 0.8,
+    backgroundRadius: 5
 };
 
 export const useTextEditor = () => {
@@ -122,12 +127,19 @@ export const useTextEditor = () => {
     };
 
     const handleTextTransform = (id: string, node: Konva.Text) => {
+        // Extract the transform values safely
+        const x = typeof node.x === 'function' ? node.x() : node.x;
+        const y = typeof node.y === 'function' ? node.y() : node.y;
+        const rotation = typeof node.rotation === 'function' ? node.rotation() : node.rotation;
+        const scaleX = typeof node.scaleX === 'function' ? node.scaleX() : node.scaleX;
+        const scaleY = typeof node.scaleY === 'function' ? node.scaleY() : node.scaleY;
+
         updateTextElement(id, {
-            x: node.x(),
-            y: node.y(),
-            rotation: node.rotation(),
-            scaleX: node.scaleX(),
-            scaleY: node.scaleY(),
+            x,
+            y,
+            rotation,
+            scaleX,
+            scaleY,
         });
     };
 
@@ -180,6 +192,10 @@ export const useTextEditor = () => {
                 fontStyle: selectedTextElement.fontStyle,
                 align: selectedTextElement.align,
                 opacity: selectedTextElement.opacity,
+                hasBackground: selectedTextElement.hasBackground,
+                backgroundColor: selectedTextElement.backgroundColor,
+                backgroundOpacity: selectedTextElement.backgroundOpacity,
+                backgroundRadius: selectedTextElement.backgroundRadius,
             };
         }
 
@@ -190,6 +206,10 @@ export const useTextEditor = () => {
             fontStyle: DEFAULT_TEXT_STYLE.fontStyle,
             align: DEFAULT_TEXT_STYLE.align,
             opacity: DEFAULT_TEXT_STYLE.opacity,
+            hasBackground: DEFAULT_TEXT_STYLE.hasBackground,
+            backgroundColor: DEFAULT_TEXT_STYLE.backgroundColor,
+            backgroundOpacity: DEFAULT_TEXT_STYLE.backgroundOpacity,
+            backgroundRadius: DEFAULT_TEXT_STYLE.backgroundRadius,
         };
     };
 
