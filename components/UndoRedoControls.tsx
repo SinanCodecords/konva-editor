@@ -6,7 +6,7 @@ const UndoRedoControls = () => {
     const { undo, redo } = useUndoRedoStore();
 
     return (
-        <div className="p-4 rounded-lg border bg-gray-800">
+        <div className="p-4 rounded-lg border bg-gray-900">
             <h3 className="text-lg font-semibold mb-4">History</h3>
 
             <div className="flex gap-2">

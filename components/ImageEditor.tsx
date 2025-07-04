@@ -1,4 +1,3 @@
-"use client";
 
 import { Stage, Layer, Image as KonvaImage } from "react-konva";
 import { Button } from "./ui/button";
