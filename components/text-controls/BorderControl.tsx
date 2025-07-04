@@ -85,7 +85,7 @@ const BorderControl = ({
                             value={[textStyle.borderWidth]}
                             onValueChange={([value]) => handleStyleChange("borderWidth", value)}
                             min={0}
-                            max={10}
+                            max={20}
                             step={0.5}
                             className="mt-2"
                         />

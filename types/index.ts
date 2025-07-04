@@ -91,3 +91,9 @@ export interface XButtonProps {
     onTap: () => void;
     isSelected: boolean;
 }
+
+
+export interface ColorPickerProps {
+    value: string;
+    onChange: (color: string) => void;
+}

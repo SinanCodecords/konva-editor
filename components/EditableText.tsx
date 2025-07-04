@@ -107,8 +107,6 @@ const EditableText = ({
 
                     stroke={textElement.hasBorder ? textElement.borderColor : undefined}
                     strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
-                    shadowColor={!textElement.hasBackground && textElement.isSelected ? "#4A90E2" : "transparent"}
-                    shadowBlur={!textElement.hasBackground && textElement.isSelected ? 5 : 0}
                 />
             </Group>
             <XButton

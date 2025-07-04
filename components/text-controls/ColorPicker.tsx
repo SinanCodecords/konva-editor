@@ -1,12 +1,7 @@
 import { Input } from "@/components/ui/input";
+import { ColorPickerProps } from "@/types";
 
-interface ColorPickerProps {
-    value: string;
-    onChange: (color: string) => void;
-    colors?: string[];
-}
-
-const ColorPicker = ({ value, onChange, colors = [
+const COLORS = [
     "#FF0000",
     "#FFFFFF",
     "#000000",
@@ -17,7 +12,9 @@ const ColorPicker = ({ value, onChange, colors = [
     "#FF6347",
     "#008080",
     "#800080"
-] }: ColorPickerProps) => {
+];
+
+const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
     return (
         <div className="flex gap-2 items-center flex-wrap">
             <Input
@@ -26,7 +23,7 @@ const ColorPicker = ({ value, onChange, colors = [
                 onChange={(e) => onChange(e.target.value)}
                 className="w-12 h-8 p-0 border-2 rounded-lg cursor-pointer"
             />
-            {colors.map((color, index) => (
+            {COLORS.map((color, index) => (
                 <div
                     key={index}
                     className={`w-8 h-8 rounded-full border-2 cursor-pointer transition-all hover:scale-110 ${value === color ? 'border-gray-800 shadow-lg' : 'border-gray-300'
