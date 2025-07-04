@@ -6,6 +6,7 @@ import BackgroundControls from './BackgroundControls';
 import BorderControl from './BorderControl';
 import FontControls from './FontControls';
 import TextInput from './TextInput';
+import { Separator } from '../ui/separator';
 
 const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
     textContent,
@@ -49,6 +50,7 @@ const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
                             textStyle={textStyle}
                             handleStyleChange={handleStyleChange}
                         />
+                        <Separator />
                         <BackgroundControls
                             textStyle={textStyle}
                             handleStyleChange={handleStyleChange}
@@ -62,6 +64,7 @@ const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
                             textStyle={textStyle}
                             handleStyleChange={handleStyleChange}
                         />
+                        <Separator />
                         <BorderControl
                             textStyle={textStyle}
                             handleStyleChange={handleStyleChange}
