@@ -2,6 +2,8 @@ import { forwardRef } from 'react';
 import { TextControlsProps } from "@/types";
 import FontControls from './FontControls';
 import ColorControls from './ColorControls';
+import BackgroundControls from './BackgroundControls';
+import BorderControl from './BorderControl';
 
 const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
     textContent,
@@ -32,6 +34,14 @@ const ControlPanel = forwardRef<HTMLDivElement, TextControlsProps>(({
                     changeTextAlign={changeTextAlign}
                 />
                 <ColorControls
+                    textStyle={textStyle}
+                    handleStyleChange={handleStyleChange}
+                />
+                <BackgroundControls
+                    textStyle={textStyle}
+                    handleStyleChange={handleStyleChange}
+                />
+                <BorderControl
                     textStyle={textStyle}
                     handleStyleChange={handleStyleChange}
                 />

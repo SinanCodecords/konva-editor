@@ -1,7 +1,7 @@
 
 import { Stage, Layer, Image as KonvaImage } from "react-konva";
 import { Button } from "./ui/button";
-import TextControls from "./TextControls";
+import TextControls from "./text-controls/TextControls";
 import EditableText from "./EditableText";
 import { useImageEditor } from "../hooks/useImageEditor";
 import EditableSticker from "./EditableSticker";

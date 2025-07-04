@@ -41,7 +41,9 @@ export interface TextControlsProps {
     changeTextAlign: (align: TextAlign) => void;
 }
 
-export type ColorControlsProps = Pick<TextControlsProps, 'textStyle' | 'handleStyleChange'>;
+export type ColorInputTypes = "string" | "hex" | "rgb";
+
+export type TextStyleControlsProps = Pick<TextControlsProps, 'textStyle' | 'handleStyleChange'>;
 export type FontControlsProps = Omit<TextControlsProps, "handleControlFocusOut">;
 
 export interface TextElement extends ElementStyles {
