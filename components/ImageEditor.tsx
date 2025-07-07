@@ -123,12 +123,17 @@ const ImageEditor = () => {
                                 {previewTextElement && (
                                     <EditableText
                                         key="preview"
-                                        textElement={previewTextElement}
+                                        textElement={{
+                                            ...previewTextElement,
+                                            isSelected: true
+                                        }}
                                         onDragEnd={() => { }}
-                                        onClose={() => { }}
+                                        onClose={() => {
+                                            removeText();
+                                        }}
                                         onTransform={() => { }}
                                         onSelect={() => { }}
-                                        transformerRef={null}
+                                        transformerRef={transformerRef}
                                     />
                                 )}
                             </Layer>

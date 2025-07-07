@@ -161,7 +161,12 @@ export const useTextEditor = () => {
     };
 
     const removeText = (id?: string) => {
+        console.log("HERE");
+
         const targetId = id || selectedElementId;
+        if (id === "preview") {
+            console.log("PREVIEW");
+        }
         if (targetId) {
             setTextElements((prev) => prev.filter((el) => el.id !== targetId));
             if (selectedElementId === targetId) {
