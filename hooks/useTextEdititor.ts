@@ -138,6 +138,7 @@ export const useTextEditor = () => {
         const rotation = typeof node.rotation === 'function' ? node.rotation() : node.rotation;
         const scaleX = typeof node.scaleX === 'function' ? node.scaleX() : node.scaleX;
         const scaleY = typeof node.scaleY === 'function' ? node.scaleY() : node.scaleY;
+        const fontSize = typeof node.fontSize === 'function' ? node.fontSize() : node.fontSize;
 
         updateTextElement(id, {
             x,
@@ -145,6 +146,7 @@ export const useTextEditor = () => {
             rotation,
             scaleX,
             scaleY,
+            fontSize,
         });
     };
 

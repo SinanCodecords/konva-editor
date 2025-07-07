@@ -13,7 +13,6 @@ const EditableText = ({
     transformerRef,
     onClose
 }: EditableTextProps) => {
-    // for keyboard events
     useDelete();
     const textRef = useRef<Konva.Text>(null);
     const groupRef = useRef<Konva.Group>(null);
@@ -30,23 +29,29 @@ const EditableText = ({
             const group = groupRef.current;
             const textNode = textRef.current;
 
-            // Create a mock Konva.Text object with the transformed properties
+            const scaleX = group.scaleX();
+            const scaleY = group.scaleY();
+            const newFontSize = Math.round(textElement.fontSize * Math.max(scaleX, scaleY));
+
+            group.scaleX(1);
+            group.scaleY(1);
+
             const mockTextNode = {
                 ...textNode,
                 x: () => group.x(),
                 y: () => group.y(),
                 rotation: () => group.rotation(),
-                scaleX: () => group.scaleX(),
-                scaleY: () => group.scaleY(),
-                width: () => textNode.width() * group.scaleX(),
-                height: () => textNode.height() * group.scaleY(),
+                scaleX: () => 1,
+                scaleY: () => 1,
+                fontSize: () => newFontSize,
+                width: () => textNode.width(),
+                height: () => textNode.height(),
             } as Konva.Text;
 
             onTransform(mockTextNode);
         }
     };
 
-    // Calculate text dimensions for background
     const textWidth = textRef.current?.width() || 0;
     const textHeight = textRef.current?.height() || 0;
 
@@ -54,7 +59,33 @@ const EditableText = ({
     const backgroundWidth = textWidth + (backgroundPadding * 2);
     const backgroundHeight = textHeight + (backgroundPadding * 2);
 
-    // Calculate X button position accounting for transformations
+    const getTextPosition = () => {
+        if (!textElement.hasBackground) {
+            return { x: 0, y: 0 };
+        }
+
+        let x = 0;
+        const y = 0;
+
+        switch (textElement.align) {
+            case 'left':
+                x = 0;
+                break;
+            case 'center':
+                x = backgroundPadding;
+                break;
+            case 'right':
+                x = backgroundPadding * 2;
+                break;
+            default:
+                x = 0;
+        }
+
+        return { x, y };
+    };
+
+    const textPosition = getTextPosition();
+
     const getXButtonPosition = () => {
         if (!groupRef.current) {
             return { x: textElement.x, y: textElement.y };
@@ -103,7 +134,6 @@ const EditableText = ({
                         shadowColor={textElement.isSelected ? "#4A90E2" : "transparent"}
                         shadowBlur={textElement.isSelected ? 5 : 0}
                         shadowOpacity={textElement.isSelected ? 0.3 : 0}
-
                         stroke={textElement.hasBorder ? textElement.borderColor : undefined}
                         strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
                     />
@@ -112,14 +142,15 @@ const EditableText = ({
                     ref={textRef}
                     id={textElement.id}
                     text={textElement.text}
-                    x={0}
-                    y={0}
+                    x={textPosition.x}
+                    y={textPosition.y}
                     fontSize={textElement.fontSize}
                     fontFamily={textElement.fontFamily}
                     fill={textElement.fill}
                     fontStyle={textElement.fontStyle}
                     opacity={textElement.opacity}
                     align={textElement.align}
+                    width={textElement.hasBackground ? textWidth : undefined}
                     stroke={textElement.hasBorder ? textElement.borderColor : undefined}
                     strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
                 />
