@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, Transformer, Group, Rect } from "react-konva";
 import Konva from "konva";
 import { EditableTextProps } from "@/types";
@@ -13,9 +13,11 @@ const EditableText = ({
     transformerRef,
     onClose
 }: EditableTextProps) => {
+    // for keyboard events
     useDelete();
     const textRef = useRef<Konva.Text>(null);
     const groupRef = useRef<Konva.Group>(null);
+    const [, forceUpdate] = useState({});
 
     useEffect(() => {
         if (transformerRef?.current && groupRef.current && textElement.isSelected) {
@@ -23,6 +25,32 @@ const EditableText = ({
             transformerRef.current.getLayer()?.batchDraw();
         }
     }, [textElement.isSelected, transformerRef]);
+
+    useEffect(() => {
+        if (transformerRef?.current && groupRef.current && textElement.isSelected) {
+            const timer = setTimeout(() => {
+                if (transformerRef.current && groupRef.current) {
+                    transformerRef.current.forceUpdate();
+                    transformerRef.current.getLayer()?.batchDraw();
+
+                    groupRef.current.getLayer()?.batchDraw();
+                    forceUpdate({});
+                }
+            }, 0);
+            return () => clearTimeout(timer);
+        }
+    }, [
+        textElement.fontSize,
+        textElement.text,
+        textElement.fontFamily,
+        textElement.fontStyle,
+        textElement.hasBackground,
+        textElement.backgroundRadius,
+        textElement.hasBorder,
+        textElement.borderWidth,
+        transformerRef,
+        textElement.isSelected
+    ]);
 
     const handleGroupTransformEnd = () => {
         if (groupRef.current && textRef.current) {
@@ -49,6 +77,15 @@ const EditableText = ({
             } as Konva.Text;
 
             onTransform(mockTextNode);
+
+            setTimeout(() => {
+                if (transformerRef?.current && groupRef.current) {
+                    transformerRef.current.forceUpdate();
+                    transformerRef.current.getLayer()?.batchDraw();
+                    groupRef.current.getLayer()?.batchDraw();
+                    forceUpdate({});
+                }
+            }, 0);
         }
     };
 
@@ -87,15 +124,14 @@ const EditableText = ({
     const textPosition = getTextPosition();
 
     const getXButtonPosition = () => {
-        if (!groupRef.current) {
-            return { x: textElement.x, y: textElement.y };
+        if (!groupRef.current || !textRef.current) {
+            return { x: textElement.x + 100, y: textElement.y - 10 };
         }
 
-        // Get the transformed bounding box of the group
         const group = groupRef.current;
+
         const clientRect = group.getClientRect();
 
-        // Account for transformer handle size (typically 8px + some padding)
         const transformerPadding = textElement.isSelected ? 16 : 8;
 
         // Position X button at top-right corner with proper spacing
