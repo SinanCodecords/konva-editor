@@ -49,16 +49,32 @@ const EditableText = ({
     // Calculate text dimensions for background
     const textWidth = textRef.current?.width() || 0;
     const textHeight = textRef.current?.height() || 0;
-    const scaledTextWidth = textWidth * textElement.scaleX;
 
     const backgroundPadding = 8;
     const backgroundWidth = textWidth + (backgroundPadding * 2);
     const backgroundHeight = textHeight + (backgroundPadding * 2);
 
-    const xSize = 20;
-    const xOffset = 5;
-    const x = textElement.x + scaledTextWidth + xOffset;
-    const y = textElement.y - xOffset;
+    // Calculate X button position accounting for transformations
+    const getXButtonPosition = () => {
+        if (!groupRef.current) {
+            return { x: textElement.x, y: textElement.y };
+        }
+
+        // Get the transformed bounding box of the group
+        const group = groupRef.current;
+        const clientRect = group.getClientRect();
+
+        // Account for transformer handle size (typically 8px + some padding)
+        const transformerPadding = textElement.isSelected ? 16 : 8;
+
+        // Position X button at top-right corner with proper spacing
+        const x = clientRect.x + clientRect.width + transformerPadding - 10;
+        const y = clientRect.y - transformerPadding + 7;
+
+        return { x, y };
+    };
+
+    const xButtonPos = getXButtonPosition();
 
     return (
         <>
@@ -109,14 +125,7 @@ const EditableText = ({
                     strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
                 />
             </Group>
-            <XButton
-                x={x}
-                y={y}
-                size={xSize}
-                isSelected={textElement.isSelected}
-                onClick={onClose}
-                onTap={onClose}
-            />
+
             {textElement.isSelected && transformerRef && (
                 <Transformer
                     ref={transformerRef}
@@ -136,6 +145,14 @@ const EditableText = ({
                     centeredScaling={false}
                 />
             )}
+
+            <XButton
+                x={xButtonPos.x}
+                y={xButtonPos.y}
+                isSelected={textElement.isSelected}
+                onClick={onClose}
+                onTap={onClose}
+            />
         </>
     );
 };

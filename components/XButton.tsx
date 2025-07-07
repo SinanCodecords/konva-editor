@@ -1,7 +1,7 @@
 import { Group, Circle, Text } from "react-konva";
 import type { XButtonProps } from "@/types";
 
-const XButton = ({ x, y, size = 24, onClick, onTap, isSelected }: XButtonProps) => {
+const XButton = ({ x, y, size = 20, onClick, onTap, isSelected }: XButtonProps) => {
     if (!isSelected) {
         return null;
     }
@@ -13,21 +13,20 @@ const XButton = ({ x, y, size = 24, onClick, onTap, isSelected }: XButtonProps) 
                 radius={size / 2}
                 fill="#000000"
                 stroke="#ffffff"
-                strokeWidth={2}
+                strokeWidth={1}
                 shadowBlur={2}
                 shadowColor="#000000"
                 shadowOpacity={0.2}
                 opacity={0.9}
             />
             <Text
-                text="×"
+                text="x"
                 fontSize={size}
                 fill="#ffffff"
                 width={size}
                 height={size}
                 align="center"
                 verticalAlign="middle"
-                fontStyle="bold"
                 offsetX={size / 2}
                 offsetY={size / 2}
             />

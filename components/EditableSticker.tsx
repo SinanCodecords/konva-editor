@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Image as KonvaImage, Transformer, Group } from "react-konva";
 import type Konva from "konva";
 import { EditableStickerProps } from "@/types";
@@ -15,8 +15,9 @@ const EditableSticker = ({
     transformerRef,
     onStickerRemove,
 }: EditableStickerProps) => {
-    // for kyboard events
+    // for keyboard events
     useDelete();
+    const groupRef = useRef<Konva.Group>(null);
 
     useEffect(() => {
         if (transformerRef?.current && stickerElement.isSelected) {
@@ -34,15 +35,31 @@ const EditableSticker = ({
         onTransform(node);
     };
 
-    // X button positioning
-    const xSize = 24;
-    const xOffset = 8;
-    const x = stickerElement.x + (stickerImage?.width || 80) * stickerElement.scaleX + xOffset;
-    const y = stickerElement.y - xOffset;
+    // Calculate X button position accounting for transformations
+    const getXButtonPosition = () => {
+        if (!groupRef.current) {
+            return { x: stickerElement.x, y: stickerElement.y };
+        }
+
+        // Get the transformed bounding box of the group
+        const group = groupRef.current;
+        const clientRect = group.getClientRect();
+
+        // Account for transformer handle size (typically 8px + some padding)
+        const transformerPadding = stickerElement.isSelected ? 16 : 8;
+
+        // Position X button at top-right corner with proper spacing
+        const x = clientRect.x + clientRect.width + transformerPadding - 10;
+        const y = clientRect.y - transformerPadding + 7;
+
+        return { x, y };
+    };
+
+    const xButtonPos = getXButtonPosition();
 
     return (
         <>
-            <Group>
+            <Group ref={groupRef}>
                 <KonvaImage
                     id={stickerElement.id}
                     image={stickerImage}
@@ -57,15 +74,8 @@ const EditableSticker = ({
                     onClick={onSelect}
                     onTap={onSelect}
                 />
-                <XButton
-                    x={x}
-                    y={y}
-                    size={xSize}
-                    isSelected={stickerElement.isSelected}
-                    onClick={() => onStickerRemove(stickerElement.id)}
-                    onTap={() => onStickerRemove(stickerElement.id)}
-                />
             </Group>
+
             {stickerElement.isSelected && transformerRef && (
                 <Transformer
                     ref={transformerRef}
@@ -77,6 +87,14 @@ const EditableSticker = ({
                     anchorSize={8}
                 />
             )}
+
+            <XButton
+                x={xButtonPos.x}
+                y={xButtonPos.y}
+                isSelected={stickerElement.isSelected}
+                onClick={() => onStickerRemove(stickerElement.id)}
+                onTap={() => onStickerRemove(stickerElement.id)}
+            />
         </>
     );
 };
