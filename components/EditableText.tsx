@@ -120,7 +120,6 @@ const EditableText = ({
                     fontStyle={textElement.fontStyle}
                     opacity={textElement.opacity}
                     align={textElement.align}
-
                     stroke={textElement.hasBorder ? textElement.borderColor : undefined}
                     strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
                 />
@@ -137,6 +136,7 @@ const EditableText = ({
                     }}
                     rotateEnabled={true}
                     borderStroke="#4A90E2"
+                    enabledAnchors={["top-left", "top-right", "bottom-left", "bottom-right", "bottom-center", "top-center"]}
                     borderStrokeWidth={2}
                     anchorFill="#4A90E2"
                     anchorStroke="#4A90E2"
