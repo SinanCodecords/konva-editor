@@ -59,16 +59,23 @@ const EditableText = ({
 
             const scaleX = group.scaleX();
             const scaleY = group.scaleY();
-            const newFontSize = Math.round(textElement.fontSize * Math.max(scaleX, scaleY));
 
+            const avgScale = (scaleX + scaleY) / 2;
+            const newFontSize = Math.max(8, Math.round(textElement.fontSize * avgScale));
+
+            const x = group.x();
+            const y = group.y();
+            const rotation = group.rotation();
+
+            // Reset scales to 1
             group.scaleX(1);
             group.scaleY(1);
 
             const mockTextNode = {
                 ...textNode,
-                x: () => group.x(),
-                y: () => group.y(),
-                rotation: () => group.rotation(),
+                x: () => x,
+                y: () => y,
+                rotation: () => rotation,
                 scaleX: () => 1,
                 scaleY: () => 1,
                 fontSize: () => newFontSize,
@@ -129,9 +136,7 @@ const EditableText = ({
         }
 
         const group = groupRef.current;
-
         const clientRect = group.getClientRect();
-
         const transformerPadding = textElement.isSelected ? 16 : 8;
 
         // Position X button at top-right corner with proper spacing
@@ -150,8 +155,8 @@ const EditableText = ({
                 x={textElement.x}
                 y={textElement.y}
                 rotation={textElement.rotation}
-                scaleX={textElement.scaleX}
-                scaleY={textElement.scaleY}
+                scaleX={textElement.scaleX || 1}
+                scaleY={textElement.scaleY || 1}
                 draggable={true}
                 onDragEnd={onDragEnd}
                 onTransformEnd={handleGroupTransformEnd}
