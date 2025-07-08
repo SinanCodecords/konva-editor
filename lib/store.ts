@@ -26,6 +26,8 @@ interface StoreState {
     setBgImageObj: (image: HTMLImageElement | null) => void;
     bringToFront: (elementId: string, elementType: 'text' | 'sticker') => void;
     setMaxZIndex: (zIndex: number) => void;
+
+    clearSelectedStickers: () => void;
 }
 
 export const useEditorStore = create<StoreState>()(
@@ -84,6 +86,13 @@ export const useEditorStore = create<StoreState>()(
                             maxZIndex: newZIndex
                         });
                     }
+                },
+                clearSelectedStickers: () => {
+                    set({
+                        selectedStickerId: null,
+                        stickers: get().stickers.map(el => ({ ...el, isSelected: false }))
+                    });
+                    return
                 }
             }),
             {

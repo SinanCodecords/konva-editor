@@ -36,6 +36,7 @@ export const useTextEditor = () => {
         maxZIndex,
         setMaxZIndex,
         bringToFront,
+        clearSelectedStickers
     } = useEditorStore();
 
     const controlsRef = useRef<HTMLDivElement>(null); 
@@ -160,6 +161,7 @@ export const useTextEditor = () => {
         setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
         setSelectedElementId(id);
         updateTextElement(id, { isSelected: true });
+        clearSelectedStickers()
         const element = textElements.find((el) => el.id === id);
         if (element) {
             setCurrentTextInput(element.text);
