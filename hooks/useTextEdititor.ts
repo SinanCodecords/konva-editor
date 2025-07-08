@@ -39,46 +39,53 @@ export const useTextEditor = () => {
         clearSelectedStickers
     } = useEditorStore();
 
-    const controlsRef = useRef<HTMLDivElement>(null); 
+    const controlsRef = useRef<HTMLDivElement>(null);
 
     const selectedTextElement = textElements.find((el) => el.id === selectedElementId) || null;
 
-    const addTextElement = (text: string) => {
-        if (text.trim()) {
-            const newZIndex = maxZIndex + 1;
-            const newElement: TextElement = {
-                id: `text-${Date.now()}-${Math.random()}`,
-                text: text.trim(),
-                x: 200,
-                y: 200,
-                ...DEFAULT_TEXT_STYLE,
-                zIndex: newZIndex,
-                isSelected: true, 
-            };
+    const createLiveTextElement = (text: string) => {
+        if (!text.trim()) return null;
 
-            setTextElements((prev) => [...prev, newElement]);
-            setSelectedElementId(newElement.id);
-            setCurrentTextInput('');
-            setPreviewTextElement(null);
-            setMaxZIndex(newZIndex);
-        }
+        const newZIndex = maxZIndex + 1;
+        const newElement: TextElement = {
+            id: `text-${Date.now()}-${Math.random()}`,
+            text: text.trim(),
+            x: 200,
+            y: 200,
+            ...DEFAULT_TEXT_STYLE,
+            zIndex: newZIndex,
+            isSelected: false,
+        };
+
+        return newElement;
+    };
+
+    const commitTextElement = (element: TextElement) => {
+        setTextElements((prev) => [...prev, element]);
+        setSelectedElementId(element.id);
+        setMaxZIndex(element.zIndex);
+        setPreviewTextElement(null);
+
+        setTimeout(() => {
+            updateTextElement(element.id, { isSelected: true });
+        }, 0);
     };
 
     const changeTextStyle = (style: TextStyle) => {
         if (selectedElementId) {
-            const element = textElements.find((el) => el.id === selectedElementId);
-            if (element) {
-                updateTextElement(selectedElementId, { fontStyle: style });
-            }
+            updateTextElement(selectedElementId, { fontStyle: style });
+        } else if (previewTextElement) {
+            const updatedPreview = { ...previewTextElement, fontStyle: style };
+            setPreviewTextElement(updatedPreview);
         }
     };
 
     const changeTextAlign = (align: TextAlign) => {
         if (selectedElementId) {
-            const element = textElements.find((el) => el.id === selectedElementId);
-            if (element) {
-                updateTextElement(selectedElementId, { align });
-            }
+            updateTextElement(selectedElementId, { align });
+        } else if (previewTextElement) {
+            const updatedPreview = { ...previewTextElement, align };
+            setPreviewTextElement(updatedPreview);
         }
     };
 
@@ -95,15 +102,10 @@ export const useTextEditor = () => {
             updateTextElement(selectedElementId, { text });
         } else {
             if (text.trim()) {
-                setPreviewTextElement({
-                    id: 'preview',
-                    text: text.trim(),
-                    x: 200,
-                    y: 200,
-                    ...DEFAULT_TEXT_STYLE,
-                    zIndex: maxZIndex + 1,
-                    isSelected: false,
-                });
+                const liveElement = createLiveTextElement(text);
+                if (liveElement) {
+                    setPreviewTextElement(liveElement);
+                }
             } else {
                 setPreviewTextElement(null);
             }
@@ -116,8 +118,8 @@ export const useTextEditor = () => {
             return;
         }
 
-        if (currentTextInput.trim() && !selectedElementId) {
-            addTextElement(currentTextInput);
+        if (previewTextElement && currentTextInput.trim()) {
+            commitTextElement(previewTextElement);
         } else {
             setCurrentTextInput('');
             setSelectedElementId(null);
@@ -128,18 +130,27 @@ export const useTextEditor = () => {
     const handleStyleChange = (key: string, value: any) => {
         if (selectedElementId) {
             updateTextElement(selectedElementId, { [key]: value });
+        } else if (previewTextElement) {
+            const updatedPreview = { ...previewTextElement, [key]: value };
+            setPreviewTextElement(updatedPreview);
         }
     };
 
     const handleTextDragEnd = (id: string, e: Konva.KonvaEventObject<DragEvent>) => {
-        updateTextElement(id, {
+        const updates = {
             x: e.target.x(),
             y: e.target.y(),
-        });
+        };
+
+        if (id === 'preview' && previewTextElement) {
+            const updatedPreview = { ...previewTextElement, ...updates };
+            setPreviewTextElement(updatedPreview);
+        } else {
+            updateTextElement(id, updates);
+        }
     };
 
     const handleTextTransform = (id: string, node: Konva.Text) => {
-        // Extract the transform values safely
         const x = typeof node.x === 'function' ? node.x() : node.x;
         const y = typeof node.y === 'function' ? node.y() : node.y;
         const rotation = typeof node.rotation === 'function' ? node.rotation() : node.rotation;
@@ -147,35 +158,51 @@ export const useTextEditor = () => {
         const scaleY = typeof node.scaleY === 'function' ? node.scaleY() : node.scaleY;
         const fontSize = typeof node.fontSize === 'function' ? node.fontSize() : node.fontSize;
 
-        updateTextElement(id, {
+        const updates = {
             x,
             y,
             rotation,
             scaleX,
             scaleY,
             fontSize,
-        });
+        };
+
+        if (id === 'preview' && previewTextElement) {
+            const updatedPreview = { ...previewTextElement, ...updates };
+            setPreviewTextElement(updatedPreview);
+        } else {
+            updateTextElement(id, updates);
+        }
     };
 
     const handleTextSelect = (id: string) => {
         setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
-        setSelectedElementId(id);
-        updateTextElement(id, { isSelected: true });
-        clearSelectedStickers()
-        const element = textElements.find((el) => el.id === id);
-        if (element) {
-            setCurrentTextInput(element.text);
-        }
+        clearSelectedStickers();
 
-        bringToFront(id, 'text');
+        if (id === 'preview' && previewTextElement) {
+            commitTextElement(previewTextElement);
+        } else {
+            setSelectedElementId(id);
+            updateTextElement(id, { isSelected: true });
+
+            const element = textElements.find((el) => el.id === id);
+            if (element) {
+                setCurrentTextInput(element.text);
+            }
+
+            bringToFront(id, 'text');
+        }
     };
 
     const removeText = (id?: string) => {
         const targetId = id || selectedElementId;
-        if (id === "preview") {
+
+        if (id === "preview" || (targetId === null && previewTextElement)) {
             setPreviewTextElement(null);
+            setCurrentTextInput('');
             return;
         }
+
         if (targetId) {
             setTextElements((prev) => prev.filter((el) => el.id !== targetId));
             if (selectedElementId === targetId) {
@@ -187,40 +214,48 @@ export const useTextEditor = () => {
     };
 
     const makeCaps = () => {
+        const uppercaseText = currentTextInput.toUpperCase();
+        setCurrentTextInput(uppercaseText);
+
         if (selectedElementId) {
-            const element = textElements.find((el) => el.id === selectedElementId);
-            if (element) {
-                const uppercaseText = element.text.toUpperCase();
-                updateTextElement(selectedElementId, { text: uppercaseText });
-                setCurrentTextInput(uppercaseText);
-            }
+            updateTextElement(selectedElementId, { text: uppercaseText });
+        } else if (previewTextElement) {
+            const updatedPreview = { ...previewTextElement, text: uppercaseText };
+            setPreviewTextElement(updatedPreview);
         }
     };
 
     const deselectAll = () => {
         setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
         setSelectedElementId(null);
-        setPreviewTextElement(null);
-        setCurrentTextInput('');
+
+        if (previewTextElement && currentTextInput.trim()) {
+            commitTextElement(previewTextElement);
+        } else {
+            setPreviewTextElement(null);
+            setCurrentTextInput('');
+        }
     };
 
     const getCurrentTextStyle = (): ElementStyles => {
-        if (selectedTextElement) {
+        const activeElement = selectedTextElement || previewTextElement;
+
+        if (activeElement) {
             return {
-                fontSize: selectedTextElement.fontSize,
-                fontFamily: selectedTextElement.fontFamily,
-                fill: selectedTextElement.fill,
-                fontStyle: selectedTextElement.fontStyle,
-                align: selectedTextElement.align,
-                opacity: selectedTextElement.opacity,
-                hasBackground: selectedTextElement.hasBackground,
-                backgroundColor: selectedTextElement.backgroundColor,
-                backgroundOpacity: selectedTextElement.backgroundOpacity,
-                backgroundRadius: selectedTextElement.backgroundRadius,
-                hasBorder: selectedTextElement.hasBorder,
-                borderColor: selectedTextElement.borderColor,
-                borderWidth: selectedTextElement.borderWidth,
-                zIndex: selectedTextElement.zIndex
+                fontSize: activeElement.fontSize,
+                fontFamily: activeElement.fontFamily,
+                fill: activeElement.fill,
+                fontStyle: activeElement.fontStyle,
+                align: activeElement.align,
+                opacity: activeElement.opacity,
+                hasBackground: activeElement.hasBackground,
+                backgroundColor: activeElement.backgroundColor,
+                backgroundOpacity: activeElement.backgroundOpacity,
+                backgroundRadius: activeElement.backgroundRadius,
+                hasBorder: activeElement.hasBorder,
+                borderColor: activeElement.borderColor,
+                borderWidth: activeElement.borderWidth,
+                zIndex: activeElement.zIndex
             };
         }
 
@@ -260,6 +295,6 @@ export const useTextEditor = () => {
         handleControlFocusOut,
         changeTextStyle,
         changeTextAlign,
-        controlsRef 
+        controlsRef
     };
 };
