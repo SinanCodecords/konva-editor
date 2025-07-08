@@ -55,32 +55,23 @@ const EditableText = ({
     const handleGroupTransformEnd = () => {
         if (groupRef.current && textRef.current) {
             const group = groupRef.current;
-            const textNode = textRef.current;
 
             const scaleX = group.scaleX();
             const scaleY = group.scaleY();
-
-            const avgScale = (scaleX + scaleY) / 2;
-            const newFontSize = Math.max(8, Math.round(textElement.fontSize * avgScale));
-
             const x = group.x();
             const y = group.y();
             const rotation = group.rotation();
 
-            // Reset scales to 1
-            group.scaleX(1);
-            group.scaleY(1);
-
             const mockTextNode = {
-                ...textNode,
+                ...textRef.current,
                 x: () => x,
                 y: () => y,
                 rotation: () => rotation,
-                scaleX: () => 1,
-                scaleY: () => 1,
-                fontSize: () => newFontSize,
-                width: () => textNode.width(),
-                height: () => textNode.height(),
+                scaleX: () => scaleX,
+                scaleY: () => scaleY,
+                fontSize: () => textElement.fontSize,
+                width: () => textRef.current?.width() || 0,
+                height: () => textRef.current?.height() || 0,
             } as Konva.Text;
 
             onTransform(mockTextNode);
