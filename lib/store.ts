@@ -30,8 +30,14 @@ export const useEditorStore = create<StoreState>()(
             (set) => ({
                 stickers: [],
                 availableStickers: [
-                    { name: 'Sticker 1', src: '/sticker.svg' },
-                    { name: 'Sticker 2', src: '/s.svg' }
+                    { name: 'Sticker ', src: '/sticker.svg' },
+                    { name: 'Sticker s', src: '/s.svg' },
+                    { name: 'Sticker 1', src: '/1.svg' },
+                    { name: 'Sticker 2', src: '/2.svg' },
+                    { name: 'Sticker 3', src: '/3.svg' },
+                    { name: 'Sticker 4', src: '/4.svg' },
+                    { name: 'Sticker 5', src: '/5.svg' },
+                    { name: 'Sticker 6', src: '/6.svg' },
                 ],
                 selectedStickerId: null,
                 textElements: [],
