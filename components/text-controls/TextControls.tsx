@@ -74,6 +74,6 @@ const TextControls = forwardRef<HTMLDivElement, TextControlsProps>(({
         </div>
     );
 });
-
+TextControls.displayName = "TextControls"
 
 export default TextControls;
