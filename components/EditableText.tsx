@@ -128,7 +128,7 @@ const EditableText = ({
 
         const group = groupRef.current;
         const clientRect = group.getClientRect();
-        const transformerPadding = textElement.isSelected ? 16 : 8;
+        const transformerPadding = 20;
 
         // Position X button at top-right corner with proper spacing
         const x = clientRect.x + clientRect.width + transformerPadding - 10;

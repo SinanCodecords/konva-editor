@@ -35,20 +35,16 @@ const EditableSticker = ({
         onTransform(node);
     };
 
-    // Calculate X button position accounting for transformations
     const getXButtonPosition = () => {
         if (!groupRef.current) {
             return { x: stickerElement.x, y: stickerElement.y };
         }
 
-        // Get the transformed bounding box of the group
         const group = groupRef.current;
         const clientRect = group.getClientRect();
 
-        // Account for transformer handle size (typically 8px + some padding)
-        const transformerPadding = stickerElement.isSelected ? 16 : 8;
+        const transformerPadding = 20;
 
-        // Position X button at top-right corner with proper spacing
         const x = clientRect.x + clientRect.width + transformerPadding - 10;
         const y = clientRect.y - transformerPadding + 7;
 
