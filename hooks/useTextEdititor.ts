@@ -97,6 +97,7 @@ export const useTextEditor = () => {
 
     const setTextContent = (text: string) => {
         setCurrentTextInput(text);
+        clearSelectedStickers();
 
         if (selectedElementId) {
             updateTextElement(selectedElementId, { text });
