@@ -28,6 +28,8 @@ export interface ElementStyles {
     hasBorder: boolean;
     borderColor: string;
     borderWidth: number;
+
+    zIndex: number;
 }
 
 export interface TextControlsProps {
@@ -71,6 +73,8 @@ export interface StickerElement {
     scaleX: number;
     scaleY: number;
     isSelected: boolean;
+    src: string;
+    zIndex: number;
 }
 
 export interface EditableStickerProps {

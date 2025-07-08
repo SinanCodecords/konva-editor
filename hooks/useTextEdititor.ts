@@ -20,6 +20,7 @@ const DEFAULT_TEXT_STYLE = {
     hasBorder: false,
     borderColor: '#000000',
     borderWidth: 2,
+    zIndex: 0,
 };
 
 export const useTextEditor = () => {
@@ -32,6 +33,9 @@ export const useTextEditor = () => {
         setCurrentTextInput,
         previewTextElement,
         setPreviewTextElement,
+        maxZIndex,
+        setMaxZIndex,
+        bringToFront,
     } = useEditorStore();
 
     const controlsRef = useRef<HTMLDivElement>(null); 
@@ -40,12 +44,14 @@ export const useTextEditor = () => {
 
     const addTextElement = (text: string) => {
         if (text.trim()) {
+            const newZIndex = maxZIndex + 1;
             const newElement: TextElement = {
                 id: `text-${Date.now()}-${Math.random()}`,
                 text: text.trim(),
                 x: 200,
                 y: 200,
                 ...DEFAULT_TEXT_STYLE,
+                zIndex: newZIndex,
                 isSelected: true, 
             };
 
@@ -53,6 +59,7 @@ export const useTextEditor = () => {
             setSelectedElementId(newElement.id);
             setCurrentTextInput('');
             setPreviewTextElement(null);
+            setMaxZIndex(newZIndex);
         }
     };
 
@@ -93,6 +100,7 @@ export const useTextEditor = () => {
                     x: 200,
                     y: 200,
                     ...DEFAULT_TEXT_STYLE,
+                    zIndex: maxZIndex + 1,
                     isSelected: false,
                 });
             } else {
@@ -110,8 +118,6 @@ export const useTextEditor = () => {
         if (currentTextInput.trim() && !selectedElementId) {
             addTextElement(currentTextInput);
         } else {
-            console.log("HERER");
-
             setCurrentTextInput('');
             setSelectedElementId(null);
             setPreviewTextElement(null);
@@ -158,14 +164,15 @@ export const useTextEditor = () => {
         if (element) {
             setCurrentTextInput(element.text);
         }
+
+        bringToFront(id, 'text');
     };
 
     const removeText = (id?: string) => {
-        console.log("HERE");
-
         const targetId = id || selectedElementId;
         if (id === "preview") {
-            console.log("PREVIEW");
+            setPreviewTextElement(null);
+            return;
         }
         if (targetId) {
             setTextElements((prev) => prev.filter((el) => el.id !== targetId));
@@ -211,6 +218,7 @@ export const useTextEditor = () => {
                 hasBorder: selectedTextElement.hasBorder,
                 borderColor: selectedTextElement.borderColor,
                 borderWidth: selectedTextElement.borderWidth,
+                zIndex: selectedTextElement.zIndex
             };
         }
 
@@ -227,6 +235,7 @@ export const useTextEditor = () => {
             backgroundRadius: DEFAULT_TEXT_STYLE.backgroundRadius,
             hasBorder: DEFAULT_TEXT_STYLE.hasBorder,
             borderColor: DEFAULT_TEXT_STYLE.borderColor,
+            zIndex: DEFAULT_TEXT_STYLE.zIndex,
             borderWidth: DEFAULT_TEXT_STYLE.borderWidth,
         };
     };

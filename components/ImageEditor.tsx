@@ -42,8 +42,19 @@ const ImageEditor = () => {
         controlsRef
     } = useImageEditor();
 
-    // for keyborad egvents
-    useUndoRedoKeyboardShortcuts()
+    // for keyboard events
+    useUndoRedoKeyboardShortcuts();
+
+    const getAllElementsSorted = () => {
+        const allElements = [
+            ...textElements.map(el => ({ ...el, type: 'text' as const })),
+            ...stickers.map(sticker => ({ ...sticker, type: 'sticker' as const }))
+        ];
+
+        return allElements.sort((a, b) => a.zIndex - b.zIndex);
+    };
+
+    const sortedElements = getAllElementsSorted();
 
     return (
         <div className="p-4 max-w-[1400px] mx-auto">
@@ -90,35 +101,39 @@ const ImageEditor = () => {
                                     />
                                 )}
 
-                                {stickers.map((sticker) => (
-                                    <EditableSticker
-                                        key={sticker.id}
-                                        stickerElement={sticker}
-                                        stickerImage={(() => {
-                                            const img = new window.Image();
-                                            img.src = sticker.src;
-                                            img.crossOrigin = "anonymous";
-                                            return img;
-                                        })()}
-                                        onDragEnd={(e) => handleStickerDragEnd(sticker.id, e)}
-                                        onTransform={(node) => handleStickerTransform(sticker.id, node)}
-                                        onSelect={() => handleStickerSelect(sticker.id)}
-                                        transformerRef={sticker.isSelected ? transformerRef : null}
-                                        onStickerRemove={handleStickerRemove}
-                                    />
-                                ))}
-
-                                {textElements.map((textElement) => (
-                                    <EditableText
-                                        key={textElement.id}
-                                        textElement={textElement}
-                                        onDragEnd={(e) => handleTextDragEnd(textElement.id, e)}
-                                        onClose={() => removeText()}
-                                        onTransform={(node) => handleTextTransform(textElement.id, node)}
-                                        onSelect={() => handleTextSelect(textElement.id)}
-                                        transformerRef={textElement.isSelected ? transformerRef : null}
-                                    />
-                                ))}
+                                {sortedElements.map((element) => {
+                                    if (element.type === 'sticker') {
+                                        return (
+                                            <EditableSticker
+                                                key={element.id}
+                                                stickerElement={element}
+                                                stickerImage={(() => {
+                                                    const img = new window.Image();
+                                                    img.src = element.src;
+                                                    img.crossOrigin = "anonymous";
+                                                    return img;
+                                                })()}
+                                                onDragEnd={(e) => handleStickerDragEnd(element.id, e)}
+                                                onTransform={(node) => handleStickerTransform(element.id, node)}
+                                                onSelect={() => handleStickerSelect(element.id)}
+                                                transformerRef={element.isSelected ? transformerRef : null}
+                                                onStickerRemove={handleStickerRemove}
+                                            />
+                                        );
+                                    } else {
+                                        return (
+                                            <EditableText
+                                                key={element.id}
+                                                textElement={element}
+                                                onDragEnd={(e) => handleTextDragEnd(element.id, e)}
+                                                onClose={() => removeText()}
+                                                onTransform={(node) => handleTextTransform(element.id, node)}
+                                                onSelect={() => handleTextSelect(element.id)}
+                                                transformerRef={element.isSelected ? transformerRef : null}
+                                            />
+                                        );
+                                    }
+                                })}
 
                                 {previewTextElement && (
                                     <EditableText

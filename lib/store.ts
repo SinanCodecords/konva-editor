@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { temporal } from 'zundo';
-import { TextElement } from '@/types';
+import { StickerElement, TextElement } from '@/types';
+
 
 interface StoreState {
-    stickers: any[];
+    stickers: StickerElement[];
     availableStickers: { name: string; src: string; }[];
     selectedStickerId: string | null;
     textElements: TextElement[];
@@ -12,7 +13,8 @@ interface StoreState {
     currentTextInput: string;
     previewTextElement: TextElement | null;
     bgImageObj: HTMLImageElement | null;
-    setStickers: (stickers: any[] | ((prev: any[]) => any[])) => void;
+    maxZIndex: number;
+    setStickers: (stickers: StickerElement[] | ((prev: StickerElement[]) => StickerElement[])) => void;
     setAvailableStickers: (
         stickers: { name: string; src: string; }[] | ((prev: { name: string; src: string; }[]) => { name: string; src: string; }[])
     ) => void;
@@ -22,12 +24,14 @@ interface StoreState {
     setCurrentTextInput: (text: string) => void;
     setPreviewTextElement: (element: TextElement | null) => void;
     setBgImageObj: (image: HTMLImageElement | null) => void;
+    bringToFront: (elementId: string, elementType: 'text' | 'sticker') => void;
+    setMaxZIndex: (zIndex: number) => void;
 }
 
 export const useEditorStore = create<StoreState>()(
     subscribeWithSelector(
         temporal(
-            (set) => ({
+            (set, get) => ({
                 stickers: [],
                 availableStickers: [
                     { name: 'Sticker ', src: '/sticker.svg' },
@@ -45,6 +49,7 @@ export const useEditorStore = create<StoreState>()(
                 currentTextInput: '',
                 previewTextElement: null,
                 bgImageObj: null,
+                maxZIndex: 0,
                 setStickers: (stickers) => set((state) => ({
                     stickers: typeof stickers === 'function' ? stickers(state.stickers) : stickers,
                 })),
@@ -59,16 +64,35 @@ export const useEditorStore = create<StoreState>()(
                 setCurrentTextInput: (text) => set({ currentTextInput: text }),
                 setPreviewTextElement: (element) => set({ previewTextElement: element }),
                 setBgImageObj: (image) => set({ bgImageObj: image }),
+                setMaxZIndex: (zIndex) => set({ maxZIndex: zIndex }),
+                bringToFront: (elementId, elementType) => {
+                    const state = get();
+                    const newZIndex = state.maxZIndex + 1;
+
+                    if (elementType === 'text') {
+                        set({
+                            textElements: state.textElements.map(el =>
+                                el.id === elementId ? { ...el, zIndex: newZIndex } : el
+                            ),
+                            maxZIndex: newZIndex
+                        });
+                    } else if (elementType === 'sticker') {
+                        set({
+                            stickers: state.stickers.map(sticker =>
+                                sticker.id === elementId ? { ...sticker, zIndex: newZIndex } : sticker
+                            ),
+                            maxZIndex: newZIndex
+                        });
+                    }
+                }
             }),
             {
-                // Configure which actions should be tracked for undo/redo
                 partialize: (state) => ({
                     stickers: state.stickers,
-                    textElements: state.textElements, 
+                    textElements: state.textElements,
+                    maxZIndex: state.maxZIndex,
                 }),
-                // Limit the number of undo/redo steps
                 limit: 50,
-                // Equality check to prevent unnecessary history entries
                 equality: (pastState, currentState) =>
                     JSON.stringify(pastState) === JSON.stringify(currentState),
             }
