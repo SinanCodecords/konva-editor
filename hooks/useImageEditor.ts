@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
 import type Konva from 'konva';
-import { useTextEditor } from './useTextEdititor';
 import { useStickerEditor } from './useStickerEditor';
 import { useEditorStore } from '@/lib/store';
+import { useTextEditor } from './useTextEdititor';
 
 export const useImageEditor = () => {
     const stageRef = useRef<Konva.Stage>(null);
     const transformerRef = useRef<Konva.Transformer>(null);
-    const { bgImageObj, setBgImageObj } = useEditorStore();
+    const { bgImageObj, setBgImageObj, setTextElements } = useEditorStore();
 
     useEffect(() => {
         const bgImg = new window.Image();
@@ -70,16 +70,30 @@ export const useImageEditor = () => {
     const downloadImage = () => {
         if (!stageRef.current) return;
 
+        setTextElements((prev) =>
+            prev.map((el) => ({ ...el, isSelected: false }))
+        );
+        setStickers((prev) =>
+            prev.map((sticker) => ({ ...sticker, isSelected: false }))
+        );
+
         if (transformerRef.current) {
             transformerRef.current.nodes([]);
             transformerRef.current.getLayer()?.batchDraw();
         }
 
-        const dataURL = stageRef.current.toDataURL({ pixelRatio: 2 });
-        const link = document.createElement('a');
-        link.download = 'composition.png';
-        link.href = dataURL;
-        link.click();
+        setTimeout(() => {
+            if (stageRef.current) {
+                stageRef.current.batchDraw();
+
+                const dataURL = stageRef.current.toDataURL({ pixelRatio: 2 });
+
+                const link = document.createElement('a');
+                link.download = 'composition.png';
+                link.href = dataURL;
+                link.click();
+            }
+        }, 100); 
     };
 
     return {
@@ -91,7 +105,7 @@ export const useImageEditor = () => {
         setTextContent,
         handleTextDragEnd: (id: string, e: Konva.KonvaEventObject<DragEvent>) => handleTextDragEnd(id, e),
         handleTextTransform: (id: string, node: Konva.Text) => handleTextTransform(id, node),
-        handleTextSelect: (id: string) => handleTextSelect(id),
+        handleTextSelect,
         removeText: () => removeText(),
         handleStyleChange,
         makeCaps,

@@ -194,6 +194,7 @@ const EditableText = ({
                     width={textElement.hasBackground ? textWidth : undefined}
                     stroke={textElement.hasBorder ? textElement.borderColor : undefined}
                     strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
+                    padding={8}
                 />
             </Group>
 
@@ -218,13 +219,15 @@ const EditableText = ({
                 />
             )}
 
-            <XButton
-                x={xButtonPos.x}
-                y={xButtonPos.y}
-                isSelected={textElement.isSelected}
-                onClick={onClose}
-                onTap={onClose}
-            />
+            {textElement.isSelected && transformerRef && (
+                <XButton
+                    x={xButtonPos.x}
+                    y={xButtonPos.y}
+                    isSelected={textElement.isSelected}
+                    onClick={onClose}
+                    onTap={onClose}
+                />
+            )}
         </>
     );
 };

@@ -87,14 +87,15 @@ const EditableSticker = ({
                     anchorSize={8}
                 />
             )}
-
-            <XButton
-                x={xButtonPos.x}
-                y={xButtonPos.y}
-                isSelected={stickerElement.isSelected}
-                onClick={() => onStickerRemove(stickerElement.id)}
-                onTap={() => onStickerRemove(stickerElement.id)}
-            />
+            {stickerElement.isSelected && transformerRef && (
+                <XButton
+                    x={xButtonPos.x}
+                    y={xButtonPos.y}
+                    isSelected={stickerElement.isSelected}
+                    onClick={() => onStickerRemove(stickerElement.id)}
+                    onTap={() => onStickerRemove(stickerElement.id)}
+                />
+            )}
         </>
     );
 };
