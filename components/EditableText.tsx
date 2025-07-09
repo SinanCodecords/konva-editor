@@ -39,18 +39,7 @@ const EditableText = ({
             }, 0);
             return () => clearTimeout(timer);
         }
-    }, [
-        textElement.fontSize,
-        textElement.text,
-        textElement.fontFamily,
-        textElement.fontStyle,
-        textElement.hasBackground,
-        textElement.backgroundRadius,
-        textElement.hasBorder,
-        textElement.borderWidth,
-        transformerRef,
-        textElement.isSelected
-    ]);
+    }, [textElement, transformerRef]);
 
     const handleGroupTransformEnd = () => {
         if (groupRef.current && textRef.current) {

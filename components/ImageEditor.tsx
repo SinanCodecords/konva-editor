@@ -142,12 +142,10 @@ const ImageEditor = () => {
                                             ...previewTextElement,
                                             isSelected: true
                                         }}
-                                        onDragEnd={() => { }}
-                                        onClose={() => {
-                                            removeText();
-                                        }}
-                                        onTransform={() => { }}
-                                        onSelect={() => { }}
+                                        onDragEnd={(e) => handleTextDragEnd('preview', e)}
+                                        onClose={() => removeText()}
+                                        onTransform={(node) => handleTextTransform('preview', node)}
+                                        onSelect={() => handleTextSelect('preview')}
                                         transformerRef={transformerRef}
                                     />
                                 )}

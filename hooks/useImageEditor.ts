@@ -103,7 +103,7 @@ export const useImageEditor = () => {
         previewTextElement,
         currentTextInput,
         setTextContent,
-        handleTextDragEnd: (id: string, e: Konva.KonvaEventObject<DragEvent>) => handleTextDragEnd(id, e),
+        handleTextDragEnd,
         handleTextTransform: (id: string, node: Konva.Text) => handleTextTransform(id, node),
         handleTextSelect,
         removeText: () => removeText(),
