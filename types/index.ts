@@ -12,12 +12,15 @@ export interface EditableTextProps {
 
 export type TextStyle = "bold" | "normal" | "italic";
 export type TextAlign = "left" | "center" | "right";
+export type FontVariant = "normal" | "small-caps";
 
 export interface ElementStyles {
     fontSize: number;
     fontFamily: string;
-    fill: string;
     fontStyle: TextStyle;
+    fontVariant: FontVariant;
+
+    fill: string;
     opacity: number;
     align: TextAlign;
 
@@ -41,6 +44,7 @@ export interface TextControlsProps {
     makeCaps: () => void;
     changeTextStyle: (text: TextStyle) => void;
     changeTextAlign: (align: TextAlign) => void;
+    selectedTextElement: TextElement | null;
 }
 
 export type ColorInputTypes = "string" | "hex" | "rgb";

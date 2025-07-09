@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import type Konva from 'konva';
-import { ElementStyles, TextAlign, TextElement, TextStyle } from '@/types';
+import { ElementStyles, FontVariant, TextAlign, TextElement, TextStyle } from '@/types';
 import { useEditorStore } from '@/hooks/useEditorStore';
 
 const DEFAULT_TEXT_STYLE = {
@@ -10,6 +10,7 @@ const DEFAULT_TEXT_STYLE = {
     rotation: 0,
     scaleX: 1,
     scaleY: 1,
+    fontVariant: "normal" as FontVariant,
     fontStyle: 'normal' as TextStyle,
     align: "center" as TextAlign,
     opacity: 1,
@@ -232,12 +233,9 @@ const useTextEditor = () => {
      * Converts the text of the selected element to uppercase.
      */
     const makeCaps = () => {
-        const uppercaseText = currentTextInput.toUpperCase();
-        setCurrentTextInput(uppercaseText);
-
         const selected = textElements.find((el) => el.isSelected);
         if (selected) {
-            updateTextElement(selected.id, { text: uppercaseText });
+            updateTextElement(selected.id, { fontVariant: selected.fontVariant === "normal" ? "small-caps" : "normal" });
         }
     };
 
@@ -283,6 +281,7 @@ const useTextEditor = () => {
             borderColor: textElement.borderColor,
             borderWidth: textElement.borderWidth,
             zIndex: textElement.zIndex,
+            fontVariant: textElement.fontVariant
         };
     };
 

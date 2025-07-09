@@ -39,7 +39,8 @@ const ImageEditor = () => {
         changeTextAlign,
         controlsRef,
         handleTextDragStart,
-        handleStickerDragStart
+        handleStickerDragStart,
+        selectedTextElement
     } = useImageEditor();
 
     // for keyboard events
@@ -66,6 +67,7 @@ const ImageEditor = () => {
                         textStyle={textStyle}
                         handleStyleChange={handleStyleChange}
                         makeCaps={makeCaps}
+                        selectedTextElement={selectedTextElement}
                         ref={controlsRef}
                         changeTextStyle={changeTextStyle}
                         changeTextAlign={changeTextAlign}

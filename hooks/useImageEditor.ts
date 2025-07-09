@@ -9,19 +9,15 @@ const useImageEditor = () => {
     const transformerRef = useRef<Konva.Transformer>(null);
     const { bgImageObj, setBgImageObj, setTextElements } = useEditorStore();
 
-    // Effect to load the background image once the component mounts.
-    // It creates a new Image object, sets its source, and once loaded,
-    // updates the global state with the image object.
     useEffect(() => {
         const bgImg = new window.Image();
         bgImg.src = '/bg.jpg';
-        bgImg.crossOrigin = 'anonymous'; // Enables cross-origin image loading.
+        bgImg.crossOrigin = 'anonymous'; 
         bgImg.onload = () => {
             setBgImageObj(bgImg);
         };
     }, [setBgImageObj]);
 
-    // Destructuring all the necessary text editing functionalities from the `useTextEditor` hook.
     const {
         textElements,
         currentTextInput,
@@ -37,10 +33,10 @@ const useImageEditor = () => {
         changeTextStyle,
         changeTextAlign,
         controlsRef,
-        handleTextDragStart
+        handleTextDragStart,
+        selectedTextElement
     } = useTextEditor();
 
-    // Destructuring all the necessary sticker editing functionalities from the `useStickerEditor` hook.
     const {
         stickers,
         setStickers,
@@ -64,7 +60,7 @@ const useImageEditor = () => {
      */
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
         // The logic checks if the click target is the stage itself.
-        if (e.target.name() === 'stage') {
+        if (e.target._id === 3 && e.target.getStage()?._id === 1) {
             deselectAll(); // Deselects all text elements.
             setStickers((prev) =>
                 prev.map((sticker) => ({
@@ -148,7 +144,8 @@ const useImageEditor = () => {
         changeTextAlign,
         controlsRef,
         handleTextDragStart,
-        handleStickerDragStart
+        handleStickerDragStart,
+        selectedTextElement
     };
 };
 

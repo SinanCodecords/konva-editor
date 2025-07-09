@@ -15,7 +15,8 @@ const TextControls = forwardRef<HTMLDivElement, TextControlsProps>(({
     handleStyleChange,
     makeCaps,
     changeTextStyle,
-    changeTextAlign
+    changeTextAlign,
+    selectedTextElement
 }, ref) => {
     return (
         <div
@@ -36,6 +37,7 @@ const TextControls = forwardRef<HTMLDivElement, TextControlsProps>(({
                             setTextContent={setTextContent}
                             makeCaps={makeCaps}
                             changeTextAlign={changeTextAlign}
+                            selectedTextElement={selectedTextElement}
                             changeTextStyle={changeTextStyle}
                             textStyle={textStyle}
                         />

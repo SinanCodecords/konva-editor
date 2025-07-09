@@ -167,6 +167,7 @@ const EditableText = ({
                     id={textElement.id}
                     text={textElement.text}
                     x={textPosition.x}
+                    fontVariant={textElement.fontVariant}
                     y={textPosition.y}
                     fontSize={textElement.fontSize}
                     fontFamily={textElement.fontFamily}

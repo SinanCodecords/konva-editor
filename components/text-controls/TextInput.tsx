@@ -11,10 +11,9 @@ const TextInput = ({
     makeCaps,
     changeTextStyle,
     changeTextAlign,
-    setTextContent
+    setTextContent,
+    selectedTextElement
 }: Omit<FontControlsProps, "handleStyleChange">) => {
-    const isAllCaps = textContent === textContent.toUpperCase() && textContent.length > 0;
-
     return (
         <div className="space-y-4">
             <Label>Text Input</Label>
@@ -30,20 +29,20 @@ const TextInput = ({
             <div className="flex gap-2">
                 <Button
                     onClick={makeCaps}
-                    variant={isAllCaps ? "default" : "ghost"}
+                    variant={selectedTextElement?.fontVariant === "small-caps" ? "default" : "ghost"}
                     className="capitalize"
                 >
                     T
                 </Button>
                 <Button
-                    onClick={() => changeTextStyle("bold")}
+                    onClick={() => changeTextStyle(selectedTextElement?.fontStyle == "bold" ? "normal" : "bold")}
                     variant={textStyle.fontStyle === "bold" ? "default" : "ghost"}
                     className="font-extrabold"
                 >
                     B
                 </Button>
                 <Button
-                    onClick={() => changeTextStyle("italic")}
+                    onClick={() => changeTextStyle(selectedTextElement?.fontStyle == "italic" ? "normal" : "italic")}
                     variant={textStyle.fontStyle === "italic" ? "default" : "ghost"}
                     className="italic"
                 >
