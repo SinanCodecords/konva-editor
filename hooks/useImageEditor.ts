@@ -20,7 +20,6 @@ export const useImageEditor = () => {
 
     const {
         textElements,
-        previewTextElement,
         currentTextInput,
         setTextContent,
         handleTextDragEnd,
@@ -100,7 +99,6 @@ export const useImageEditor = () => {
         stageRef,
         transformerRef,
         textElements,
-        previewTextElement,
         currentTextInput,
         setTextContent,
         handleTextDragEnd,

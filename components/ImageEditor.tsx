@@ -15,7 +15,6 @@ const ImageEditor = () => {
         stageRef,
         transformerRef,
         textElements,
-        previewTextElement,
         currentTextInput,
         setTextContent,
         handleTextDragEnd,
@@ -134,21 +133,6 @@ const ImageEditor = () => {
                                         );
                                     }
                                 })}
-
-                                {previewTextElement && (
-                                    <EditableText
-                                        key="preview"
-                                        textElement={{
-                                            ...previewTextElement,
-                                            isSelected: true
-                                        }}
-                                        onDragEnd={(e) => handleTextDragEnd('preview', e)}
-                                        onClose={() => removeText()}
-                                        onTransform={(node) => handleTextTransform('preview', node)}
-                                        onSelect={() => handleTextSelect('preview')}
-                                        transformerRef={transformerRef}
-                                    />
-                                )}
                             </Layer>
                         </Stage>
                     </div>

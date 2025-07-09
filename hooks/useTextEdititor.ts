@@ -31,8 +31,6 @@ export const useTextEditor = () => {
         setSelectedElementId,
         currentTextInput,
         setCurrentTextInput,
-        previewTextElement,
-        setPreviewTextElement,
         maxZIndex,
         setMaxZIndex,
         bringToFront,
@@ -43,49 +41,34 @@ export const useTextEditor = () => {
 
     const selectedTextElement = textElements.find((el) => el.id === selectedElementId) || null;
 
-    const createLiveTextElement = (text: string) => {
-        if (!text.trim()) return null;
-
+    const createNewTextElement = (text: string) => {
         const newZIndex = maxZIndex + 1;
         const newElement: TextElement = {
             id: `text-${Date.now()}-${Math.random()}`,
-            text: text.trim(),
+            text: text,
             x: 200,
             y: 200,
             ...DEFAULT_TEXT_STYLE,
             zIndex: newZIndex,
-            isSelected: false,
+            isSelected: true,
         };
 
+        setTextElements((prev) => [...prev, newElement]);
+        setSelectedElementId(newElement.id);
+        setMaxZIndex(newZIndex);
+
         return newElement;
-    };
-
-    const commitTextElement = (element: TextElement) => {
-        setTextElements((prev) => [...prev, element]);
-        setSelectedElementId(element.id);
-        setMaxZIndex(element.zIndex);
-        setPreviewTextElement(null);
-
-        setTimeout(() => {
-            updateTextElement(element.id, { isSelected: true });
-        }, 0);
     };
 
     const changeTextStyle = (style: TextStyle) => {
         if (selectedElementId) {
             updateTextElement(selectedElementId, { fontStyle: style });
-        } else if (previewTextElement) {
-            const updatedPreview = { ...previewTextElement, fontStyle: style };
-            setPreviewTextElement(updatedPreview);
         }
     };
 
     const changeTextAlign = (align: TextAlign) => {
         if (selectedElementId) {
             updateTextElement(selectedElementId, { align });
-        } else if (previewTextElement) {
-            const updatedPreview = { ...previewTextElement, align };
-            setPreviewTextElement(updatedPreview);
         }
     };
 
@@ -101,39 +84,28 @@ export const useTextEditor = () => {
 
         if (selectedElementId) {
             updateTextElement(selectedElementId, { text });
-        } else {
-            if (text.trim()) {
-                const liveElement = createLiveTextElement(text);
-                if (liveElement) {
-                    setPreviewTextElement(liveElement);
-                }
-            } else {
-                setPreviewTextElement(null);
-            }
+        } else if (text.trim()) {
+            createNewTextElement(text);
         }
     };
 
     const handleControlFocusOut = (e: React.FocusEvent<HTMLDivElement>) => {
-        const relatedTarget = e.relatedTarget as HTMLElement;
+        const relatedTarget = e.relatedTarget;
         if (controlsRef.current && relatedTarget && controlsRef.current.contains(relatedTarget)) {
             return;
         }
 
-        if (previewTextElement && currentTextInput.trim()) {
-            commitTextElement(previewTextElement);
-        } else {
-            setCurrentTextInput('');
-            setSelectedElementId(null);
-            setPreviewTextElement(null);
+        if (selectedElementId && !currentTextInput.trim()) {
+            removeText(selectedElementId);
         }
+
+        setCurrentTextInput('');
+        setSelectedElementId(null);
     };
 
     const handleStyleChange = (key: string, value: any) => {
         if (selectedElementId) {
             updateTextElement(selectedElementId, { [key]: value });
-        } else if (previewTextElement) {
-            const updatedPreview = { ...previewTextElement, [key]: value };
-            setPreviewTextElement(updatedPreview);
         }
     };
 
@@ -142,13 +114,7 @@ export const useTextEditor = () => {
             x: e.target.x(),
             y: e.target.y(),
         };
-
-        if (id === 'preview' && previewTextElement) {
-            const updatedPreview = { ...previewTextElement, ...updates };
-            setPreviewTextElement(updatedPreview);
-        } else {
-            updateTextElement(id, updates);
-        }
+        updateTextElement(id, updates);
     };
 
     const handleTextTransform = (id: string, node: Konva.Text) => {
@@ -168,48 +134,35 @@ export const useTextEditor = () => {
             fontSize,
         };
 
-        if (id === 'preview' && previewTextElement) {
-            const updatedPreview = { ...previewTextElement, ...updates };
-            setPreviewTextElement(updatedPreview);
-        } else {
-            updateTextElement(id, updates);
-        }
+        updateTextElement(id, updates);
     };
 
     const handleTextSelect = (id: string) => {
-        setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
+        setTextElements((prev) =>
+            prev.map((el) => ({
+                ...el,
+                isSelected: el.id === id
+            }))
+        );
         clearSelectedStickers();
 
-        if (id === 'preview' && previewTextElement) {
-            commitTextElement(previewTextElement);
-        } else {
-            setSelectedElementId(id);
-            updateTextElement(id, { isSelected: true });
-
-            const element = textElements.find((el) => el.id === id);
-            if (element) {
-                setCurrentTextInput(element.text);
-            }
-
-            bringToFront(id, 'text');
+        setSelectedElementId(id);
+        const element = textElements.find((el) => el.id === id);
+        if (element) {
+            setCurrentTextInput(element.text);
         }
+
+        bringToFront(id, 'text');
     };
 
     const removeText = (id?: string) => {
         const targetId = id || selectedElementId;
-
-        if (id === "preview" || (targetId === null && previewTextElement)) {
-            setPreviewTextElement(null);
-            setCurrentTextInput('');
-            return;
-        }
 
         if (targetId) {
             setTextElements((prev) => prev.filter((el) => el.id !== targetId));
             if (selectedElementId === targetId) {
                 setSelectedElementId(null);
                 setCurrentTextInput('');
-                setPreviewTextElement(null);
             }
         }
     };
@@ -220,26 +173,28 @@ export const useTextEditor = () => {
 
         if (selectedElementId) {
             updateTextElement(selectedElementId, { text: uppercaseText });
-        } else if (previewTextElement) {
-            const updatedPreview = { ...previewTextElement, text: uppercaseText };
-            setPreviewTextElement(updatedPreview);
         }
     };
 
     const deselectAll = () => {
-        setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
-        setSelectedElementId(null);
+        setTextElements((prev) =>
+            prev.map((el) => ({ ...el, isSelected: false }))
+        );
 
-        if (previewTextElement && currentTextInput.trim()) {
-            commitTextElement(previewTextElement);
-        } else {
-            setPreviewTextElement(null);
-            setCurrentTextInput('');
+        if (selectedElementId) {
+            const selectedElement = textElements.find(el => el.id === selectedElementId);
+            if (selectedElement && !selectedElement.text.trim()) {
+                removeText(selectedElementId);
+            }
         }
+
+        setSelectedElementId(null);
+        setCurrentTextInput('');
     };
 
+
     const getCurrentTextStyle = (): ElementStyles => {
-        const activeElement = selectedTextElement || previewTextElement;
+        const activeElement = selectedTextElement;
 
         if (activeElement) {
             return {
@@ -282,7 +237,6 @@ export const useTextEditor = () => {
         textElements,
         selectedElementId,
         selectedTextElement,
-        previewTextElement,
         currentTextInput,
         setTextContent,
         handleTextDragEnd,

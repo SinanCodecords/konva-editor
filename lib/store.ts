@@ -3,7 +3,6 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { StickerElement, TextElement } from '@/types';
 
-
 interface StoreState {
     stickers: StickerElement[];
     availableStickers: { name: string; src: string; }[];
@@ -11,7 +10,6 @@ interface StoreState {
     textElements: TextElement[];
     selectedElementId: string | null;
     currentTextInput: string;
-    previewTextElement: TextElement | null;
     bgImageObj: HTMLImageElement | null;
     maxZIndex: number;
     setStickers: (stickers: StickerElement[] | ((prev: StickerElement[]) => StickerElement[])) => void;
@@ -22,11 +20,9 @@ interface StoreState {
     setTextElements: (elements: TextElement[] | ((prev: TextElement[]) => TextElement[])) => void;
     setSelectedElementId: (id: string | null) => void;
     setCurrentTextInput: (text: string) => void;
-    setPreviewTextElement: (element: TextElement | null) => void;
     setBgImageObj: (image: HTMLImageElement | null) => void;
     bringToFront: (elementId: string, elementType: 'text' | 'sticker') => void;
     setMaxZIndex: (zIndex: number) => void;
-
     clearSelectedStickers: () => void;
 }
 
@@ -49,7 +45,6 @@ export const useEditorStore = create<StoreState>()(
                 textElements: [],
                 selectedElementId: null,
                 currentTextInput: '',
-                previewTextElement: null,
                 bgImageObj: null,
                 maxZIndex: 0,
                 setStickers: (stickers) => set((state) => ({
@@ -64,7 +59,6 @@ export const useEditorStore = create<StoreState>()(
                 })),
                 setSelectedElementId: (id) => set({ selectedElementId: id }),
                 setCurrentTextInput: (text) => set({ currentTextInput: text }),
-                setPreviewTextElement: (element) => set({ previewTextElement: element }),
                 setBgImageObj: (image) => set({ bgImageObj: image }),
                 setMaxZIndex: (zIndex) => set({ maxZIndex: zIndex }),
                 bringToFront: (elementId, elementType) => {
