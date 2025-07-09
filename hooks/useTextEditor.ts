@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react';
 import type Konva from 'konva';
 import { ElementStyles, TextAlign, TextElement, TextStyle } from '@/types';
-import { useEditorStore } from '@/lib/store';
+import { useEditorStore } from '@/hooks/useEditorStore';
 
 const DEFAULT_TEXT_STYLE = {
     fontSize: 30,
@@ -23,7 +23,7 @@ const DEFAULT_TEXT_STYLE = {
     zIndex: 0,
 };
 
-export const useTextEditor = () => {
+const useTextEditor = () => {
     const {
         textElements,
         setTextElements,
@@ -38,25 +38,35 @@ export const useTextEditor = () => {
 
     const controlsRef = useRef<HTMLDivElement>(null);
 
+    // Memoized selector to efficiently find the currently selected text element.
     const selectedTextElement = useMemo(() => textElements.find((el) => el.isSelected) || null, [textElements]);
 
+    /**
+     * Selects a text element by its ID, updating the application state to reflect
+     * the new selection. It also sets the current text input to the content of the
+     * selected element.
+     *
+     * @param id - The ID of the text element to select.
+     */
     const select = (id: string) => {
-        let text = "";
         setTextElements((prev) =>
             prev.map((el) => {
                 const isSelected = el.id === id;
-                if (!text) {
-                    text = isSelected ? el.text : "";
-                };
-                return {
-                    ...el,
-                    isSelected
-                };
+                if (isSelected) {
+                    setCurrentTextInput(el.text);
+                }
+                return { ...el, isSelected };
             })
         );
-        setCurrentTextInput(text!);
-    }
+    };
 
+    /**
+     * Creates a new text element with default styling and adds it to the canvas.
+     * The new element is automatically selected, and its z-index is set to be the highest.
+     *
+     * @param text - The initial text content for the new element.
+     * @returns The newly created text element.
+     */
     const createNewTextElement = (text: string) => {
         const newZIndex = maxZIndex + 1;
         const newElement: TextElement = {
@@ -75,6 +85,11 @@ export const useTextEditor = () => {
         return newElement;
     };
 
+    /**
+     * Changes the font style (e.g., bold, italic) of the selected text element.
+     *
+     * @param style - The new font style to apply.
+     */
     const changeTextStyle = (style: TextStyle) => {
         const selected = textElements.find((el) => el.isSelected);
         if (selected) {
@@ -82,6 +97,11 @@ export const useTextEditor = () => {
         }
     };
 
+    /**
+     * Changes the text alignment (e.g., left, center) of the selected text element.
+     *
+     * @param align - The new text alignment to apply.
+     */
     const changeTextAlign = (align: TextAlign) => {
         const selected = textElements.find((el) => el.isSelected);
         if (selected) {
@@ -89,6 +109,13 @@ export const useTextEditor = () => {
         }
     };
 
+    /**
+     * A generic function to update properties of a text element. This function is used
+     * by other handlers to modify specific attributes of a text element.
+     *
+     * @param id - The ID of the text element to update.
+     * @param updates - An object containing the properties to update.
+     */
     const updateTextElement = (id: string, updates: Partial<TextElement>) => {
         setTextElements((prev) =>
             prev.map((el) => (el.id === id ? { ...el, ...updates } : el))
@@ -96,6 +123,12 @@ export const useTextEditor = () => {
     };
 
 
+    /**
+     * Sets the text content for a text element. If an element is already selected, it updates
+     * its content. Otherwise, it creates a new text element with the provided text.
+     *
+     * @param text - The text content to set.
+     */
     const setTextContent = (text: string) => {
         clearSelectedStickers();
         const selected = textElements.find((el) => el.isSelected);
@@ -107,6 +140,13 @@ export const useTextEditor = () => {
         }
     };
 
+    /**
+     * Handles the focus out event for the text control inputs. If the input is blurred and
+     * the new focus target is outside the controls container, it deselects the text element.
+     * If the text content is empty, the element is removed.
+     *
+     * @param e - The React focus event.
+     */
     const handleControlFocusOut = (e: React.FocusEvent<HTMLDivElement>) => {
         const relatedTarget = e.relatedTarget;
         if (controlsRef.current && relatedTarget && controlsRef.current.contains(relatedTarget)) {
@@ -122,6 +162,13 @@ export const useTextEditor = () => {
         deselectAll();
     };
 
+    /**
+     * A generic handler for style changes. It updates the specified style property of the
+     * selected text element with the new value.
+     *
+     * @param key - The style property to change (e.g., 'fill', 'fontSize').
+     * @param value - The new value for the style property.
+     */
     const handleStyleChange = (key: string, value: any) => {
         const selected = textElements.find((el) => el.isSelected);
         if (selected) {
@@ -129,13 +176,25 @@ export const useTextEditor = () => {
         }
     };
 
+    /**
+     * Handles the drag start event for a text element. If the dragged element is not
+     * already selected, it selects it.
+     *
+     * @param id - The ID of the text element being dragged.
+     */
     const handleTextDragStart = (id: string) => {
         const element = textElements.find((el) => el.id === id);
         if (element && !element.isSelected) {
-            select(id)
+            select(id);
         }
     };
 
+    /**
+     * Handles the drag end event, updating the text element's position in the state.
+     *
+     * @param id - The ID of the text element.
+     * @param e - The Konva drag event object.
+     */
     const handleTextDragEnd = (id: string, e: Konva.KonvaEventObject<DragEvent>) => {
         const updates = {
             x: e.target.x(),
@@ -144,42 +203,55 @@ export const useTextEditor = () => {
         updateTextElement(id, updates);
     };
 
+    /**
+     * Handles the transform event, updating the text element's properties (such as scale,
+     * rotation, and position) in the state.
+     *
+     * @param id - The ID of the text element.
+     * @param node - The Konva text node being transformed.
+     */
     const handleTextTransform = (id: string, node: Konva.Text) => {
-        const x = typeof node.x === 'function' ? node.x() : node.x;
-        const y = typeof node.y === 'function' ? node.y() : node.y;
-        const rotation = typeof node.rotation === 'function' ? node.rotation() : node.rotation;
-        const scaleX = typeof node.scaleX === 'function' ? node.scaleX() : node.scaleX;
-        const scaleY = typeof node.scaleY === 'function' ? node.scaleY() : node.scaleY;
-        const fontSize = typeof node.fontSize === 'function' ? node.fontSize() : node.fontSize;
-
         const updates = {
-            x,
-            y,
-            rotation,
-            scaleX,
-            scaleY,
-            fontSize,
+            x: node.x(),
+            y: node.y(),
+            rotation: node.rotation(),
+            scaleX: node.scaleX(),
+            scaleY: node.scaleY(),
+            fontSize: node.fontSize(),
         };
 
         updateTextElement(id, updates);
     };
 
+    /**
+     * Handles the selection of a text element, ensuring it is brought to the front
+     * and that any selected stickers are deselected.
+     *
+     * @param id - The ID of the text element to select.
+     */
     const handleTextSelect = (id: string) => {
         clearSelectedStickers();
-
-        select(id)
+        select(id);
         bringToFront(id, 'text');
     };
 
+    /**
+     * Removes a text element from the canvas. If no ID is provided, it removes the
+     * currently selected element.
+     *
+     * @param id - The ID of the text element to remove.
+     */
     const removeText = (id?: string) => {
         const targetId = id || textElements.find((el) => el.isSelected)?.id;
 
         if (targetId) {
             setTextElements((prev) => prev.filter((el) => el.id !== targetId));
-            update({ currentTextInput: "" });
         }
     };
 
+    /**
+     * Converts the text of the selected element to uppercase.
+     */
     const makeCaps = () => {
         const uppercaseText = currentTextInput.toUpperCase();
         setCurrentTextInput(uppercaseText);
@@ -190,6 +262,9 @@ export const useTextEditor = () => {
         }
     };
 
+    /**
+     * Deselects all text elements. If a selected element has no text content, it is removed.
+     */
     const deselectAll = () => {
         setTextElements((prev) =>
             prev.map((el) => ({ ...el, isSelected: false }))
@@ -203,9 +278,15 @@ export const useTextEditor = () => {
         setCurrentTextInput('');
     };
 
+    /**
+     * Retrieves the style of the currently selected text element. If no element is selected,
+     * it returns the default text style. This is useful for displaying the current styles
+     * in the UI controls.
+     *
+     * @returns The style object of the selected text element or the default style.
+     */
     const getCurrentTextStyle = (): ElementStyles => {
         const activeElement = textElements.find((el) => el.isSelected);
-
         const textElement = activeElement || DEFAULT_TEXT_STYLE;
 
         return {
@@ -247,3 +328,5 @@ export const useTextEditor = () => {
         controlsRef
     };
 };
+
+export default useTextEditor;

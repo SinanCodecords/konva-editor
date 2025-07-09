@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useUndoRedoStore } from '@/lib/store';
+import { useUndoRedoStore } from '@/hooks/useEditorStore';
 
 const useUndoRedo = () => {
     const { undo, redo, } = useUndoRedoStore();

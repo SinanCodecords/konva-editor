@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import { useUndoRedoStore } from "../lib/store";
+import { useUndoRedoStore } from "../hooks/useEditorStore";
 import { Undo, Redo } from "lucide-react";
 
 const UndoRedoControls = () => {

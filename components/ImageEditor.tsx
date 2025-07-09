@@ -3,7 +3,7 @@
 import { Stage, Layer, Image as KonvaImage } from "react-konva";
 import { Button } from "./ui/button";
 import EditableText from "./EditableText";
-import { useImageEditor } from "../hooks/useImageEditor";
+import useImageEditor from "../hooks/useImageEditor";
 import EditableSticker from "./EditableSticker";
 import StickerControls from "./StickerControls";
 import UndoRedoControls from "./UndoRedoControls";
