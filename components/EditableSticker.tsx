@@ -1,64 +1,76 @@
-import type React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image as KonvaImage, Transformer, Group } from "react-konva";
 import type Konva from "konva";
 import { EditableStickerProps } from "@/types";
 import useDelete from "@/hooks/keyboardShortcuts/useDelete";
 import XButton from "./XButton";
+import useImage from "use-image";
 
 const EditableSticker = ({
     stickerElement,
-    stickerImage,
     onDragEnd,
     onTransform,
     onSelect,
     transformerRef,
     onStickerRemove,
 }: EditableStickerProps) => {
-    // for keyboard events
     useDelete();
     const groupRef = useRef<Konva.Group>(null);
+    const [image, status] = useImage(stickerElement.src, "anonymous");
+    const [xButtonPos, setXButtonPos] = useState({
+        x: stickerElement.x,
+        y: stickerElement.y
+    });
 
     useEffect(() => {
-        if (transformerRef?.current && stickerElement.isSelected) {
+        if (stickerElement.isSelected && status === "loaded" && transformerRef?.current) {
             const stage = transformerRef.current.getStage();
             const node = stage?.findOne(`#${stickerElement.id}`);
             if (node) {
                 transformerRef.current.nodes([node]);
                 transformerRef.current.getLayer()?.batchDraw();
             }
+            updateXButtonPosition();
         }
-    }, [stickerElement.isSelected, transformerRef, stickerElement.id]);
+    }, [stickerElement.isSelected, status, transformerRef, stickerElement.id]);
+
+    useEffect(() => {
+        if (stickerElement.isSelected && status === "loaded") {
+            updateXButtonPosition();
+        }
+    }, [
+        stickerElement.x,
+        stickerElement.y,
+        stickerElement.rotation,
+        stickerElement.scaleX,
+        stickerElement.scaleY,
+        status
+    ]);
 
     const handleTransformEnd = (e: Konva.KonvaEventObject<Event>) => {
         const node = e.target as Konva.Image;
         onTransform(node);
     };
 
-    const getXButtonPosition = () => {
-        if (!groupRef.current) {
-            return { x: stickerElement.x, y: stickerElement.y };
-        }
+    const updateXButtonPosition = () => {
+        if (!groupRef.current || status !== "loaded") return;
 
         const group = groupRef.current;
         const clientRect = group.getClientRect();
-
         const transformerPadding = 20;
 
-        const x = clientRect.x + clientRect.width + transformerPadding - 10;
-        const y = clientRect.y - transformerPadding + 7;
-
-        return { x, y };
+        setXButtonPos({
+            x: clientRect.x + clientRect.width + transformerPadding - 10,
+            y: clientRect.y - transformerPadding + 7
+        });
     };
-
-    const xButtonPos = getXButtonPosition();
 
     return (
         <>
             <Group ref={groupRef}>
                 <KonvaImage
                     id={stickerElement.id}
-                    image={stickerImage}
+                    image={image}
                     x={stickerElement.x}
                     y={stickerElement.y}
                     rotation={stickerElement.rotation}
@@ -72,7 +84,7 @@ const EditableSticker = ({
                 />
             </Group>
 
-            {stickerElement.isSelected && transformerRef && (
+            {stickerElement.isSelected && status === "loaded" && transformerRef && (
                 <Transformer
                     ref={transformerRef}
                     rotateEnabled={true}
@@ -83,7 +95,7 @@ const EditableSticker = ({
                     anchorSize={8}
                 />
             )}
-            {stickerElement.isSelected && transformerRef && (
+            {stickerElement.isSelected && (
                 <XButton
                     x={xButtonPos.x}
                     y={xButtonPos.y}

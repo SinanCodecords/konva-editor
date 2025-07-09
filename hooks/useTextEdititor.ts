@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import type Konva from 'konva';
 import { ElementStyles, TextAlign, TextElement, TextStyle } from '@/types';
 import { useEditorStore } from '@/lib/store';
@@ -27,8 +27,6 @@ export const useTextEditor = () => {
     const {
         textElements,
         setTextElements,
-        selectedElementId,
-        setSelectedElementId,
         currentTextInput,
         setCurrentTextInput,
         maxZIndex,
@@ -40,7 +38,24 @@ export const useTextEditor = () => {
 
     const controlsRef = useRef<HTMLDivElement>(null);
 
-    const selectedTextElement = textElements.find((el) => el.id === selectedElementId) || null;
+    const selectedTextElement = useMemo(() => textElements.find((el) => el.isSelected) || null, [textElements]);
+
+    const select = (id: string) => {
+        let text = "";
+        setTextElements((prev) =>
+            prev.map((el) => {
+                const isSelected = el.id === id;
+                if (!text) {
+                    text = isSelected ? el.text : "";
+                };
+                return {
+                    ...el,
+                    isSelected
+                };
+            })
+        );
+        setCurrentTextInput(text!);
+    }
 
     const createNewTextElement = (text: string) => {
         const newZIndex = maxZIndex + 1;
@@ -53,38 +68,42 @@ export const useTextEditor = () => {
             zIndex: newZIndex,
             isSelected: true,
         };
-        setSelectedElementId(newElement.id);
-        setMaxZIndex(newZIndex);
         setTextElements((prev) => {
             return [...prev.map(el => ({ ...el, isSelected: false })), newElement];
         });
+        setMaxZIndex(newZIndex);
         return newElement;
     };
 
     const changeTextStyle = (style: TextStyle) => {
-        if (selectedElementId) {
-            updateTextElement(selectedElementId, { fontStyle: style });
+        const selected = textElements.find((el) => el.isSelected);
+        if (selected) {
+            updateTextElement(selected.id, { fontStyle: style });
         }
     };
 
     const changeTextAlign = (align: TextAlign) => {
-        if (selectedElementId) {
-            updateTextElement(selectedElementId, { align });
+        const selected = textElements.find((el) => el.isSelected);
+        if (selected) {
+            updateTextElement(selected.id, { align });
         }
     };
 
     const updateTextElement = (id: string, updates: Partial<TextElement>) => {
         setTextElements((prev) =>
-            prev.map((el) => (el.id === id ? { ...el, ...updates } : { ...el, isSelected: false }))
+            prev.map((el) => (el.id === id ? { ...el, ...updates } : el))
         );
     };
 
+
     const setTextContent = (text: string) => {
-        setCurrentTextInput(text);
+
         clearSelectedStickers();
 
-        if (selectedElementId) {
-            updateTextElement(selectedElementId, { text });
+        const selected = textElements.find((el) => el.isSelected);
+        if (selected) {
+            setCurrentTextInput(text);
+            updateTextElement(selected.id, { text });
         } else if (text.trim()) {
             createNewTextElement(text);
         }
@@ -96,31 +115,26 @@ export const useTextEditor = () => {
             return;
         }
 
-        if (selectedElementId && !currentTextInput.trim()) {
-            removeText(selectedElementId);
+        const selected = textElements.find((el) => el.isSelected);
+        if (selected && !currentTextInput.trim()) {
+            removeText(selected.id);
         }
 
         setCurrentTextInput('');
-        setSelectedElementId(null);
+        deselectAll();
     };
 
     const handleStyleChange = (key: string, value: any) => {
-        if (selectedElementId) {
-            updateTextElement(selectedElementId, { [key]: value });
+        const selected = textElements.find((el) => el.isSelected);
+        if (selected) {
+            updateTextElement(selected.id, { [key]: value });
         }
     };
 
     const handleTextDragStart = (id: string) => {
         const element = textElements.find((el) => el.id === id);
-        console.log("CALLED HERE");
-
         if (element && !element.isSelected) {
-            setTextElements((prev) =>
-                prev.map((el) => ({
-                    ...el,
-                    isSelected: el.id === id
-                }))
-            );
+            select(id)
         }
     };
 
@@ -153,31 +167,18 @@ export const useTextEditor = () => {
     };
 
     const handleTextSelect = (id: string) => {
-        setTextElements((prev) =>
-            prev.map((el) => ({
-                ...el,
-                isSelected: el.id === id
-            }))
-        );
         clearSelectedStickers();
 
-        setSelectedElementId(id);
-        const element = textElements.find((el) => el.id === id);
-        if (element) {
-            setCurrentTextInput(element.text);
-        }
-
+        select(id)
         bringToFront(id, 'text');
     };
 
     const removeText = (id?: string) => {
-        const targetId = id || selectedElementId;
+        const targetId = id || textElements.find((el) => el.isSelected)?.id;
 
         if (targetId) {
             setTextElements((prev) => prev.filter((el) => el.id !== targetId));
-            if (selectedElementId === targetId) {
-                update({ currentTextInput: "", selectedElementId: null });
-            }
+            update({ currentTextInput: "" });
         }
     };
 
@@ -185,8 +186,9 @@ export const useTextEditor = () => {
         const uppercaseText = currentTextInput.toUpperCase();
         setCurrentTextInput(uppercaseText);
 
-        if (selectedElementId) {
-            updateTextElement(selectedElementId, { text: uppercaseText });
+        const selected = textElements.find((el) => el.isSelected);
+        if (selected) {
+            updateTextElement(selected.id, { text: uppercaseText });
         }
     };
 
@@ -195,60 +197,40 @@ export const useTextEditor = () => {
             prev.map((el) => ({ ...el, isSelected: false }))
         );
 
-        if (selectedElementId) {
-            const selectedElement = textElements.find(el => el.id === selectedElementId);
-            if (selectedElement && !selectedElement.text.trim()) {
-                removeText(selectedElementId);
-            }
+        const selected = textElements.find((el) => el.isSelected);
+        if (selected && !selected.text.trim()) {
+            removeText(selected.id);
         }
 
-        setSelectedElementId(null);
         setCurrentTextInput('');
     };
 
     const getCurrentTextStyle = (): ElementStyles => {
-        const activeElement = selectedTextElement;
+        const activeElement = textElements.find((el) => el.isSelected);
 
-        if (activeElement) {
-            return {
-                fontSize: activeElement.fontSize,
-                fontFamily: activeElement.fontFamily,
-                fill: activeElement.fill,
-                fontStyle: activeElement.fontStyle,
-                align: activeElement.align,
-                opacity: activeElement.opacity,
-                hasBackground: activeElement.hasBackground,
-                backgroundColor: activeElement.backgroundColor,
-                backgroundOpacity: activeElement.backgroundOpacity,
-                backgroundRadius: activeElement.backgroundRadius,
-                hasBorder: activeElement.hasBorder,
-                borderColor: activeElement.borderColor,
-                borderWidth: activeElement.borderWidth,
-                zIndex: activeElement.zIndex
-            };
-        }
+        const textElement = activeElement || DEFAULT_TEXT_STYLE;
 
         return {
-            fontSize: DEFAULT_TEXT_STYLE.fontSize,
-            fontFamily: DEFAULT_TEXT_STYLE.fontFamily,
-            fill: DEFAULT_TEXT_STYLE.fill,
-            fontStyle: DEFAULT_TEXT_STYLE.fontStyle,
-            align: DEFAULT_TEXT_STYLE.align,
-            opacity: DEFAULT_TEXT_STYLE.opacity,
-            hasBackground: DEFAULT_TEXT_STYLE.hasBackground,
-            backgroundColor: DEFAULT_TEXT_STYLE.backgroundColor,
-            backgroundOpacity: DEFAULT_TEXT_STYLE.backgroundOpacity,
-            backgroundRadius: DEFAULT_TEXT_STYLE.backgroundRadius,
-            hasBorder: DEFAULT_TEXT_STYLE.hasBorder,
-            borderColor: DEFAULT_TEXT_STYLE.borderColor,
-            zIndex: DEFAULT_TEXT_STYLE.zIndex,
-            borderWidth: DEFAULT_TEXT_STYLE.borderWidth,
+            fontSize: textElement.fontSize,
+            fontFamily: textElement.fontFamily,
+            fill: textElement.fill,
+            fontStyle: textElement.fontStyle,
+            align: textElement.align,
+            opacity: textElement.opacity,
+            hasBackground: textElement.hasBackground,
+            backgroundColor: textElement.backgroundColor,
+            backgroundOpacity: textElement.backgroundOpacity,
+            backgroundRadius: textElement.backgroundRadius,
+            hasBorder: textElement.hasBorder,
+            borderColor: textElement.borderColor,
+            borderWidth: textElement.borderWidth,
+            zIndex: textElement.zIndex,
         };
     };
 
+
     return {
         textElements,
-        selectedElementId,
         selectedTextElement,
         currentTextInput,
         setTextContent,

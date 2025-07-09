@@ -10,7 +10,6 @@ export const useStickerEditor = () => {
         selectedStickerId,
         setSelectedStickerId,
         setTextElements,
-        setSelectedElementId,
         maxZIndex,
         setMaxZIndex,
         bringToFront,
@@ -19,7 +18,7 @@ export const useStickerEditor = () => {
     const addSticker = (src: string) => {
         const newZIndex = maxZIndex + 1;
         setStickers((prev) => [
-            ...prev,
+            ...prev.map(el => ({ ...el, isSelected: false })),
             {
                 id: `sticker-${Date.now()}`,
                 x: 100,
@@ -27,11 +26,12 @@ export const useStickerEditor = () => {
                 rotation: 0,
                 scaleX: 1,
                 scaleY: 1,
-                isSelected: false,
+                isSelected: true,
                 src,
                 zIndex: newZIndex,
             },
         ]);
+        setTextElements(prev => prev.map(el => ({ ...el, isSelected: false })))
         setMaxZIndex(newZIndex);
     };
 
@@ -69,7 +69,6 @@ export const useStickerEditor = () => {
         setSelectedStickerId(id);
         setStickers((prev) => prev.map((sticker) => ({ ...sticker, isSelected: sticker.id === id })));
         setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
-        setSelectedElementId(null);
         bringToFront(id, 'sticker');
     };
 

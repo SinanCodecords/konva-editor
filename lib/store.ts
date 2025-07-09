@@ -8,7 +8,6 @@ interface StoreState {
     availableStickers: { name: string; src: string; }[];
     selectedStickerId: string | null;
     textElements: TextElement[];
-    selectedElementId: string | null;
     currentTextInput: string;
     bgImageObj: HTMLImageElement | null;
     maxZIndex: number;
@@ -18,7 +17,6 @@ interface StoreState {
     ) => void;
     setSelectedStickerId: (id: string | null) => void;
     setTextElements: (elements: TextElement[] | ((prev: TextElement[]) => TextElement[])) => void;
-    setSelectedElementId: (id: string | null) => void;
     setCurrentTextInput: (text: string) => void;
     setBgImageObj: (image: HTMLImageElement | null) => void;
     bringToFront: (elementId: string, elementType: 'text' | 'sticker') => void;
@@ -32,7 +30,6 @@ interface UpdateOptions {
     availableStickers?: { name: string; src: string; }[];
     selectedStickerId?: string | null;
     textElements?: TextElement[];
-    selectedElementId?: string | null;
     currentTextInput?: string;
     bgImageObj?: HTMLImageElement | null;
     maxZIndex?: number;
@@ -55,7 +52,6 @@ export const useEditorStore = create<StoreState>()(
                 ],
                 selectedStickerId: null,
                 textElements: [],
-                selectedElementId: null,
                 currentTextInput: '',
                 bgImageObj: null,
                 maxZIndex: 0,
@@ -71,7 +67,6 @@ export const useEditorStore = create<StoreState>()(
                 setTextElements: (elements) => set((state) => ({
                     textElements: typeof elements === 'function' ? elements(state.textElements) : elements,
                 })),
-                setSelectedElementId: (id) => set({ selectedElementId: id }),
                 setCurrentTextInput: (text) => set({ currentTextInput: text }),
                 setBgImageObj: (image) => set({ bgImageObj: image }),
                 setMaxZIndex: (zIndex) => set({ maxZIndex: zIndex }),
@@ -113,7 +108,6 @@ export const useEditorStore = create<StoreState>()(
                         availableStickers: updateData.availableStickers ?? state.availableStickers,
                         selectedStickerId: updateData.selectedStickerId ?? state.selectedStickerId,
                         textElements: updateData.textElements ?? state.textElements,
-                        selectedElementId: updateData.selectedElementId ?? state.selectedElementId,
                         currentTextInput: updateData.currentTextInput ?? state.currentTextInput,
                         bgImageObj: updateData.bgImageObj ?? state.bgImageObj,
                         maxZIndex: updateData.maxZIndex ?? state.maxZIndex,

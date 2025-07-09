@@ -141,6 +141,7 @@ const EditableText = ({
                 draggable={true}
                 onDragEnd={onDragEnd}
                 onTransformEnd={handleGroupTransformEnd}
+                onTransformStart={handleGroupTransformEnd}
                 onClick={onSelect}
                 onTap={onSelect}
                 onDragStart={onDragStart}
