@@ -23,6 +23,32 @@ const EditableSticker = ({
         y: stickerElement.y
     });
 
+    useEffect(() => {
+        if (stickerElement.isSelected && status === "loaded" && transformerRef?.current) {
+            const stage = transformerRef.current.getStage();
+            const node = stage?.findOne(`#${stickerElement.id}`);
+            if (node) {
+                transformerRef.current.nodes([node]);
+                transformerRef.current.getLayer()?.batchDraw();
+            }
+            updateXButtonPosition();
+        }
+        //eslint-disable-next-line
+    }, [stickerElement.isSelected, status, transformerRef, stickerElement.id]);
+
+    useEffect(() => {
+        if (stickerElement.isSelected && status === "loaded") {
+            updateXButtonPosition();
+        }
+
+        //eslint-disable-next-line
+    }, [stickerElement.x, stickerElement.y, stickerElement.rotation, stickerElement.scaleX, stickerElement.scaleY, status]);
+
+    const handleTransformEnd = (e: Konva.KonvaEventObject<Event>) => {
+        const node = e.target as Konva.Image;
+        onTransform(node);
+    };
+
     const updateXButtonPosition = () => {
         if (!groupRef.current || status !== "loaded") return;
 
@@ -34,37 +60,6 @@ const EditableSticker = ({
             x: clientRect.x + clientRect.width + transformerPadding - 10,
             y: clientRect.y - transformerPadding + 7
         });
-    };
-
-    useEffect(() => {
-        if (stickerElement.isSelected && status === "loaded" && transformerRef?.current) {
-            const stage = transformerRef.current.getStage();
-            const node = stage?.findOne(`#${stickerElement.id}`);
-            if (node) {
-                transformerRef.current.nodes([node]);
-                transformerRef.current.getLayer()?.batchDraw();
-            }
-            updateXButtonPosition();
-        }
-    }, [stickerElement.isSelected, status, transformerRef, stickerElement.id, updateXButtonPosition]);
-
-    useEffect(() => {
-        if (stickerElement.isSelected && status === "loaded") {
-            updateXButtonPosition();
-        }
-    }, [
-        stickerElement.x,
-        stickerElement.y,
-        stickerElement.rotation,
-        stickerElement.scaleX,
-        stickerElement.scaleY,
-        status,
-        updateXButtonPosition
-    ]);
-
-    const handleTransformEnd = (e: Konva.KonvaEventObject<Event>) => {
-        const node = e.target as Konva.Image;
-        onTransform(node);
     };
 
     return (
