@@ -24,6 +24,18 @@ interface StoreState {
     bringToFront: (elementId: string, elementType: 'text' | 'sticker') => void;
     setMaxZIndex: (zIndex: number) => void;
     clearSelectedStickers: () => void;
+    update: (updateData: UpdateOptions) => void;
+}
+
+interface UpdateOptions {
+    stickers?: StickerElement[];
+    availableStickers?: { name: string; src: string; }[];
+    selectedStickerId?: string | null;
+    textElements?: TextElement[];
+    selectedElementId?: string | null;
+    currentTextInput?: string;
+    bgImageObj?: HTMLImageElement | null;
+    maxZIndex?: number;
 }
 
 export const useEditorStore = create<StoreState>()(
@@ -47,6 +59,8 @@ export const useEditorStore = create<StoreState>()(
                 currentTextInput: '',
                 bgImageObj: null,
                 maxZIndex: 0,
+
+                // Update functions
                 setStickers: (stickers) => set((state) => ({
                     stickers: typeof stickers === 'function' ? stickers(state.stickers) : stickers,
                 })),
@@ -61,6 +75,8 @@ export const useEditorStore = create<StoreState>()(
                 setCurrentTextInput: (text) => set({ currentTextInput: text }),
                 setBgImageObj: (image) => set({ bgImageObj: image }),
                 setMaxZIndex: (zIndex) => set({ maxZIndex: zIndex }),
+
+                // Bringing element to front
                 bringToFront: (elementId, elementType) => {
                     const state = get();
                     const newZIndex = state.maxZIndex + 1;
@@ -81,13 +97,29 @@ export const useEditorStore = create<StoreState>()(
                         });
                     }
                 },
+
+                // Clearing selected stickers
                 clearSelectedStickers: () => {
                     set({
                         selectedStickerId: null,
                         stickers: get().stickers.map(el => ({ ...el, isSelected: false }))
                     });
-                    return
+                },
+
+                // Update function
+                update: (updateData) => {
+                    set((state) => ({
+                        stickers: updateData.stickers ?? state.stickers,
+                        availableStickers: updateData.availableStickers ?? state.availableStickers,
+                        selectedStickerId: updateData.selectedStickerId ?? state.selectedStickerId,
+                        textElements: updateData.textElements ?? state.textElements,
+                        selectedElementId: updateData.selectedElementId ?? state.selectedElementId,
+                        currentTextInput: updateData.currentTextInput ?? state.currentTextInput,
+                        bgImageObj: updateData.bgImageObj ?? state.bgImageObj,
+                        maxZIndex: updateData.maxZIndex ?? state.maxZIndex,
+                    }));
                 }
+
             }),
             {
                 partialize: (state) => ({

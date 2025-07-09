@@ -11,7 +11,8 @@ const EditableText = ({
     onTransform,
     onSelect,
     transformerRef,
-    onClose
+    onClose,
+    onDragStart
 }: EditableTextProps) => {
     // for keyboard events
     useDelete();
@@ -142,6 +143,7 @@ const EditableText = ({
                 onTransformEnd={handleGroupTransformEnd}
                 onClick={onSelect}
                 onTap={onSelect}
+                onDragStart={onDragStart}
             >
                 {textElement.hasBackground && (
                     <Rect

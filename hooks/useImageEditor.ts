@@ -33,7 +33,8 @@ export const useImageEditor = () => {
         handleControlFocusOut,
         changeTextStyle,
         changeTextAlign,
-        controlsRef
+        controlsRef,
+        handleTextDragStart
     } = useTextEditor();
 
     const {
@@ -122,6 +123,7 @@ export const useImageEditor = () => {
         handleStickerRemove,
         changeTextStyle,
         changeTextAlign,
-        controlsRef
+        controlsRef,
+        handleTextDragStart
     };
 };

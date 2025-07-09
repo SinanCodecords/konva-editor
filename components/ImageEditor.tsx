@@ -38,7 +38,8 @@ const ImageEditor = () => {
         handleControlFocusOut,
         changeTextStyle,
         changeTextAlign,
-        controlsRef
+        controlsRef,
+        handleTextDragStart
     } = useImageEditor();
 
     // for keyboard events
@@ -125,6 +126,7 @@ const ImageEditor = () => {
                                                 key={element.id}
                                                 textElement={element}
                                                 onDragEnd={(e) => handleTextDragEnd(element.id, e)}
+                                                onDragStart={(e) => handleTextDragStart(element.id)}
                                                 onClose={() => removeText()}
                                                 onTransform={(node) => handleTextTransform(element.id, node)}
                                                 onSelect={() => handleTextSelect(element.id)}

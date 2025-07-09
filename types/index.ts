@@ -3,6 +3,7 @@ import Konva from "konva";
 export interface EditableTextProps {
     textElement: TextElement;
     onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
+    onDragStart: (e: Konva.KonvaEventObject<DragEvent>) => void;
     onTransform: (node: Konva.Text) => void;
     onSelect: () => void;
     transformerRef: React.RefObject<Konva.Transformer | null> | null;

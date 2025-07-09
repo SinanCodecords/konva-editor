@@ -34,7 +34,8 @@ export const useTextEditor = () => {
         maxZIndex,
         setMaxZIndex,
         bringToFront,
-        clearSelectedStickers
+        clearSelectedStickers,
+        update
     } = useEditorStore();
 
     const controlsRef = useRef<HTMLDivElement>(null);
@@ -52,11 +53,11 @@ export const useTextEditor = () => {
             zIndex: newZIndex,
             isSelected: true,
         };
-
-        setTextElements((prev) => [...prev, newElement]);
         setSelectedElementId(newElement.id);
         setMaxZIndex(newZIndex);
-
+        setTextElements((prev) => {
+            return [...prev.map(el => ({ ...el, isSelected: false })), newElement];
+        });
         return newElement;
     };
 
@@ -74,7 +75,7 @@ export const useTextEditor = () => {
 
     const updateTextElement = (id: string, updates: Partial<TextElement>) => {
         setTextElements((prev) =>
-            prev.map((el) => (el.id === id ? { ...el, ...updates } : el))
+            prev.map((el) => (el.id === id ? { ...el, ...updates } : { ...el, isSelected: false }))
         );
     };
 
@@ -106,6 +107,20 @@ export const useTextEditor = () => {
     const handleStyleChange = (key: string, value: any) => {
         if (selectedElementId) {
             updateTextElement(selectedElementId, { [key]: value });
+        }
+    };
+
+    const handleTextDragStart = (id: string) => {
+        const element = textElements.find((el) => el.id === id);
+        console.log("CALLED HERE");
+
+        if (element && !element.isSelected) {
+            setTextElements((prev) =>
+                prev.map((el) => ({
+                    ...el,
+                    isSelected: el.id === id
+                }))
+            );
         }
     };
 
@@ -161,8 +176,7 @@ export const useTextEditor = () => {
         if (targetId) {
             setTextElements((prev) => prev.filter((el) => el.id !== targetId));
             if (selectedElementId === targetId) {
-                setSelectedElementId(null);
-                setCurrentTextInput('');
+                update({ currentTextInput: "", selectedElementId: null });
             }
         }
     };
@@ -191,7 +205,6 @@ export const useTextEditor = () => {
         setSelectedElementId(null);
         setCurrentTextInput('');
     };
-
 
     const getCurrentTextStyle = (): ElementStyles => {
         const activeElement = selectedTextElement;
@@ -239,6 +252,7 @@ export const useTextEditor = () => {
         selectedTextElement,
         currentTextInput,
         setTextContent,
+        handleTextDragStart,
         handleTextDragEnd,
         handleTextTransform,
         handleTextSelect,
