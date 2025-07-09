@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
-import { useTextEditor } from '../useTextEdititor';
-import { useStickerEditor } from '../useStickerEditor';
+import useTextEditor from '../useTextEditor';
+import useStickerEditor from '../useStickerEditor';
 
 const useDelete = () => {
     const { textElements, removeText } = useTextEditor();
