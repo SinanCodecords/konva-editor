@@ -46,14 +46,13 @@ export const useImageEditor = () => {
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
-        setSelectedStickerId,
         handleStickerRemove,
+        handleStickerDragStart
     } = useStickerEditor();
 
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
         if (e.target._id === 3 && e.target.getStage()?._id === 1) {
             deselectAll();
-            setSelectedStickerId(null);
             setStickers((prev) =>
                 prev.map((sticker) => ({
                     ...sticker,
@@ -124,6 +123,7 @@ export const useImageEditor = () => {
         changeTextStyle,
         changeTextAlign,
         controlsRef,
-        handleTextDragStart
+        handleTextDragStart,
+        handleStickerDragStart
     };
 };

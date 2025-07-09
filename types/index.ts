@@ -82,6 +82,7 @@ export interface EditableStickerProps {
     stickerElement: StickerElement;
     stickerImage: HTMLImageElement;
     onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
+    onDragStart: () => void;
     onTransform: (node: Konva.Image) => void;
     onSelect: () => void;
     transformerRef: React.RefObject<Konva.Transformer | null> | null;

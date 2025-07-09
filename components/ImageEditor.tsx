@@ -39,7 +39,8 @@ const ImageEditor = () => {
         changeTextStyle,
         changeTextAlign,
         controlsRef,
-        handleTextDragStart
+        handleTextDragStart,
+        handleStickerDragStart
     } = useImageEditor();
 
     // for keyboard events
@@ -114,6 +115,7 @@ const ImageEditor = () => {
                                                     return img;
                                                 })()}
                                                 onDragEnd={(e) => handleStickerDragEnd(element.id, e)}
+                                                onDragStart={() => handleStickerDragStart(element.id)}
                                                 onTransform={(node) => handleStickerTransform(element.id, node)}
                                                 onSelect={() => handleStickerSelect(element.id)}
                                                 transformerRef={element.isSelected ? transformerRef : null}

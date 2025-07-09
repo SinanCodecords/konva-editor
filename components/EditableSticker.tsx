@@ -12,6 +12,7 @@ const EditableSticker = ({
     onTransform,
     onSelect,
     transformerRef,
+    onDragStart,
     onStickerRemove,
 }: EditableStickerProps) => {
     useDelete();
@@ -78,6 +79,7 @@ const EditableSticker = ({
                     scaleY={stickerElement.scaleY}
                     draggable={true}
                     onDragEnd={onDragEnd}
+                    onDragStart={onDragStart}
                     onTransformEnd={handleTransformEnd}
                     onClick={onSelect}
                     onTap={onSelect}

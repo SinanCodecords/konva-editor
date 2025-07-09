@@ -7,8 +7,6 @@ export const useStickerEditor = () => {
         setStickers,
         availableStickers,
         setAvailableStickers,
-        selectedStickerId,
-        setSelectedStickerId,
         setTextElements,
         maxZIndex,
         setMaxZIndex,
@@ -34,6 +32,12 @@ export const useStickerEditor = () => {
         setTextElements(prev => prev.map(el => ({ ...el, isSelected: false })))
         setMaxZIndex(newZIndex);
     };
+
+    const handleStickerDragStart = (id: string) => {
+        setStickers((prev) =>
+            prev.map((sticker) => ({ ...sticker, isSelected: sticker.id === id }))
+        );
+    }
 
     const addAvailableSticker = (src: string) => {
         setAvailableStickers((prev) => [
@@ -66,7 +70,6 @@ export const useStickerEditor = () => {
     };
 
     const handleStickerSelect = (id: string) => {
-        setSelectedStickerId(id);
         setStickers((prev) => prev.map((sticker) => ({ ...sticker, isSelected: sticker.id === id })));
         setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
         bringToFront(id, 'sticker');
@@ -82,11 +85,10 @@ export const useStickerEditor = () => {
         availableStickers,
         addSticker,
         addAvailableSticker,
-        selectedStickerId,
-        setSelectedStickerId,
         handleStickerDragEnd,
         handleStickerTransform,
         handleStickerSelect,
         handleStickerRemove,
+        handleStickerDragStart
     };
 };

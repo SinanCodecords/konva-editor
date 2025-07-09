@@ -6,7 +6,6 @@ import { StickerElement, TextElement } from '@/types';
 interface StoreState {
     stickers: StickerElement[];
     availableStickers: { name: string; src: string; }[];
-    selectedStickerId: string | null;
     textElements: TextElement[];
     currentTextInput: string;
     bgImageObj: HTMLImageElement | null;
@@ -15,7 +14,6 @@ interface StoreState {
     setAvailableStickers: (
         stickers: { name: string; src: string; }[] | ((prev: { name: string; src: string; }[]) => { name: string; src: string; }[])
     ) => void;
-    setSelectedStickerId: (id: string | null) => void;
     setTextElements: (elements: TextElement[] | ((prev: TextElement[]) => TextElement[])) => void;
     setCurrentTextInput: (text: string) => void;
     setBgImageObj: (image: HTMLImageElement | null) => void;
@@ -28,7 +26,6 @@ interface StoreState {
 interface UpdateOptions {
     stickers?: StickerElement[];
     availableStickers?: { name: string; src: string; }[];
-    selectedStickerId?: string | null;
     textElements?: TextElement[];
     currentTextInput?: string;
     bgImageObj?: HTMLImageElement | null;
@@ -50,7 +47,6 @@ export const useEditorStore = create<StoreState>()(
                     { name: 'Sticker 5', src: '/5.svg' },
                     { name: 'Sticker 6', src: '/6.svg' },
                 ],
-                selectedStickerId: null,
                 textElements: [],
                 currentTextInput: '',
                 bgImageObj: null,
@@ -63,7 +59,6 @@ export const useEditorStore = create<StoreState>()(
                 setAvailableStickers: (stickers) => set((state) => ({
                     availableStickers: typeof stickers === 'function' ? stickers(state.availableStickers) : stickers,
                 })),
-                setSelectedStickerId: (id) => set({ selectedStickerId: id }),
                 setTextElements: (elements) => set((state) => ({
                     textElements: typeof elements === 'function' ? elements(state.textElements) : elements,
                 })),
@@ -96,17 +91,14 @@ export const useEditorStore = create<StoreState>()(
                 // Clearing selected stickers
                 clearSelectedStickers: () => {
                     set({
-                        selectedStickerId: null,
                         stickers: get().stickers.map(el => ({ ...el, isSelected: false }))
                     });
                 },
 
-                // Update function
                 update: (updateData) => {
                     set((state) => ({
                         stickers: updateData.stickers ?? state.stickers,
                         availableStickers: updateData.availableStickers ?? state.availableStickers,
-                        selectedStickerId: updateData.selectedStickerId ?? state.selectedStickerId,
                         textElements: updateData.textElements ?? state.textElements,
                         currentTextInput: updateData.currentTextInput ?? state.currentTextInput,
                         bgImageObj: updateData.bgImageObj ?? state.bgImageObj,
