@@ -126,7 +126,7 @@ const ImageEditor = () => {
                                                 key={element.id}
                                                 textElement={element}
                                                 onDragEnd={(e) => handleTextDragEnd(element.id, e)}
-                                                onDragStart={(e) => handleTextDragStart(element.id)}
+                                                onDragStart={() => handleTextDragStart(element.id)}
                                                 onDelete={() => removeText(element.id)}
                                                 onTransform={(node) => handleTextTransform(element.id, node)}
                                                 onSelect={() => handleTextSelect(element.id)}
