@@ -11,7 +11,6 @@ import { Separator } from '../ui/separator';
 const TextControls = forwardRef<HTMLDivElement, TextControlsProps>(({
     textContent,
     setTextContent,
-    handleControlFocusOut,
     textStyle,
     handleStyleChange,
     makeCaps,
@@ -22,7 +21,6 @@ const TextControls = forwardRef<HTMLDivElement, TextControlsProps>(({
         <div
             className="p-4 rounded-lg border bg-gray-900"
             ref={ref}
-            onBlur={handleControlFocusOut}
             tabIndex={-1}
         >
             <Tabs defaultValue="text" className="w-full">

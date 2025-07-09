@@ -35,7 +35,6 @@ const ImageEditor = () => {
         handleStickerRemove,
         makeCaps,
         textStyle,
-        handleControlFocusOut,
         changeTextStyle,
         changeTextAlign,
         controlsRef,
@@ -64,7 +63,6 @@ const ImageEditor = () => {
                     <TextControls
                         textContent={currentTextInput}
                         setTextContent={setTextContent}
-                        handleControlFocusOut={handleControlFocusOut}
                         textStyle={textStyle}
                         handleStyleChange={handleStyleChange}
                         makeCaps={makeCaps}

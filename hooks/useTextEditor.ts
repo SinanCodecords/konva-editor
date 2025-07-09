@@ -141,28 +141,6 @@ const useTextEditor = () => {
     };
 
     /**
-     * Handles the focus out event for the text control inputs. If the input is blurred and
-     * the new focus target is outside the controls container, it deselects the text element.
-     * If the text content is empty, the element is removed.
-     *
-     * @param e - The React focus event.
-     */
-    const handleControlFocusOut = (e: React.FocusEvent<HTMLDivElement>) => {
-        const relatedTarget = e.relatedTarget;
-        if (controlsRef.current && relatedTarget && controlsRef.current.contains(relatedTarget)) {
-            return;
-        }
-
-        const selected = textElements.find((el) => el.isSelected);
-        if (selected && !currentTextInput.trim()) {
-            removeText(selected.id);
-        }
-
-        setCurrentTextInput('');
-        deselectAll();
-    };
-
-    /**
      * A generic handler for style changes. It updates the specified style property of the
      * selected text element with the new value.
      *
@@ -177,12 +155,13 @@ const useTextEditor = () => {
     };
 
     /**
-     * Handles the drag start event for a text element. If the dragged element is not
+     * Handles the drag start event for a text element. Clears the selected stickers and If the dragged element is not
      * already selected, it selects it.
      *
      * @param id - The ID of the text element being dragged.
      */
     const handleTextDragStart = (id: string) => {
+        clearSelectedStickers();
         const element = textElements.find((el) => el.id === id);
         if (element && !element.isSelected) {
             select(id);
@@ -322,7 +301,6 @@ const useTextEditor = () => {
         makeCaps,
         deselectAll,
         getCurrentTextStyle,
-        handleControlFocusOut,
         changeTextStyle,
         changeTextAlign,
         controlsRef

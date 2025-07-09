@@ -34,7 +34,6 @@ const useImageEditor = () => {
         makeCaps,
         deselectAll,
         getCurrentTextStyle,
-        handleControlFocusOut,
         changeTextStyle,
         changeTextAlign,
         controlsRef,
@@ -128,17 +127,11 @@ const useImageEditor = () => {
         currentTextInput,
         setTextContent,
         handleTextDragEnd,
-        /**
-         * Handles the transform event for a text element.
-         * @param id - The ID of the text element.
-         * @param node - The Konva text node being transformed.
-         */
         handleTextTransform: (id: string, node: Konva.Text) => handleTextTransform(id, node),
         handleTextSelect,
         removeText,
         handleStyleChange,
         makeCaps,
-        handleControlFocusOut,
         textStyle: getCurrentTextStyle(),
         handleStageClick,
         downloadImage,

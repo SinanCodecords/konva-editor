@@ -13,6 +13,14 @@ const useStickerEditor = () => {
         bringToFront,
     } = useEditorStore();
 
+
+    /**
+    * Deselects all the selected text elements
+    */
+    const deselectedTextElements = () => {
+        setTextElements(prev => prev.map(el => ({ ...el, isSelected: false })));
+    }
+
     /**
      * Adds a new sticker to the canvas. When a sticker is added, it is set as the currently
      * selected element, and all other elements (including text) are deselected. The new sticker
@@ -36,7 +44,7 @@ const useStickerEditor = () => {
                 zIndex: newZIndex, // Place it on top.
             },
         ]);
-        setTextElements(prev => prev.map(el => ({ ...el, isSelected: false }))); // Deselect text elements.
+        deselectedTextElements()
         setMaxZIndex(newZIndex); // Update the max z-index.
     };
 
@@ -47,6 +55,7 @@ const useStickerEditor = () => {
      * @param id - The ID of the sticker being dragged.
      */
     const handleStickerDragStart = (id: string) => {
+        deselectedTextElements()
         setStickers((prev) =>
             prev.map((sticker) => ({ ...sticker, isSelected: sticker.id === id }))
         );
@@ -113,7 +122,7 @@ const useStickerEditor = () => {
      */
     const handleStickerSelect = (id: string) => {
         setStickers((prev) => prev.map((sticker) => ({ ...sticker, isSelected: sticker.id === id })));
-        setTextElements((prev) => prev.map((el) => ({ ...el, isSelected: false })));
+        deselectedTextElements()
         bringToFront(id, 'sticker'); // Manages the z-index.
     };
 
