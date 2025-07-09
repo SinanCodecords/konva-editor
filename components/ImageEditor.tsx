@@ -129,7 +129,7 @@ const ImageEditor = () => {
                                                 textElement={element}
                                                 onDragEnd={(e) => handleTextDragEnd(element.id, e)}
                                                 onDragStart={(e) => handleTextDragStart(element.id)}
-                                                onClose={() => removeText()}
+                                                onDelete={() => removeText(element.id)}
                                                 onTransform={(node) => handleTextTransform(element.id, node)}
                                                 onSelect={() => handleTextSelect(element.id)}
                                                 transformerRef={element.isSelected ? transformerRef : null}

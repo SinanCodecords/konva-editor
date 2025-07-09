@@ -1,10 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTextEditor } from '../useTextEdititor';
 import { useStickerEditor } from '../useStickerEditor';
 
 const useDelete = () => {
-    const { selectedElementId, removeText } = useTextEditor();
-    const { selectedStickerId, handleStickerRemove } = useStickerEditor();
+    const { textElements, removeText } = useTextEditor();
+    const { stickers, handleStickerRemove } = useStickerEditor();
+
+    const selectedElementId = useMemo(() => (textElements.find(el => el.isSelected === true))?.id, [textElements]);
+    const selectedStickerId = useMemo(() => (stickers.find(el => el.isSelected === true))?.id, [stickers]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {

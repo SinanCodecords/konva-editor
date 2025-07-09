@@ -97,9 +97,7 @@ export const useTextEditor = () => {
 
 
     const setTextContent = (text: string) => {
-
         clearSelectedStickers();
-
         const selected = textElements.find((el) => el.isSelected);
         if (selected) {
             setCurrentTextInput(text);

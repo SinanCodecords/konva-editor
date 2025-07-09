@@ -7,7 +7,7 @@ export interface EditableTextProps {
     onTransform: (node: Konva.Text) => void;
     onSelect: () => void;
     transformerRef: React.RefObject<Konva.Transformer | null> | null;
-    onClose: () => void;
+    onDelete: () => void;
 }
 
 export type TextStyle = "bold" | "normal" | "italic";
@@ -93,9 +93,7 @@ export interface XButtonProps {
     x: number;
     y: number;
     size?: number;
-    onClick: () => void;
-    onTap: () => void;
-    isSelected: boolean;
+    onDelete: () => void;
 }
 
 

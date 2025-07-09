@@ -11,7 +11,7 @@ const EditableText = ({
     onTransform,
     onSelect,
     transformerRef,
-    onClose,
+    onDelete,
     onDragStart
 }: EditableTextProps) => {
     // for keyboard events
@@ -206,9 +206,7 @@ const EditableText = ({
                 <XButton
                     x={xButtonPos.x}
                     y={xButtonPos.y}
-                    isSelected={textElement.isSelected}
-                    onClick={onClose}
-                    onTap={onClose}
+                    onDelete={onDelete}
                 />
             )}
         </>

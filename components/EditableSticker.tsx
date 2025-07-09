@@ -101,9 +101,7 @@ const EditableSticker = ({
                 <XButton
                     x={xButtonPos.x}
                     y={xButtonPos.y}
-                    isSelected={stickerElement.isSelected}
-                    onClick={() => onStickerRemove(stickerElement.id)}
-                    onTap={() => onStickerRemove(stickerElement.id)}
+                    onDelete={() => onStickerRemove(stickerElement.id)}
                 />
             )}
         </>

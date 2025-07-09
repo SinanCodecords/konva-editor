@@ -104,7 +104,7 @@ export const useImageEditor = () => {
         handleTextDragEnd,
         handleTextTransform: (id: string, node: Konva.Text) => handleTextTransform(id, node),
         handleTextSelect,
-        removeText: () => removeText(),
+        removeText,
         handleStyleChange,
         makeCaps,
         handleControlFocusOut,

@@ -1,12 +1,14 @@
 import { Group, Circle, Text } from "react-konva";
 import type { XButtonProps } from "@/types";
 
-const XButton = ({ x, y, size = 20, onClick, onTap, isSelected }: XButtonProps) => {
-    if (!isSelected) {
-        return null;
+const XButton = ({ x, y, size = 20, onDelete }: XButtonProps) => {
+    //eslint-disable-next-line
+    const handleDelete = (e: any) => {
+        e.evt.preventDefault();
+        onDelete()
     }
     return (
-        <Group x={x} y={y} onClick={onClick} onTap={onTap}>
+        <Group x={x} y={y} onClick={handleDelete} onTap={handleDelete}>
             <Circle
                 width={size}
                 height={size}
@@ -18,12 +20,16 @@ const XButton = ({ x, y, size = 20, onClick, onTap, isSelected }: XButtonProps) 
                 shadowColor="#000000"
                 shadowOpacity={0.2}
                 opacity={0.9}
+                onClick={handleDelete}
+                onTap={handleDelete}
             />
             <Text
                 text="x"
                 fontSize={size}
                 fill="#ffffff"
                 width={size}
+                onClick={handleDelete}
+                onTap={handleDelete}
                 height={size}
                 align="center"
                 verticalAlign="middle"
