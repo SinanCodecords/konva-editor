@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Text, Transformer, Group, Rect } from "react-konva";
 import Konva from "konva";
 import { EditableTextProps } from "@/types";
-import useDelete from "@/hooks/keyboardShortcuts/useDelete";
 import XButton from "./XButton";
 
 const EditableText = ({
@@ -14,8 +13,6 @@ const EditableText = ({
     onDelete,
     onDragStart
 }: EditableTextProps) => {
-    // for keyboard events
-    useDelete();
     const textRef = useRef<Konva.Text>(null);
     const groupRef = useRef<Konva.Group>(null);
     const [, forceUpdate] = useState({});
@@ -186,6 +183,7 @@ const EditableText = ({
                     stroke={textElement.hasBorder ? textElement.borderColor : undefined}
                     strokeWidth={textElement.hasBorder ? textElement.borderWidth : 0}
                     padding={8}
+                    wrap="none"
                 />
             </Group>
 

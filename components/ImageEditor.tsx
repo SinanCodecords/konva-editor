@@ -9,6 +9,7 @@ import StickerControls from "./StickerControls";
 import UndoRedoControls from "./UndoRedoControls";
 import useUndoRedoKeyboardShortcuts from "@/hooks/keyboardShortcuts/useUndo";
 import TextControls from "./text-controls/TextControls";
+import useDelete from "@/hooks/keyboardShortcuts/useDelete";
 
 const ImageEditor = () => {
     const {
@@ -45,6 +46,8 @@ const ImageEditor = () => {
 
     // for keyboard events
     useUndoRedoKeyboardShortcuts();
+    useDelete();
+
 
     const getAllElementsSorted = () => {
         const allElements = [
