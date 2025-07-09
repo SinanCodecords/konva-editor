@@ -33,7 +33,6 @@ const EditableText = ({
                 if (transformerRef.current && groupRef.current) {
                     transformerRef.current.forceUpdate();
                     transformerRef.current.getLayer()?.batchDraw();
-
                     groupRef.current.getLayer()?.batchDraw();
                     forceUpdate({});
                 }
@@ -45,7 +44,6 @@ const EditableText = ({
     const handleGroupTransformEnd = () => {
         if (groupRef.current && textRef.current) {
             const group = groupRef.current;
-
             const scaleX = group.scaleX();
             const scaleY = group.scaleY();
             const x = group.x();
@@ -81,8 +79,13 @@ const EditableText = ({
     const textHeight = textRef.current?.height() || 0;
 
     const backgroundPadding = 8;
-    const backgroundWidth = textWidth + (backgroundPadding * 2);
-    const backgroundHeight = textHeight + (backgroundPadding * 2);
+    const scaleX = textElement.scaleX || 1;
+    const scaleY = textElement.scaleY || 1;
+    const effectivePaddingX = backgroundPadding / scaleX;
+    const effectivePaddingY = backgroundPadding / scaleY;
+
+    const backgroundWidth = textWidth + 2 * effectivePaddingX;
+    const backgroundHeight = textHeight + 2 * effectivePaddingY;
 
     const getTextPosition = () => {
         if (!textElement.hasBackground) {
@@ -94,16 +97,16 @@ const EditableText = ({
 
         switch (textElement.align) {
             case 'left':
-                x = 0;
+                x = effectivePaddingX;
                 break;
             case 'center':
-                x = backgroundPadding;
+                x = effectivePaddingX;
                 break;
             case 'right':
-                x = backgroundPadding * 2;
+                x = effectivePaddingX;
                 break;
             default:
-                x = 0;
+                x = effectivePaddingX;
         }
 
         return { x, y };
@@ -112,19 +115,23 @@ const EditableText = ({
     const textPosition = getTextPosition();
 
     const getXButtonPosition = () => {
-        if (!groupRef.current || !textRef.current) {
+        if (!transformerRef || !transformerRef.current || !groupRef.current) {
             return { x: textElement.x + 100, y: textElement.y - 10 };
         }
 
-        const group = groupRef.current;
-        const clientRect = group.getClientRect();
-        const transformerPadding = 20;
-
-        // Position X button at top-right corner with proper spacing
-        const x = clientRect.x + clientRect.width + transformerPadding - 10;
-        const y = clientRect.y - transformerPadding + 7;
-
-        return { x, y };
+        const transformer = transformerRef.current;
+        const topRightAnchor = transformer.findOne('.top-right');
+        if (topRightAnchor) {
+            const pos = topRightAnchor.getAbsolutePosition();
+            const x = pos.x + 10;
+            const y = pos.y - 10;
+            return { x, y };
+        } else {
+            const clientRect = groupRef.current.getClientRect();
+            const x = clientRect.x + clientRect.width + 10;
+            const y = clientRect.y - 10;
+            return { x, y };
+        }
     };
 
     const xButtonPos = getXButtonPosition();
@@ -148,8 +155,8 @@ const EditableText = ({
             >
                 {textElement.hasBackground && (
                     <Rect
-                        x={-backgroundPadding}
-                        y={-backgroundPadding}
+                        x={-effectivePaddingX}
+                        y={-effectivePaddingY}
                         width={backgroundWidth}
                         height={backgroundHeight}
                         fill={textElement.backgroundColor}
