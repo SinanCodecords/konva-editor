@@ -23,14 +23,7 @@ interface StoreState {
     update: (updateData: UpdateOptions) => void;
 }
 
-interface UpdateOptions {
-    stickers?: StickerElement[];
-    availableStickers?: { name: string; src: string; }[];
-    textElements?: TextElement[];
-    currentTextInput?: string;
-    bgImageObj?: HTMLImageElement | null;
-    maxZIndex?: number;
-}
+type UpdateOptions = Partial<Pick<StoreState, 'stickers' | 'availableStickers' | 'textElements' | 'currentTextInput' | 'bgImageObj' | 'maxZIndex'>>;
 
 export const useEditorStore = create<StoreState>()(
     subscribeWithSelector(
