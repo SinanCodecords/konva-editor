@@ -7,7 +7,7 @@ import useTextEditor from './useTextEditor';
 const useImageEditor = () => {
     const stageRef = useRef<Konva.Stage>(null);
     const transformerRef = useRef<Konva.Transformer>(null);
-    const { bgImageObj, setBgImageObj, setTextElements, canvasSize, setCanvasSize } = useEditorStore();
+    const { bgImageObj, setBgImageObj, setTextElements, canvasSize, setCanvasSize, setCurrentTextInput } = useEditorStore();
 
     const {
         textElements,
@@ -46,6 +46,7 @@ const useImageEditor = () => {
      * @param file - The uploaded image file
      */
     const handleBackgroundUpload = (file: File) => {
+        cleanElements()
         const reader = new FileReader();
         reader.onload = (e) => {
             const bgImg = new window.Image();
@@ -72,12 +73,19 @@ const useImageEditor = () => {
         reader.readAsDataURL(file);
     };
 
+    /**
+     * Clear's The elements in the canvas. eg: stickers, and texts
+     */
+    const cleanElements = () => {
+        setTextElements([]);
+        setStickers([]);
+        setCurrentTextInput("");
+    }
+
     const removeBackground = () => {
         setBgImageObj(null);
         setCanvasSize({ width: 1024, height: 700 });
-
-        setTextElements([]);
-        setStickers([]);
+        cleanElements();
     };
 
     /**
@@ -89,8 +97,8 @@ const useImageEditor = () => {
      * @param e - The Konva event object, which provides details about the click event.
      */
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-        // The logic checks if the click target is the stage itself.
-        if (e.target._id === 3 && e.target.getStage()?._id === 1) {
+        // The logic checks if the click target is the backround image.
+        if (e.target._id === 2 && e.target.getStage()?._id === 1) {
             deselectAll(); 
             setStickers((prev) =>
                 prev.map((sticker) => ({
@@ -113,7 +121,7 @@ const useImageEditor = () => {
      * to allow the canvas to redraw before generating the data URL.
      */
     const downloadImage = () => {
-        if (!stageRef.current) return;
+        if (!stageRef.current || !bgImageObj) return;
 
         // Deselect all text and sticker elements.
         setTextElements((prev) =>
@@ -132,19 +140,28 @@ const useImageEditor = () => {
         // A short timeout to ensure the canvas is updated before exporting.
         setTimeout(() => {
             if (stageRef.current) {
+                // Ensure stage size matches canvas size before export
+                stageRef.current.width(canvasSize.width);
+                stageRef.current.height(canvasSize.height);
                 stageRef.current.batchDraw();
 
-                // Generate a data URL with a higher pixel ratio for better quality.
-                const dataURL = stageRef.current.toDataURL({ pixelRatio: 2 });
-
+                // Generate a data URL with exact dimensions
+                const dataURL = stageRef.current.toDataURL({
+                    pixelRatio: 1, // Use 1 for exact dimensions, 2 for higher quality
+                    width: canvasSize.width,
+                    height: canvasSize.height,
+                    x: 0,
+                    y: 0
+                });
                 // Create a temporary link to trigger the download.
                 const link = document.createElement('a');
-                link.download = 'composition.png';
+                link.download = `composition_${canvasSize.width}x${canvasSize.height}.png`;
                 link.href = dataURL;
                 link.click();
             }
         }, 100);
     };
+
 
     return {
         stageRef,
