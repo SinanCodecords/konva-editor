@@ -7,6 +7,7 @@ import useImageEditor from "../hooks/useImageEditor";
 import EditableSticker from "./EditableSticker";
 import StickerControls from "./StickerControls";
 import UndoRedoControls from "./UndoRedoControls";
+import BackgroundImageControls from "./BackgroundImageControls";
 import useUndoRedoKeyboardShortcuts from "@/hooks/keyboardShortcuts/useUndo";
 import TextControls from "./text-controls/TextControls";
 import useDelete from "@/hooks/keyboardShortcuts/useDelete";
@@ -25,6 +26,9 @@ const ImageEditor = () => {
         removeText,
         downloadImage,
         bgImageObj,
+        canvasSize,
+        handleBackgroundUpload,
+        removeBackground,
         stickers,
         availableStickers,
         addSticker,
@@ -48,7 +52,6 @@ const ImageEditor = () => {
     useUndoRedoKeyboardShortcuts();
     useDelete();
 
-
     const getAllElementsSorted = () => {
         const allElements = [
             ...textElements.map(el => ({ ...el, type: 'text' as const })),
@@ -61,87 +64,114 @@ const ImageEditor = () => {
     const sortedElements = getAllElementsSorted();
 
     return (
-        <div className="p-4 max-w-[1400px] mx-auto">
+        <div className="p-4 max-w-full mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div className="lg:col-span-1 space-y-6">
-                    <TextControls
-                        textContent={currentTextInput}
-                        setTextContent={setTextContent}
-                        textStyle={textStyle}
-                        handleStyleChange={handleStyleChange}
-                        makeCaps={makeCaps}
-                        selectedTextElement={selectedTextElement}
-                        ref={controlsRef}
-                        changeTextStyle={changeTextStyle}
-                        changeTextAlign={changeTextAlign}
+                    <BackgroundImageControls
+                        bgImageObj={bgImageObj}
+                        onBackgroundUpload={handleBackgroundUpload}
+                        onRemoveBackground={removeBackground}
                     />
-                    <StickerControls
-                        availableStickers={availableStickers}
-                        addSticker={addSticker}
-                        addAvailableSticker={addAvailableSticker}
-                    />
+
+                    {bgImageObj && (
+                        <>
+                            <TextControls
+                                textContent={currentTextInput}
+                                setTextContent={setTextContent}
+                                textStyle={textStyle}
+                                handleStyleChange={handleStyleChange}
+                                makeCaps={makeCaps}
+                                selectedTextElement={selectedTextElement}
+                                ref={controlsRef}
+                                changeTextStyle={changeTextStyle}
+                                changeTextAlign={changeTextAlign}
+                            />
+                            <StickerControls
+                                availableStickers={availableStickers}
+                                addSticker={addSticker}
+                                addAvailableSticker={addAvailableSticker}
+                            />
+                        </>
+                    )}
 
                     <UndoRedoControls />
                 </div>
 
                 <div className="lg:col-span-3">
-                    <div className="border rounded-lg overflow-hidden mb-4">
-                        <Stage
-                            width={1024}
-                            height={700}
-                            ref={stageRef}
-                            onClick={handleStageClick}
-                            onTap={handleStageClick}
-                        >
-                            <Layer>
-                                {bgImageObj && (
-                                    <KonvaImage
-                                        image={bgImageObj}
-                                        x={0}
-                                        y={0}
-                                        width={1024}
-                                        height={700}
-                                        draggable={false}
-                                    />
-                                )}
+                    <div className="border rounded-lg mb-4 inline-block">
+                        {!bgImageObj ? (
+                            <div className="w-[1024px] h-[700px] bg-gray-100 flex items-center justify-center">
+                                <div className="text-center">
+                                    <div className="text-gray-400 text-lg mb-2">No background image</div>
+                                    <div className="text-gray-500 text-sm">
+                                        Upload a background image to start editing
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                className="inline-block"
+                                style={{
+                                    width: canvasSize.width,
+                                    height: canvasSize.height
+                                }}
+                            >
+                                <Stage
+                                        width={canvasSize.width}
+                                        height={canvasSize.height}
+                                        ref={stageRef}
+                                        onClick={handleStageClick}
+                                        onTap={handleStageClick}
+                                    >
+                                        <Layer>
+                                            <KonvaImage
+                                                image={bgImageObj}
+                                                x={0}
+                                                y={0}
+                                                width={canvasSize.width}
+                                                height={canvasSize.height}
+                                                draggable={false}
+                                            />
 
-                                {sortedElements.map((element) => {
-                                    if (element.type === 'sticker') {
-                                        return (
-                                            <EditableSticker
-                                                key={element.id}
-                                                stickerElement={element}
-                                                stickerImage={(() => {
-                                                    const img = new window.Image();
-                                                    img.src = element.src;
-                                                    img.crossOrigin = "anonymous";
-                                                    return img;
-                                                })()}
-                                                onDragEnd={(e) => handleStickerDragEnd(element.id, e)}
-                                                onDragStart={() => handleStickerDragStart(element.id)}
-                                                onTransform={(node) => handleStickerTransform(element.id, node)}
-                                                onSelect={() => handleStickerSelect(element.id)}
-                                                transformerRef={element.isSelected ? transformerRef : null}
-                                                onStickerRemove={handleStickerRemove}
-                                            />
-                                        );
-                                    } else {
-                                        return (
-                                            <EditableText
-                                                key={element.id}
-                                                textElement={element}
-                                                onDragEnd={(e) => handleTextDragEnd(element.id, e)}
-                                                onDragStart={() => handleTextDragStart(element.id)}
-                                                onDelete={() => removeText(element.id)}
-                                                onTransform={(node) => handleTextTransform(element.id, node)}
-                                                onSelect={() => handleTextSelect(element.id)}
-                                                transformerRef={element.isSelected ? transformerRef : null}
-                                            />
-                                        );
-                                    }
-                                })}
-                            </Layer>
-                        </Stage>
+                                            {sortedElements.map((element) => {
+                                                if (element.type === 'sticker') {
+                                                    return (
+                                                        <EditableSticker
+                                                            key={element.id}
+                                                            stickerElement={element}
+                                                            stickerImage={(() => {
+                                                                const img = new window.Image();
+                                                                img.src = element.src;
+                                                                img.crossOrigin = "anonymous";
+                                                                return img;
+                                                            })()}
+                                                            onDragEnd={(e) => handleStickerDragEnd(element.id, e)}
+                                                            onDragStart={() => handleStickerDragStart(element.id)}
+                                                            onTransform={(node) => handleStickerTransform(element.id, node)}
+                                                            onSelect={() => handleStickerSelect(element.id)}
+                                                            transformerRef={element.isSelected ? transformerRef : null}
+                                                            onStickerRemove={handleStickerRemove}
+                                                        />
+                                                    );
+                                                } else {
+                                                    return (
+                                                        <EditableText
+                                                            key={element.id}
+                                                            textElement={element}
+                                                            onDragEnd={(e) => handleTextDragEnd(element.id, e)}
+                                                            onDragStart={() => handleTextDragStart(element.id)}
+                                                            onDelete={() => removeText(element.id)}
+                                                            onTransform={(node) => handleTextTransform(element.id, node)}
+                                                            onSelect={() => handleTextSelect(element.id)}
+                                                            transformerRef={element.isSelected ? transformerRef : null}
+                                                        />
+                                                    );
+                                                }
+                                            })}
+                                        </Layer>
+                                    </Stage>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex gap-2">

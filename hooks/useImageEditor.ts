@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import type Konva from 'konva';
 import { useEditorStore } from '@/hooks/useEditorStore';
 import useStickerEditor from './useStickerEditor';
@@ -7,16 +7,7 @@ import useTextEditor from './useTextEditor';
 const useImageEditor = () => {
     const stageRef = useRef<Konva.Stage>(null);
     const transformerRef = useRef<Konva.Transformer>(null);
-    const { bgImageObj, setBgImageObj, setTextElements } = useEditorStore();
-
-    useEffect(() => {
-        const bgImg = new window.Image();
-        bgImg.src = '/bg.jpg';
-        bgImg.crossOrigin = 'anonymous'; 
-        bgImg.onload = () => {
-            setBgImageObj(bgImg);
-        };
-    }, [setBgImageObj]);
+    const { bgImageObj, setBgImageObj, setTextElements, canvasSize, setCanvasSize } = useEditorStore();
 
     const {
         textElements,
@@ -51,6 +42,45 @@ const useImageEditor = () => {
     } = useStickerEditor();
 
     /**
+     * Handles background image upload
+     * @param file - The uploaded image file
+     */
+    const handleBackgroundUpload = (file: File) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const bgImg = new window.Image();
+            bgImg.crossOrigin = 'anonymous';
+
+            bgImg.onload = () => {
+                const newCanvasSize = {
+                    width: bgImg.naturalWidth,
+                    height: bgImg.naturalHeight
+                };
+
+                setCanvasSize(newCanvasSize);
+
+                setBgImageObj(bgImg);
+            };
+
+            bgImg.onerror = (error) => {
+                console.error('Error loading image:', error);
+            };
+
+            bgImg.src = e.target?.result as string;
+        };
+
+        reader.readAsDataURL(file);
+    };
+
+    const removeBackground = () => {
+        setBgImageObj(null);
+        setCanvasSize({ width: 1024, height: 700 });
+
+        setTextElements([]);
+        setStickers([]);
+    };
+
+    /**
      * Handles clicks on the stage. When the stage background is clicked,
      * it deselects all text and sticker elements, effectively clearing any active selections.
      * This is determined by checking the target of the click event.
@@ -61,11 +91,11 @@ const useImageEditor = () => {
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
         // The logic checks if the click target is the stage itself.
         if (e.target._id === 3 && e.target.getStage()?._id === 1) {
-            deselectAll(); // Deselects all text elements.
+            deselectAll(); 
             setStickers((prev) =>
                 prev.map((sticker) => ({
                     ...sticker,
-                    isSelected: false, // Deselects all sticker elements.
+                    isSelected: false,
                 }))
             );
             // Clears the transformer nodes to remove any transformation controls.
@@ -123,7 +153,7 @@ const useImageEditor = () => {
         currentTextInput,
         setTextContent,
         handleTextDragEnd,
-        handleTextTransform: (id: string, node: Konva.Text) => handleTextTransform(id, node),
+        handleTextTransform,
         handleTextSelect,
         removeText,
         handleStyleChange,
@@ -132,6 +162,9 @@ const useImageEditor = () => {
         handleStageClick,
         downloadImage,
         bgImageObj,
+        canvasSize,
+        handleBackgroundUpload,
+        removeBackground,
         stickers,
         availableStickers,
         addSticker,

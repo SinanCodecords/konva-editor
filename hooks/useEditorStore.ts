@@ -3,12 +3,18 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { StickerElement, TextElement } from '@/types';
 
+interface CanvasSize {
+    width: number;
+    height: number;
+}
+
 interface StoreState {
     stickers: StickerElement[];
     availableStickers: { name: string; src: string; }[];
     textElements: TextElement[];
     currentTextInput: string;
     bgImageObj: HTMLImageElement | null;
+    canvasSize: CanvasSize;
     maxZIndex: number;
     setStickers: (stickers: StickerElement[] | ((prev: StickerElement[]) => StickerElement[])) => void;
     setAvailableStickers: (
@@ -17,13 +23,14 @@ interface StoreState {
     setTextElements: (elements: TextElement[] | ((prev: TextElement[]) => TextElement[])) => void;
     setCurrentTextInput: (text: string) => void;
     setBgImageObj: (image: HTMLImageElement | null) => void;
+    setCanvasSize: (size: CanvasSize) => void;
     bringToFront: (elementId: string, elementType: 'text' | 'sticker') => void;
     setMaxZIndex: (zIndex: number) => void;
     clearSelectedStickers: () => void;
     update: (updateData: UpdateOptions) => void;
 }
 
-type UpdateOptions = Partial<Pick<StoreState, 'stickers' | 'availableStickers' | 'textElements' | 'currentTextInput' | 'bgImageObj' | 'maxZIndex'>>;
+type UpdateOptions = Partial<Pick<StoreState, 'stickers' | 'availableStickers' | 'textElements' | 'currentTextInput' | 'bgImageObj' | 'canvasSize' | 'maxZIndex'>>;
 
 export const useEditorStore = create<StoreState>()(
     subscribeWithSelector(
@@ -43,6 +50,7 @@ export const useEditorStore = create<StoreState>()(
                 textElements: [],
                 currentTextInput: '',
                 bgImageObj: null,
+                canvasSize: { width: 1024, height: 700 }, // Default canvas size
                 maxZIndex: 0,
 
                 // Update functions
@@ -57,6 +65,7 @@ export const useEditorStore = create<StoreState>()(
                 })),
                 setCurrentTextInput: (text) => set({ currentTextInput: text }),
                 setBgImageObj: (image) => set({ bgImageObj: image }),
+                setCanvasSize: (size) => set({ canvasSize: size }),
                 setMaxZIndex: (zIndex) => set({ maxZIndex: zIndex }),
 
                 // Bringing element to front
@@ -95,6 +104,7 @@ export const useEditorStore = create<StoreState>()(
                         textElements: updateData.textElements ?? state.textElements,
                         currentTextInput: updateData.currentTextInput ?? state.currentTextInput,
                         bgImageObj: updateData.bgImageObj ?? state.bgImageObj,
+                        canvasSize: updateData.canvasSize ?? state.canvasSize,
                         maxZIndex: updateData.maxZIndex ?? state.maxZIndex,
                     }));
                 }
