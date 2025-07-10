@@ -115,6 +115,7 @@ export const useEditorStore = create<StoreState>()(
                     stickers: state.stickers,
                     textElements: state.textElements,
                     maxZIndex: state.maxZIndex,
+                    bgImageObj: state.bgImageObj
                 }),
                 limit: 50,
                 equality: (pastState, currentState) =>
