@@ -65,7 +65,6 @@ export default [
             '@radix-ui/react-slot',
             '@radix-ui/react-switch',
             '@radix-ui/react-tabs',
-            'canvas'
         ],
     },
     {
@@ -73,7 +72,7 @@ export default [
         output: [{file: 'dist/index.d.ts', format: 'esm'}],
         plugins: [
             dts({
-                tsconfig: './tsconfig.json', // Ensure dts uses tsconfig
+                tsconfig: './tsconfig.json',
             }),
         ],
     },
