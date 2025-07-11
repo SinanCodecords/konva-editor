@@ -3,7 +3,6 @@ import type Konva from 'konva';
 import { useEditorStore } from './useEditorStore';
 import useStickerEditor from './useStickerEditor';
 import useTextEditor from './useTextEditor';
-import "../styles/globals.css";
 
 const useImageEditor = () => {
     const stageRef = useRef<Konva.Stage>(null);
