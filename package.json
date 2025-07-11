@@ -1,7 +1,24 @@
 {
-  "name": "cli",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@yourname/konva-editor",
+  "version": "1.0.0",
+  "description": "A React component library for building Konva-based canvas editors",
+  "keywords": [
+    "konva",
+    "react",
+    "canvas",
+    "editor",
+    "drawing",
+    "graphics"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sinanptm/konva-editor"
+  },
+  "bugs": {
+    "url": "https://github.com/sinanptm/konva-editor/issues"
+  },
+  "homepage": "https://github.com/sinanptm/konva-editor#readme",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

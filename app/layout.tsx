@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import { Geist } from "next/font/google";
 import { metadataBase } from "./metadata";
-import { HocProps } from "@/types/props";
+import { HocProps } from "@/types";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

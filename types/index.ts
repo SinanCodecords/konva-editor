@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import Konva from "konva";
 
 export interface EditableTextProps {
@@ -8,6 +9,10 @@ export interface EditableTextProps {
     onSelect: () => void;
     transformerRef: React.RefObject<Konva.Transformer | null> | null;
     onDelete: () => void;
+}
+
+export interface HocProps {
+    children: ReactNode;
 }
 
 export type TextStyle = "bold" | "normal" | "italic";
