@@ -1,7 +1,7 @@
 {
   "name": "@yourname/konva-editor",
   "version": "1.0.0",
-  "private": false,
+  "private": true,
   "description": "A React component library for building Konva-based canvas editors",
   "keywords": [
     "konva",
