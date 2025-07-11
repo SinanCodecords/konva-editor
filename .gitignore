@@ -17,6 +17,10 @@
 /.next/
 /out/
 
+dist/*.map 
+
+.rollup.cache/  
+
 # production
 /build
 

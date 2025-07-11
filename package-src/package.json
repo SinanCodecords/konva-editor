@@ -2,10 +2,13 @@
   "name": "image-editor",
   "version": "1.0.0",
   "description": "A simple image editor.",
+  "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist"
@@ -19,6 +22,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-strip": "^3.0.4",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.4",
     "@tailwindcss/postcss": "^4.1.11",
