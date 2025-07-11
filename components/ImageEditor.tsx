@@ -8,7 +8,7 @@ import EditableSticker from "./EditableSticker";
 import StickerControls from "./StickerControls";
 import UndoRedoControls from "./UndoRedoControls";
 import BackgroundImageControls from "./BackgroundImageControls";
-import useUndoRedoKeyboardShortcuts from "@/hooks/keyboardShortcuts/useUndo";
+import useUndoRedoKeyboardShortcuts from "@/hooks/keyboardShortcuts/useUndoRedo";
 import TextControls from "./text-controls/TextControls";
 import useDelete from "@/hooks/keyboardShortcuts/useDelete";
 

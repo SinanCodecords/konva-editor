@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Konva from "konva";
+export * from "./store";
 
 export interface EditableTextProps {
     textElement: TextElement;
