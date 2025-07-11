@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ColorInputTypes, TextStyleControlsProps } from "@/types";
+import { ColorInputTypes, TextStyleControlsProps } from "../../types";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";

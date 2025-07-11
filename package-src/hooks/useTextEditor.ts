@@ -33,8 +33,7 @@ const useTextEditor = () => {
         maxZIndex,
         setMaxZIndex,
         bringToFront,
-        clearSelectedStickers,
-        update
+        clearSelectedStickers
     } = useEditorStore();
 
     const controlsRef = useRef<HTMLDivElement>(null);
