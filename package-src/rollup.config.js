@@ -25,7 +25,7 @@ export default [
         plugins: [
             peerDepsExternal(),
             resolve({
-                extensions: ['.ts', '.tsx', '.js', '.jsx'], // Ensure .tsx is included
+                extensions: ['.ts', '.tsx', '.js', '.jsx'],
             }),
             commonjs(),
             strip({
@@ -34,15 +34,17 @@ export default [
             typescript({
                 tsconfig: './tsconfig.json',
                 jsx: 'react-jsx',
-                sourceMap: true,
-                include: ['**/*.ts', '**/*.tsx'], // Explicitly include .tsx files
+                include: ['**/*.ts', '**/*.tsx'], 
                 exclude: ['node_modules', 'dist'],
-                declaration: false, // Prevent duplicate declaration files
             }),
             postcss({
-                config: true,
-                extract: 'styles.css',
+                config: {
+                    "path": "./styles/globals.css"
+                },
                 minimize: true,
+                inject: {
+                    insertAt: "top"
+                }
             }),
             terser(),
         ],
@@ -65,16 +67,17 @@ export default [
             '@radix-ui/react-slot',
             '@radix-ui/react-switch',
             '@radix-ui/react-tabs',
+            'tw-animate-css'
         ],
     },
     {
         input: './index.ts',
-        output: [{file: 'dist/index.d.ts', format: 'esm'}],
+        output: [{file: 'dist/index.d.ts', format: 'es6'}],
         plugins: [
             dts({
                 tsconfig: './tsconfig.json',
             }),
         ],
-        external: [/\.css$/],
+        // external: [/\.css$/],
     },
 ];
