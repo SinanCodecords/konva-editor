@@ -1,0 +1,7 @@
+# Ignore everything by default
+*
+
+# Explicitly include the desired files and directories
+!bin/
+!image-editor/
+!package.json
