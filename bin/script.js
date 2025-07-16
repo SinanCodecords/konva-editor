@@ -33,7 +33,7 @@ const main = async () => {
         console.log('Core dependencies installed.');
 
         console.log('Adding shadcn-ui components...');
-        await execa('pnpm', ['dlx', 'shadcn-ui@latest', 'add', 'button', 'input', 'label', 'select', 'separator', 'slider', 'switch', 'tabs', 'textarea'], { stdio: 'inherit' });
+        await execa('pnpm', ['dlx', 'shadcn@latest', 'add', 'button', 'input', 'label', 'slider', 'select', 'separator', 'slider', 'switch', 'tabs', 'textarea'], {stdio: 'inherit'});
         console.log('Shadcn-ui components added.');
 
     } catch (error) {
