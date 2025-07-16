@@ -1,7 +1,9 @@
-# Ignore everything by default
-*
+# # Ignore everything by default
+.next 
+node_modules
+package-src
 
-# Explicitly include the desired files and directories
-!bin/
-!image-editor/
-!package.json
+# # Explicitly include the desired files and directories
+# !bin/
+# !image-editor/
+# !package.json
