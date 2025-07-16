@@ -26,6 +26,16 @@ const main = async () => {
         await fs.copy(sourceDir, destDir);
         console.log('Image editor copied to your project.');
 
+        console.log('Installing dependencies...');
+        const { execa } = await import('execa');
+
+        await execa('pnpm', ['install', 'canvas', 'react-konva', 'konva', 'use-image', 'zundo', 'zustand', 'lucide-react'], { stdio: 'inherit' });
+        console.log('Core dependencies installed.');
+
+        console.log('Adding shadcn-ui components...');
+        await execa('pnpm', ['dlx', 'shadcn-ui@latest', 'add', 'button', 'input', 'label', 'select', 'separator', 'slider', 'switch', 'tabs', 'textarea'], { stdio: 'inherit' });
+        console.log('Shadcn-ui components added.');
+
     } catch (error) {
         console.error('An error occurred during initialization:', error);
     }
