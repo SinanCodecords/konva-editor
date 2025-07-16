@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 const ImageEditor = dynamic(() => import("@/image-editor/ImageEditor"), { ssr: false })
 
-
 const page = () => {
   return (
     <div>
